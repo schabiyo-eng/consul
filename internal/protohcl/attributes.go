@@ -6,7 +6,6 @@ package protohcl
 import (
 	"fmt"
 
-	"github.com/pkg/errors"
 	"github.com/zclconf/go-cty/cty"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -23,7 +22,10 @@ func (u UnmarshalOptions) decodeAttribute(ctx *UnmarshalContext, newMessage newM
 
 	ok, value, err := decodeAttributeToWellKnownType(f, val)
 	if ok {
-		return value, errors.Wrapf(err, "%s: Failed to unmarshal argument %s", ctx.ErrorRange(), ctx.Name)
+		if err != nil {
+			return value, fmt.Errorf("%s: Failed to unmarshal argument %s: %w", ctx.ErrorRange(), ctx.Name, err)
+		}
+		return value, nil
 	}
 
 	ok, value, err = u.decodeAttributeToMessage(ctx, newMessage, f, val)
@@ -33,7 +35,7 @@ func (u UnmarshalOptions) decodeAttribute(ctx *UnmarshalContext, newMessage newM
 
 	value, err = decodeAttributeToPrimitive(f, val)
 	if err != nil {
-		return value, errors.Wrapf(err, "%s: Failed to unmarshal argument %s", ctx.ErrorRange(), ctx.Name)
+		return value, fmt.Errorf("%s: Failed to unmarshal argument %s: %w", ctx.ErrorRange(), ctx.Name, err)
 	}
 	return value, nil
 }
