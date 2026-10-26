@@ -7,6 +7,7 @@ import (
 	"bytes"
 	"crypto/rand"
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"github.com/hashicorp/consul/sdk/testutil/retry"
 	"io"
@@ -14,7 +15,6 @@ import (
 	"testing"
 
 	"github.com/hashicorp/go-uuid"
-	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
 
 	"github.com/hashicorp/consul/test/integration/consul-container/libs/utils"
@@ -31,7 +31,7 @@ func newSerfEncryptionKey() (string, error) {
 	key := make([]byte, 32)
 	n, err := rand.Reader.Read(key)
 	if err != nil {
-		return "", errors.Wrap(err, "error reading random data")
+		return "", fmt.Errorf("error reading random data: %w", err)
 	}
 	if n != 32 {
 		return "", errors.New("couldn't read enough entropy. Generate more entropy!")
