@@ -34,7 +34,7 @@ func newSerfEncryptionKey() (string, error) {
 		return "", errors.Wrap(err, "error reading random data")
 	}
 	if n != 32 {
-		return "", errors.Wrap(err, "couldn't read enough entropy. Generate more entropy!")
+		return "", errors.New("couldn't read enough entropy. Generate more entropy!")
 	}
 
 	return base64.StdEncoding.EncodeToString(key), nil
