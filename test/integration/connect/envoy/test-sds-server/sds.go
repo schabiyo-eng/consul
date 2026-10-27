@@ -179,25 +179,25 @@ func newGRPCLogger(logLevel string, logger hclog.Logger) *grpcLogger {
 }
 
 // gRPC's INFO level is more akin to hclog's TRACE level.
-func (g *grpcLogger) Info(args ...interface{})         { g.logger.Trace(fmt.Sprint(args...)) }
-func (g *grpcLogger) Infoln(args ...interface{})       { g.Info(fmt.Sprint(args...)) }
-func (g *grpcLogger) Infof(f string, a ...interface{}) { g.Info(fmt.Sprintf(f, a...)) }
+func (g *grpcLogger) Info(args ...any)         { g.logger.Trace(fmt.Sprint(args...)) }
+func (g *grpcLogger) Infoln(args ...any)       { g.Info(fmt.Sprint(args...)) }
+func (g *grpcLogger) Infof(f string, a ...any) { g.Info(fmt.Sprintf(f, a...)) }
 
-func (g *grpcLogger) Warning(args ...interface{})   { g.logger.Warn(fmt.Sprint(args...)) }
-func (g *grpcLogger) Warningln(args ...interface{}) { g.Warning(fmt.Sprint(args...)) }
-func (g *grpcLogger) Warningf(f string, a ...interface{}) {
+func (g *grpcLogger) Warning(args ...any)   { g.logger.Warn(fmt.Sprint(args...)) }
+func (g *grpcLogger) Warningln(args ...any) { g.Warning(fmt.Sprint(args...)) }
+func (g *grpcLogger) Warningf(f string, a ...any) {
 	g.Warning(fmt.Sprintf(f, a...))
 }
 
-func (g *grpcLogger) Error(args ...interface{})   { g.logger.Error(fmt.Sprint(args...)) }
-func (g *grpcLogger) Errorln(args ...interface{}) { g.Error(fmt.Sprint(args...)) }
-func (g *grpcLogger) Errorf(f string, a ...interface{}) {
+func (g *grpcLogger) Error(args ...any)   { g.logger.Error(fmt.Sprint(args...)) }
+func (g *grpcLogger) Errorln(args ...any) { g.Error(fmt.Sprint(args...)) }
+func (g *grpcLogger) Errorf(f string, a ...any) {
 	g.Error(fmt.Sprintf(f, a...))
 }
 
-func (g *grpcLogger) Fatal(args ...interface{})   { g.logger.Error(fmt.Sprint(args...)) }
-func (g *grpcLogger) Fatalln(args ...interface{}) { g.Fatal(fmt.Sprint(args...)) }
-func (g *grpcLogger) Fatalf(f string, a ...interface{}) {
+func (g *grpcLogger) Fatal(args ...any)   { g.logger.Error(fmt.Sprint(args...)) }
+func (g *grpcLogger) Fatalln(args ...any) { g.Fatal(fmt.Sprint(args...)) }
+func (g *grpcLogger) Fatalf(f string, a ...any) {
 	g.Fatal(fmt.Sprintf(f, a...))
 }
 
