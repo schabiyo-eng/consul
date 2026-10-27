@@ -213,7 +213,7 @@ type AgentServiceConnectProxyConfig struct {
 	LocalServiceSocketPath string                  `json:",omitempty"`
 	Mode                   ProxyMode               `json:",omitempty"`
 	TransparentProxy       *TransparentProxyConfig `json:",omitempty"`
-	Config                 map[string]interface{}  `json:",omitempty" bexpr:"-"`
+	Config                 map[string]any          `json:",omitempty" bexpr:"-"`
 	Upstreams              []Upstream              `json:",omitempty"`
 	MeshGateway            MeshGatewayConfig       `json:",omitempty"`
 	Expose                 ExposeConfig            `json:",omitempty"`
@@ -598,7 +598,7 @@ type ConnectProxyConfig struct {
 	TargetServiceID   string
 	TargetServiceName string
 	ContentHash       string
-	Config            map[string]interface{} `bexpr:"-"`
+	Config            map[string]any `bexpr:"-"`
 	Upstreams         []Upstream
 }
 
@@ -609,15 +609,15 @@ type Upstream struct {
 	DestinationNamespace string           `json:",omitempty"`
 	DestinationPeer      string           `json:",omitempty"`
 	DestinationName      string
-	DestinationPort      string                 `json:",omitempty"`
-	Datacenter           string                 `json:",omitempty"`
-	LocalBindAddress     string                 `json:",omitempty"`
-	LocalBindPort        int                    `json:",omitempty"`
-	LocalBindSocketPath  string                 `json:",omitempty"`
-	LocalBindSocketMode  string                 `json:",omitempty"`
-	Config               map[string]interface{} `json:",omitempty" bexpr:"-"`
-	MeshGateway          MeshGatewayConfig      `json:",omitempty"`
-	CentrallyConfigured  bool                   `json:",omitempty" bexpr:"-"`
+	DestinationPort      string            `json:",omitempty"`
+	Datacenter           string            `json:",omitempty"`
+	LocalBindAddress     string            `json:",omitempty"`
+	LocalBindPort        int               `json:",omitempty"`
+	LocalBindSocketPath  string            `json:",omitempty"`
+	LocalBindSocketMode  string            `json:",omitempty"`
+	Config               map[string]any    `json:",omitempty" bexpr:"-"`
+	MeshGateway          MeshGatewayConfig `json:",omitempty"`
+	CentrallyConfigured  bool              `json:",omitempty" bexpr:"-"`
 }
 
 // Agent can be used to query the Agent endpoints
@@ -635,7 +635,7 @@ func (c *Client) Agent() *Agent {
 
 // Self is used to query the agent we are speaking to for
 // information about itself
-func (a *Agent) Self() (map[string]map[string]interface{}, error) {
+func (a *Agent) Self() (map[string]map[string]any, error) {
 	r := a.c.newRequest("GET", "/v1/agent/self")
 	_, resp, err := a.c.doRequest(r)
 	if err != nil {
@@ -646,7 +646,7 @@ func (a *Agent) Self() (map[string]map[string]interface{}, error) {
 		return nil, err
 	}
 
-	var out map[string]map[string]interface{}
+	var out map[string]map[string]any
 	if err := decodeBody(resp, &out); err != nil {
 		return nil, err
 	}
@@ -656,7 +656,7 @@ func (a *Agent) Self() (map[string]map[string]interface{}, error) {
 // Host is used to retrieve information about the host the
 // agent is running on such as CPU, memory, and disk. Requires
 // a operator:read ACL token.
-func (a *Agent) Host() (map[string]interface{}, error) {
+func (a *Agent) Host() (map[string]any, error) {
 	r := a.c.newRequest("GET", "/v1/agent/host")
 	_, resp, err := a.c.doRequest(r)
 	if err != nil {
@@ -666,7 +666,7 @@ func (a *Agent) Host() (map[string]interface{}, error) {
 	if err := requireOK(resp); err != nil {
 		return nil, err
 	}
-	var out map[string]interface{}
+	var out map[string]any
 	if err := decodeBody(resp, &out); err != nil {
 		return nil, err
 	}
@@ -674,7 +674,7 @@ func (a *Agent) Host() (map[string]interface{}, error) {
 }
 
 // Version is used to retrieve information about the running Consul version and build.
-func (a *Agent) Version() (map[string]interface{}, error) {
+func (a *Agent) Version() (map[string]any, error) {
 	r := a.c.newRequest("GET", "/v1/agent/version")
 	_, resp, err := a.c.doRequest(r)
 	if err != nil {
@@ -684,7 +684,7 @@ func (a *Agent) Version() (map[string]interface{}, error) {
 	if err := requireOK(resp); err != nil {
 		return nil, err
 	}
-	var out map[string]interface{}
+	var out map[string]any
 	if err := decodeBody(resp, &out); err != nil {
 		return nil, err
 	}

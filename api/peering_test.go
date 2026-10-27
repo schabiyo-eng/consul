@@ -256,10 +256,10 @@ func TestAPI_Peering_GenerateToken_ExternalAddresses(t *testing.T) {
 	require.NoError(t, err)
 
 	// Put the token in an arbitrary map, because the struct isn't available in the api package.
-	token := make(map[string]interface{})
+	token := make(map[string]any)
 	require.NoError(t, json.Unmarshal(tokenJSON, &token))
-	require.Equal(t, []interface{}{s.GRPCTLSAddr}, token["ServerAddresses"])
-	require.Equal(t, []interface{}{externalAddress}, token["ManualServerAddresses"])
+	require.Equal(t, []any{s.GRPCTLSAddr}, token["ServerAddresses"])
+	require.Equal(t, []any{externalAddress}, token["ManualServerAddresses"])
 }
 
 // TestAPI_Peering_GenerateToken_Read_Establish_Delete tests the following use case:

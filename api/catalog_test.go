@@ -535,7 +535,7 @@ func testUpstreams() []Upstream {
 		{
 			DestinationName: "db",
 			LocalBindPort:   9191,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"connect_timeout_ms": float64(1000),
 			},
 		},

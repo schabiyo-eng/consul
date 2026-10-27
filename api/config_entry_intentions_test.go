@@ -22,7 +22,7 @@ func TestAPI_ConfigEntries_ServiceIntentions(t *testing.T) {
 	_, _, err := config_entries.Set(&ProxyConfigEntry{
 		Kind: ProxyDefaults,
 		Name: ProxyConfigGlobal,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "http",
 		},
 	}, nil)

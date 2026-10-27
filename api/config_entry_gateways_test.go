@@ -46,7 +46,7 @@ func TestAPI_ConfigEntries_IngressGateway(t *testing.T) {
 	global := &ProxyConfigEntry{
 		Kind: ProxyDefaults,
 		Name: ProxyConfigGlobal,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "http",
 		},
 	}

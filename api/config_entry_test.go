@@ -24,7 +24,7 @@ func TestAPI_ConfigEntries(t *testing.T) {
 		global_proxy := &ProxyConfigEntry{
 			Kind: ProxyDefaults,
 			Name: ProxyConfigGlobal,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": "bar",
 				"bar": 1.0,
 			},
@@ -279,7 +279,7 @@ func TestAPI_ConfigEntries(t *testing.T) {
 		entry := &ProxyConfigEntry{
 			Kind: ProxyDefaults,
 			Name: ProxyConfigGlobal,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": "bar",
 			},
 		}
@@ -429,10 +429,10 @@ func TestDecodeConfigEntry(t *testing.T) {
 					"foo": "bar",
 					"gir": "zim",
 				},
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"foo": float64(19),
 					"bar": "abc",
-					"moreconfig": map[string]interface{}{
+					"moreconfig": map[string]any{
 						"moar": "config",
 					},
 				},
@@ -1448,7 +1448,7 @@ func TestDecodeConfigEntry(t *testing.T) {
 		tc := tc
 
 		t.Run(tc.name+": DecodeConfigEntry", func(t *testing.T) {
-			var raw map[string]interface{}
+			var raw map[string]any
 			require.NoError(t, json.Unmarshal([]byte(tc.body), &raw))
 
 			got, err := DecodeConfigEntry(raw)
@@ -1463,7 +1463,7 @@ func TestDecodeConfigEntry(t *testing.T) {
 		})
 
 		t.Run(tc.name+": DecodeConfigEntrySlice", func(t *testing.T) {
-			var raw []map[string]interface{}
+			var raw []map[string]any
 			require.NoError(t, json.Unmarshal([]byte("["+tc.body+"]"), &raw))
 
 			got, err := decodeConfigEntrySlice(raw)

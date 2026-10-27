@@ -43,8 +43,8 @@ func TestParse_exempt(t *testing.T) {
 	}
 }
 
-func makeParams(t *testing.T, s string) map[string]interface{} {
-	var out map[string]interface{}
+func makeParams(t *testing.T, s string) map[string]any {
+	var out map[string]any
 	dec := json.NewDecoder(bytes.NewReader([]byte(s)))
 	if err := dec.Decode(&out); err != nil {
 		t.Fatalf("err: %v", err)

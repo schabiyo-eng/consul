@@ -716,7 +716,7 @@ func TestAPI_AuthMethod_List(t *testing.T) {
 	}
 }
 
-func AuthMethodCreateKubernetesConfigHelper() (result map[string]interface{}) {
+func AuthMethodCreateKubernetesConfigHelper() (result map[string]any) {
 	var pemData = `
 -----BEGIN CERTIFICATE-----
 MIIE1DCCArwCCQC2kx7TchbxAzANBgkqhkiG9w0BAQsFADAsMQswCQYDVQQGEwJV
@@ -747,7 +747,7 @@ SxTJANJHqf4BiFtVjN7LZXi3HUIRAsceEbd0TfW5be9SQ0tbDyyGYt/bXtBLGTIh
 15bSOU7NsVZfwLw+M+DyNWPxI1BR/XOP+YoyTgIEChIC9eYnmlWU2Q==
 -----END CERTIFICATE-----`
 
-	result = map[string]interface{}{
+	result = map[string]any{
 		"Host":              "https://192.0.2.42:8443",
 		"CACert":            pemData,
 		"ServiceAccountJWT": `eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImp0aSI6ImQxYTZiYzE5LWZiODItNDI5ZC05NmUxLTg1YTFjYjEyNGQ3MCIsImlhdCI6MTYxMTcxNTQ5NiwiZXhwIjoxNjExNzE5MDk2fQ.rrVS5h1Yw20eI41RsTl2YAqzKKikKNg3qMkDmspTPQs`,
