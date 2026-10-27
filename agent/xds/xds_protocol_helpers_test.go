@@ -4,7 +4,9 @@
 package xds
 
 import (
+	"cmp"
 	"context"
+	"slices"
 	"sort"
 	"sync"
 	"testing"
@@ -237,8 +239,8 @@ func protoToSortedJSON(t *testing.T, pb proto.Message) string {
 
 	switch x := pb.(type) {
 	case *envoy_discovery_v3.DeltaDiscoveryResponse:
-		sort.Slice(x.Resources, func(i, j int) bool {
-			return x.Resources[i].Name < x.Resources[j].Name
+		slices.SortFunc(x.Resources, func(a, b *envoy_discovery_v3.Resource) int {
+			return cmp.Compare(a.Name, b.Name)
 		})
 		sort.Strings(x.RemovedResources)
 	}

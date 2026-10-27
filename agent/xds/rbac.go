@@ -4,8 +4,10 @@
 package xds
 
 import (
+	"cmp"
 	"fmt"
 	"regexp"
+	"slices"
 	"sort"
 	"strings"
 
@@ -507,8 +509,8 @@ func simplifyNotSourceSlice(notSources []rbacService) []rbacService {
 
 	// Sort, keeping the least wildcarded elements first.
 	// More specific elements have a higher precedence over more wildcarded elements.
-	sort.SliceStable(notSources, func(i, j int) bool {
-		return countWild(notSources[i]) < countWild(notSources[j])
+	slices.SortStableFunc(notSources, func(a, b rbacService) int {
+		return cmp.Compare(countWild(a), countWild(b))
 	})
 
 	keep := make([]rbacService, 0, len(notSources))

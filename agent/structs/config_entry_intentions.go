@@ -4,8 +4,9 @@
 package structs
 
 import (
+	"cmp"
 	"fmt"
-	"sort"
+	"slices"
 	"strings"
 	"time"
 
@@ -582,8 +583,8 @@ func (e *ServiceIntentionsConfigEntry) normalize(legacyWrite bool) error {
 
 	// The source intentions closer to the head of the list have higher
 	// precedence. i.e. index 0 has the highest precedence.
-	sort.SliceStable(e.Sources, func(i, j int) bool {
-		return e.Sources[i].Precedence > e.Sources[j].Precedence
+	slices.SortStableFunc(e.Sources, func(a, b *SourceIntention) int {
+		return cmp.Compare(b.Precedence, a.Precedence)
 	})
 
 	h, err := HashConfigEntry(e)
@@ -1008,23 +1009,14 @@ func MigrateIntentions(ixns Intentions) []*ServiceIntentionsConfigEntry {
 	for _, entry := range collated {
 		out = append(out, entry)
 	}
-	sort.Slice(out, func(i, j int) bool {
-		a := out[i]
-		b := out[j]
-
-		if a.PartitionOrDefault() < b.PartitionOrDefault() {
-			return true
-		} else if a.PartitionOrDefault() > b.PartitionOrDefault() {
-			return false
+	slices.SortFunc(out, func(a, b *ServiceIntentionsConfigEntry) int {
+		if c := cmp.Compare(a.PartitionOrDefault(), b.PartitionOrDefault()); c != 0 {
+			return c
 		}
-
-		if a.NamespaceOrDefault() < b.NamespaceOrDefault() {
-			return true
-		} else if a.NamespaceOrDefault() > b.NamespaceOrDefault() {
-			return false
+		if c := cmp.Compare(a.NamespaceOrDefault(), b.NamespaceOrDefault()); c != 0 {
+			return c
 		}
-
-		return a.Name < b.Name
+		return cmp.Compare(a.Name, b.Name)
 	})
 	return out
 }

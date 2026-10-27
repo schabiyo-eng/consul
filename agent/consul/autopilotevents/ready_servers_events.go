@@ -4,9 +4,10 @@
 package autopilotevents
 
 import (
+	"cmp"
 	"fmt"
 	"net"
-	"sort"
+	"slices"
 	"strconv"
 	"sync"
 	"time"
@@ -169,9 +170,9 @@ func (r *ReadyServersEventPublisher) readyServersEvents(state *autopilot.State) 
 	// this outside of the next length check conditional block to ensure that all
 	// values of previousReadyServers we store will be sorted and the future
 	// comparison's will remain valid.
-	sort.Slice(servers, func(i, j int) bool {
+	slices.SortFunc(servers, func(a, b ReadyServerInfo) int {
 		// no two servers can have the same id so this is sufficient
-		return servers[i].ID < servers[j].ID
+		return cmp.Compare(a.ID, b.ID)
 	})
 
 	// If the number of ready servers hasn't changed then we need to inspect individual

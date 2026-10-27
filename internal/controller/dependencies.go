@@ -5,6 +5,7 @@ package controller
 
 import (
 	"fmt"
+	"slices"
 	"sort"
 	"strings"
 
@@ -103,9 +104,7 @@ func (deps Dependencies) ToMermaid() string {
 		}
 	}
 
-	sort.Slice(depStrings, func(a, b int) bool {
-		return depStrings[a] < depStrings[b]
-	})
+	slices.Sort(depStrings)
 	out := "flowchart TD\n" + strings.Join(depStrings, "\n")
 
 	return out

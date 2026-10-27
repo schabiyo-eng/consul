@@ -4,6 +4,8 @@
 package state
 
 import (
+	"cmp"
+	"slices"
 	"sort"
 	"testing"
 	"time"
@@ -2461,8 +2463,8 @@ func TestStore_IntentionTopology(t *testing.T) {
 			require.Equal(t, tt.expect.idx, idx)
 
 			// ServiceList is from a map, so it is not deterministically sorted
-			sort.Slice(got, func(i, j int) bool {
-				return got[i].String() < got[j].String()
+			slices.SortFunc(got, func(a, b structs.ServiceName) int {
+				return cmp.Compare(a.String(), b.String())
 			})
 			require.Equal(t, tt.expect.services, got)
 		})
@@ -2651,8 +2653,8 @@ func TestStore_IntentionTopology_Destination(t *testing.T) {
 			require.Equal(t, tt.expect.idx, idx)
 
 			// ServiceList is from a map, so it is not deterministically sorted
-			sort.Slice(got, func(i, j int) bool {
-				return got[i].String() < got[j].String()
+			slices.SortFunc(got, func(a, b structs.ServiceName) int {
+				return cmp.Compare(a.String(), b.String())
 			})
 			require.Equal(t, tt.expect.services, got)
 		})

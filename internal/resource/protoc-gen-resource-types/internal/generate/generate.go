@@ -1,9 +1,10 @@
 package generate
 
 import (
+	"cmp"
 	"fmt"
 	"path/filepath"
-	"sort"
+	"slices"
 	"strings"
 	"text/template"
 
@@ -115,8 +116,8 @@ func (g *generator) generateTypes(gp *protogen.Plugin) error {
 	for _, info := range g.resources {
 		f := gp.NewGeneratedFile(filepath.Join(info.Directory, "resources.rtypes.go"), info.ImportPath)
 
-		sort.Slice(info.Kinds, func(a, b int) bool {
-			return info.Kinds[a].Name < info.Kinds[b].Name
+		slices.SortFunc(info.Kinds, func(a, b kind) int {
+			return cmp.Compare(a.Name, b.Name)
 		})
 
 		if err := typesTemplate.Execute(f, info); err != nil {

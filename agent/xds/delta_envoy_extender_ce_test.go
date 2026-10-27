@@ -6,8 +6,9 @@
 package xds
 
 import (
+	"cmp"
 	"path/filepath"
-	"sort"
+	"slices"
 	"testing"
 	"time"
 
@@ -818,42 +819,34 @@ end`,
 					entities := []struct {
 						name   string
 						key    string
-						sorter func([]proto.Message) func(int, int) bool
+						sorter func(a, b proto.Message) int
 					}{
 						{
 							name: "clusters",
 							key:  xdscommon.ClusterType,
-							sorter: func(msgs []proto.Message) func(int, int) bool {
-								return func(i, j int) bool {
-									return msgs[i].(*envoy_cluster_v3.Cluster).Name < msgs[j].(*envoy_cluster_v3.Cluster).Name
-								}
+							sorter: func(a, b proto.Message) int {
+								return cmp.Compare(a.(*envoy_cluster_v3.Cluster).Name, b.(*envoy_cluster_v3.Cluster).Name)
 							},
 						},
 						{
 							name: "listeners",
 							key:  xdscommon.ListenerType,
-							sorter: func(msgs []proto.Message) func(int, int) bool {
-								return func(i, j int) bool {
-									return msgs[i].(*envoy_listener_v3.Listener).Name < msgs[j].(*envoy_listener_v3.Listener).Name
-								}
+							sorter: func(a, b proto.Message) int {
+								return cmp.Compare(a.(*envoy_listener_v3.Listener).Name, b.(*envoy_listener_v3.Listener).Name)
 							},
 						},
 						{
 							name: "routes",
 							key:  xdscommon.RouteType,
-							sorter: func(msgs []proto.Message) func(int, int) bool {
-								return func(i, j int) bool {
-									return msgs[i].(*envoy_route_v3.RouteConfiguration).Name < msgs[j].(*envoy_route_v3.RouteConfiguration).Name
-								}
+							sorter: func(a, b proto.Message) int {
+								return cmp.Compare(a.(*envoy_route_v3.RouteConfiguration).Name, b.(*envoy_route_v3.RouteConfiguration).Name)
 							},
 						},
 						{
 							name: "endpoints",
 							key:  xdscommon.EndpointType,
-							sorter: func(msgs []proto.Message) func(int, int) bool {
-								return func(i, j int) bool {
-									return msgs[i].(*envoy_endpoint_v3.ClusterLoadAssignment).ClusterName < msgs[j].(*envoy_endpoint_v3.ClusterLoadAssignment).ClusterName
-								}
+							sorter: func(a, b proto.Message) int {
+								return cmp.Compare(a.(*envoy_endpoint_v3.ClusterLoadAssignment).ClusterName, b.(*envoy_endpoint_v3.ClusterLoadAssignment).ClusterName)
 							},
 						},
 					}
@@ -864,7 +857,7 @@ end`,
 							msgs = append(msgs, e)
 						}
 
-						sort.Slice(msgs, entity.sorter(msgs))
+						slices.SortFunc(msgs, entity.sorter)
 						r, err := response.CreateResponse(entity.key, "00000001", "00000001", msgs)
 						require.NoError(t, err)
 

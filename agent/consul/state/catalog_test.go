@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"net"
 	"reflect"
-	"sort"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -4968,25 +4968,16 @@ func TestStateStore_ServiceDump(t *testing.T) {
 	}
 
 	sortDump := func(dump structs.CheckServiceNodes) {
-		sort.Slice(dump, func(i, j int) bool {
-			if dump[i].Node.Node < dump[j].Node.Node {
-				return true
-			} else if dump[i].Node.Node > dump[j].Node.Node {
-				return false
+		slices.SortFunc(dump, func(a, b structs.CheckServiceNode) int {
+			if c := strings.Compare(a.Node.Node, b.Node.Node); c != 0 {
+				return c
 			}
-
-			if dump[i].Service.Service < dump[j].Service.Service {
-				return true
-			} else if dump[i].Service.Service > dump[j].Service.Service {
-				return false
-			}
-
-			return false
+			return strings.Compare(a.Service.Service, b.Service.Service)
 		})
 
 		for i := 0; i < len(dump); i++ {
-			sort.Slice(dump[i].Checks, func(m, n int) bool {
-				return dump[i].Checks[m].CheckID < dump[i].Checks[n].CheckID
+			slices.SortFunc(dump[i].Checks, func(a, b *structs.HealthCheck) int {
+				return strings.Compare(string(a.CheckID), string(b.CheckID))
 			})
 		}
 	}

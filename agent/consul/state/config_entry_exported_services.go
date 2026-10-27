@@ -4,8 +4,9 @@
 package state
 
 import (
+	"cmp"
 	"fmt"
-	"sort"
+	"slices"
 
 	"github.com/hashicorp/consul/acl"
 	"github.com/hashicorp/consul/agent/configentry"
@@ -165,9 +166,11 @@ func getUniqueExportedServices(exportedServices []structs.ExportedService, entMe
 
 	}
 
-	sort.Slice(uniqueExportedServices, func(i, j int) bool {
-		return (uniqueExportedServices[i].Name < uniqueExportedServices[j].Name) ||
-			(uniqueExportedServices[i].Name == uniqueExportedServices[j].Name && uniqueExportedServices[i].Namespace < uniqueExportedServices[j].Namespace)
+	slices.SortFunc(uniqueExportedServices, func(a, b structs.ExportedService) int {
+		if c := cmp.Compare(a.Name, b.Name); c != 0 {
+			return c
+		}
+		return cmp.Compare(a.Namespace, b.Namespace)
 	})
 
 	return uniqueExportedServices

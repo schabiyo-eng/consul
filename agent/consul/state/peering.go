@@ -4,8 +4,10 @@
 package state
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
+	"slices"
 	"sort"
 	"strings"
 
@@ -988,8 +990,8 @@ func exportedServicesForPeerTxn(
 		// We only need to populate the targets for replication purposes for L4 protocols, which
 		// do not ultimately get intercepted by the mesh gateways.
 		if !structs.IsProtocolHTTPLike(protocol) {
-			sort.Slice(targets, func(i, j int) bool {
-				return targets[i].ID < targets[j].ID
+			slices.SortFunc(targets, func(a, b *structs.DiscoveryTarget) int {
+				return cmp.Compare(a.ID, b.ID)
 			})
 
 			info.TCPTargets = targets

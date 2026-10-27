@@ -4,7 +4,7 @@
 package resource
 
 import (
-	"sort"
+	"slices"
 
 	"github.com/hashicorp/consul/proto-public/pbresource"
 )
@@ -34,9 +34,7 @@ func (c *BoundReferenceCollector) List() []*pbresource.Reference {
 		out = append(out, ref)
 	}
 
-	sort.Slice(out, func(i, j int) bool {
-		return LessReference(out[i], out[j])
-	})
+	slices.SortFunc(out, compareReference)
 
 	return out
 }

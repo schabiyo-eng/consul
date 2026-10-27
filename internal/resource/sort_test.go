@@ -6,6 +6,7 @@ package resource
 import (
 	"fmt"
 	"math/rand"
+	"slices"
 	"sort"
 	"strings"
 	"testing"
@@ -105,9 +106,7 @@ func TestLessReference(t *testing.T) {
 		// We actually got a permuted list out of this.
 		require.NotEqual(t, stringify(inputs), stringify(mixed))
 
-		sort.Slice(mixed, func(i, j int) bool {
-			return LessReference(mixed[i], mixed[j])
-		})
+		slices.SortFunc(mixed, compareReference)
 
 		// And it sorted.
 		require.Equal(t, stringify(inputs), stringify(mixed))

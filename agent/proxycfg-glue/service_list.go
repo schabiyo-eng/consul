@@ -4,8 +4,9 @@
 package proxycfgglue
 
 import (
+	"cmp"
 	"context"
-	"sort"
+	"slices"
 
 	"github.com/hashicorp/consul/acl"
 	"github.com/hashicorp/consul/agent/cache"
@@ -114,8 +115,8 @@ func (v *serviceListView) Result(index uint64) any {
 	for _, name := range v.state {
 		serviceList = append(serviceList, name)
 	}
-	sort.Slice(serviceList, func(a, b int) bool {
-		return serviceList[a].String() < serviceList[b].String()
+	slices.SortFunc(serviceList, func(a, b structs.ServiceName) int {
+		return cmp.Compare(a.String(), b.String())
 	})
 	return &structs.IndexedServiceList{
 		Services: serviceList,

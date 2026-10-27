@@ -4,12 +4,13 @@
 package xds
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"net"
 	"net/url"
 	"regexp"
-	"sort"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -624,34 +625,34 @@ func (s *ResourceGenerator) listenersFromSnapshotConnectProxy(cfgSnap *proxycfg.
 		outboundListener.FilterChains = append(outboundListener.FilterChains, passthroughChains...)
 
 		// Filter chains are stable sorted to avoid draining if the list is provided out of order
-		sort.SliceStable(outboundListener.FilterChains, func(i, j int) bool {
-			si := ""
-			sj := ""
-			if len(outboundListener.FilterChains[i].FilterChainMatch.PrefixRanges) > 0 {
-				si += outboundListener.FilterChains[i].FilterChainMatch.PrefixRanges[0].AddressPrefix +
-					"/" + outboundListener.FilterChains[i].FilterChainMatch.PrefixRanges[0].PrefixLen.String() +
-					":" + outboundListener.FilterChains[i].FilterChainMatch.DestinationPort.String()
+		slices.SortStableFunc(outboundListener.FilterChains, func(a, b *envoy_listener_v3.FilterChain) int {
+			sa := ""
+			sb := ""
+			if len(a.FilterChainMatch.PrefixRanges) > 0 {
+				sa += a.FilterChainMatch.PrefixRanges[0].AddressPrefix +
+					"/" + a.FilterChainMatch.PrefixRanges[0].PrefixLen.String() +
+					":" + a.FilterChainMatch.DestinationPort.String()
 			}
-			if len(outboundListener.FilterChains[i].FilterChainMatch.ServerNames) > 0 {
-				si += outboundListener.FilterChains[i].FilterChainMatch.ServerNames[0] +
-					":" + outboundListener.FilterChains[i].FilterChainMatch.DestinationPort.String()
+			if len(a.FilterChainMatch.ServerNames) > 0 {
+				sa += a.FilterChainMatch.ServerNames[0] +
+					":" + a.FilterChainMatch.DestinationPort.String()
 			} else {
-				si += outboundListener.FilterChains[i].FilterChainMatch.DestinationPort.String()
+				sa += a.FilterChainMatch.DestinationPort.String()
 			}
 
-			if len(outboundListener.FilterChains[j].FilterChainMatch.PrefixRanges) > 0 {
-				sj += outboundListener.FilterChains[j].FilterChainMatch.PrefixRanges[0].AddressPrefix +
-					"/" + outboundListener.FilterChains[j].FilterChainMatch.PrefixRanges[0].PrefixLen.String() +
-					":" + outboundListener.FilterChains[j].FilterChainMatch.DestinationPort.String()
+			if len(b.FilterChainMatch.PrefixRanges) > 0 {
+				sb += b.FilterChainMatch.PrefixRanges[0].AddressPrefix +
+					"/" + b.FilterChainMatch.PrefixRanges[0].PrefixLen.String() +
+					":" + b.FilterChainMatch.DestinationPort.String()
 			}
-			if len(outboundListener.FilterChains[j].FilterChainMatch.ServerNames) > 0 {
-				sj += outboundListener.FilterChains[j].FilterChainMatch.ServerNames[0] +
-					":" + outboundListener.FilterChains[j].FilterChainMatch.DestinationPort.String()
+			if len(b.FilterChainMatch.ServerNames) > 0 {
+				sb += b.FilterChainMatch.ServerNames[0] +
+					":" + b.FilterChainMatch.DestinationPort.String()
 			} else {
-				sj += outboundListener.FilterChains[j].FilterChainMatch.DestinationPort.String()
+				sb += b.FilterChainMatch.DestinationPort.String()
 			}
 
-			return si < sj
+			return cmp.Compare(sa, sb)
 		})
 
 		// Add a catch-all filter chain that acts as a TCP proxy to destinations outside the mesh
@@ -821,8 +822,8 @@ func makeFilterChainMatchFromAddrs(addrs map[string]struct{}) *envoy_listener_v3
 	}
 
 	// The match rules are stable sorted to avoid draining if the list is provided out of order
-	sort.SliceStable(ranges, func(i, j int) bool {
-		return ranges[i].AddressPrefix < ranges[j].AddressPrefix
+	slices.SortStableFunc(ranges, func(a, b *envoy_core_v3.CidrRange) int {
+		return cmp.Compare(a.AddressPrefix, b.AddressPrefix)
 	})
 
 	return &envoy_listener_v3.FilterChainMatch{
@@ -989,8 +990,8 @@ func (s *ResourceGenerator) listenersFromSnapshotGateway(cfgSnap *proxycfg.Confi
 	// Sort the list and then if two items share a service address, take the
 	// first one to ensure we generate one listener per address and it's
 	// stable.
-	sort.Slice(addrs, func(i, j int) bool {
-		return addrs[i].name < addrs[j].name
+	slices.SortFunc(addrs, func(a, b namedAddress) int {
+		return cmp.Compare(a.name, b.name)
 	})
 
 	// Make listeners and deduplicate on the fly.
@@ -1523,8 +1524,8 @@ func makeSpiffeValidatorConfig(trustDomain, roots string, peerBundles []*pbpeeri
 	// Sort the trust domains so that the output is stable.
 	// This benefits tests but also prevents Envoy from mistakenly thinking the listener
 	// changed and needs to be drained only because this ordering is different.
-	sort.Slice(cfg.TrustDomains, func(i int, j int) bool {
-		return cfg.TrustDomains[i].Name < cfg.TrustDomains[j].Name
+	slices.SortFunc(cfg.TrustDomains, func(a, b *envoy_tls_v3.SPIFFECertValidatorConfig_TrustDomain) int {
+		return cmp.Compare(a.Name, b.Name)
 	})
 	return anypb.New(cfg)
 }
@@ -2054,8 +2055,8 @@ func (s *ResourceGenerator) makeTerminatingGatewayListener(
 	// envoy will force the listener to be replaced. Sorting these has no
 	// effect on how they operate, but it does mean that we won't churn
 	// listeners at idle.
-	sort.Slice(l.FilterChains, func(i, j int) bool {
-		return l.FilterChains[i].FilterChainMatch.ServerNames[0] < l.FilterChains[j].FilterChainMatch.ServerNames[0]
+	slices.SortFunc(l.FilterChains, func(a, b *envoy_listener_v3.FilterChain) int {
+		return cmp.Compare(a.FilterChainMatch.ServerNames[0], b.FilterChainMatch.ServerNames[0])
 	})
 
 	// This fallback catch-all filter ensures a listener will be present for health checks to pass
@@ -2460,8 +2461,8 @@ func (s *ResourceGenerator) makeMeshGatewayListener(name, addr string, port int,
 	}
 
 	// Sort so the output is stable and the listener doesn't get drained
-	sort.Slice(peerServerFilterChains, func(i, j int) bool {
-		return peerServerFilterChains[i].FilterChainMatch.ServerNames[0] < peerServerFilterChains[j].FilterChainMatch.ServerNames[0]
+	slices.SortFunc(peerServerFilterChains, func(a, b *envoy_listener_v3.FilterChain) int {
+		return cmp.Compare(a.FilterChainMatch.ServerNames[0], b.FilterChainMatch.ServerNames[0])
 	})
 	l.FilterChains = append(l.FilterChains, peerServerFilterChains...)
 

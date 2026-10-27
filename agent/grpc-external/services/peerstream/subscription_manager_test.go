@@ -4,9 +4,10 @@
 package peerstream
 
 import (
+	"cmp"
 	"context"
 	"fmt"
-	"sort"
+	"slices"
 	"sync"
 	"testing"
 	"time"
@@ -1206,8 +1207,8 @@ func expectEvents(
 
 	require.Len(t, out, num)
 
-	sort.SliceStable(out, func(i, j int) bool {
-		return out[i].CorrelationID < out[j].CorrelationID
+	slices.SortStableFunc(out, func(a, b cache.UpdateEvent) int {
+		return cmp.Compare(a.CorrelationID, b.CorrelationID)
 	})
 
 	for i := 0; i < num; i++ {

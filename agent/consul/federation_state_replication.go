@@ -4,10 +4,11 @@
 package consul
 
 import (
+	"cmp"
 	"context"
 	"errors"
 	"fmt"
-	"sort"
+	"slices"
 	"time"
 
 	"github.com/hashicorp/consul/agent/structs"
@@ -135,8 +136,8 @@ func (r *FederationStateReplicator) DiffRemoteAndLocalState(localRaw any, remote
 }
 
 func federationStateSort(states []*structs.FederationState) {
-	sort.Slice(states, func(i, j int) bool {
-		return states[i].Datacenter < states[j].Datacenter
+	slices.SortFunc(states, func(a, b *structs.FederationState) int {
+		return cmp.Compare(a.Datacenter, b.Datacenter)
 	})
 }
 

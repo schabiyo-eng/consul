@@ -4,12 +4,13 @@
 package agent
 
 import (
+	"cmp"
 	"context"
 	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
-	"sort"
+	"slices"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -829,8 +830,8 @@ func fixPersistedServiceConfigForTest(content []byte) ([]byte, error) {
 		return nil, err
 	}
 	// Sort the output, since it's randomized and causes flaky tests otherwise.
-	sort.Slice(parsed.Defaults.UpstreamConfigs, func(i, j int) bool {
-		return parsed.Defaults.UpstreamConfigs[i].Upstream.String() < parsed.Defaults.UpstreamConfigs[j].Upstream.String()
+	slices.SortFunc(parsed.Defaults.UpstreamConfigs, func(a, b structs.OpaqueUpstreamConfig) int {
+		return cmp.Compare(a.Upstream.String(), b.Upstream.String())
 	})
 	out, err := json.Marshal(parsed)
 	if err != nil {

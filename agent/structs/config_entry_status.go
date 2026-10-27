@@ -4,8 +4,9 @@
 package structs
 
 import (
+	"cmp"
 	"fmt"
-	"sort"
+	"slices"
 	"time"
 
 	"github.com/hashicorp/consul/acl"
@@ -69,14 +70,17 @@ func (s Status) SameConditions(other Status) bool {
 		return false
 	}
 	sortConditions := func(conditions []Condition) []Condition {
-		sort.SliceStable(conditions, func(i, j int) bool {
-			if conditions[i].Type < conditions[j].Type {
-				return true
+		slices.SortStableFunc(conditions, func(a, b Condition) int {
+			if c := cmp.Compare(a.Type, b.Type); c != 0 {
+				return c
 			}
-			if conditions[i].Type > conditions[j].Type {
-				return false
+			if lessResource(a.Resource, b.Resource) {
+				return -1
 			}
-			return lessResource(conditions[i].Resource, conditions[j].Resource)
+			if lessResource(b.Resource, a.Resource) {
+				return 1
+			}
+			return 0
 		})
 		return conditions
 	}

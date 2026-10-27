@@ -4,10 +4,11 @@
 package xds
 
 import (
+	"cmp"
 	"fmt"
 	"path/filepath"
 	"regexp"
-	"sort"
+	"slices"
 	"testing"
 
 	envoy_rbac_v3 "github.com/envoyproxy/go-control-plane/envoy/config/rbac/v3"
@@ -49,8 +50,8 @@ func TestRemoveIntentionPrecedence(t *testing.T) {
 		return ixn
 	}
 	sorted := func(ixns ...*structs.Intention) structs.SimplifiedIntentions {
-		sort.SliceStable(ixns, func(i, j int) bool {
-			return ixns[j].Precedence < ixns[i].Precedence
+		slices.SortStableFunc(ixns, func(a, b *structs.Intention) int {
+			return cmp.Compare(b.Precedence, a.Precedence)
 		})
 		return structs.SimplifiedIntentions(ixns)
 	}
@@ -504,8 +505,8 @@ func TestMakeRBACNetworkAndHTTPFilters(t *testing.T) {
 	}
 	testTrustDomain := "test.consul"
 	sorted := func(ixns ...*structs.Intention) structs.SimplifiedIntentions {
-		sort.SliceStable(ixns, func(i, j int) bool {
-			return ixns[j].Precedence < ixns[i].Precedence
+		slices.SortStableFunc(ixns, func(a, b *structs.Intention) int {
+			return cmp.Compare(b.Precedence, a.Precedence)
 		})
 		return structs.SimplifiedIntentions(ixns)
 	}
@@ -987,8 +988,8 @@ func TestRemoveSameSourceIntentions(t *testing.T) {
 		return ixn
 	}
 	sorted := func(ixns ...*structs.Intention) structs.SimplifiedIntentions {
-		sort.SliceStable(ixns, func(i, j int) bool {
-			return ixns[j].Precedence < ixns[i].Precedence
+		slices.SortStableFunc(ixns, func(a, b *structs.Intention) int {
+			return cmp.Compare(b.Precedence, a.Precedence)
 		})
 		return structs.SimplifiedIntentions(ixns)
 	}

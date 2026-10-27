@@ -52,11 +52,12 @@
 package balancer
 
 import (
+	"cmp"
 	"container/list"
 	"errors"
 	"fmt"
 	"math/rand"
-	"sort"
+	"slices"
 	"sync"
 	"time"
 
@@ -318,11 +319,11 @@ func (b *balancer) idealServerLocked() *serverInfo {
 		return nil
 	}
 
-	sort.Slice(candidates, func(a, b int) bool {
-		ca, cb := candidates[a], candidates[b]
-
-		return ca.lastFailed.Before(cb.lastFailed) ||
-			(ca.lastFailed.Equal(cb.lastFailed) && ca.index < cb.index)
+	slices.SortFunc(candidates, func(ca, cb *serverInfo) int {
+		if c := ca.lastFailed.Compare(cb.lastFailed); c != 0 {
+			return c
+		}
+		return cmp.Compare(ca.index, cb.index)
 	})
 	return candidates[0]
 }
