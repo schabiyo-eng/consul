@@ -5,6 +5,7 @@ package main
 
 import (
 	"bytes"
+	"cmp"
 	"encoding/json"
 	"errors"
 	"flag"
@@ -13,7 +14,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
-	"sort"
+	"slices"
 	"strings"
 )
 
@@ -178,9 +179,7 @@ func collectSpecs(inputPaths []string) ([]spec, []spec, error) {
 		specs = append(specs, fileSpecs...)
 	}
 
-	sort.Slice(specs, func(a, b int) bool {
-		return specs[a].MethodName < specs[b].MethodName
-	})
+	slices.SortFunc(specs, func(a, b spec) int { return cmp.Compare(a.MethodName, b.MethodName) })
 
 	var ce, ent []spec
 	for _, spec := range specs {
