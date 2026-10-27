@@ -512,7 +512,7 @@ func (a *Asserter) ValidateHealthEndpointAuditLog(t *testing.T, filePath string)
 	// function to validate the error object when the health endpoint is returning 429
 	isErrorJSONObject := func(errorString string) error {
 		// Attempt to unmarshal the error string into a map[string]interface{}
-		var m map[string]interface{}
+		var m map[string]any
 		err := json.Unmarshal([]byte(errorString), &m)
 		return err
 	}
