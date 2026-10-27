@@ -664,15 +664,15 @@ func (n *Node) IsDataplane() bool {
 func (n *Node) SortedWorkloads() []*Workload {
 	var out []*Workload
 	out = append(out, n.Workloads...)
-	sort.Slice(out, func(i, j int) bool {
-		mi := out[i].IsMeshGateway
-		mj := out[j].IsMeshGateway
-		if mi && !mi {
-			return false
-		} else if !mi && mj {
-			return true
+	slices.SortFunc(out, func(a, b *Workload) int {
+		// mesh gateways last
+		if a.IsMeshGateway != b.IsMeshGateway {
+			if a.IsMeshGateway {
+				return 1
+			}
+			return -1
 		}
-		return out[i].ID.Less(out[j].ID)
+		return a.ID.Compare(b.ID)
 	})
 	return out
 }

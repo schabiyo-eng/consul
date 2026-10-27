@@ -4,6 +4,7 @@
 package topology
 
 import (
+	"cmp"
 	"fmt"
 
 	"github.com/hashicorp/consul/api"
@@ -56,13 +57,17 @@ func NewID(name, namespace, partition string) ID {
 }
 
 func (id ID) Less(other ID) bool {
-	if id.Partition != other.Partition {
-		return id.Partition < other.Partition
+	return id.Compare(other) < 0
+}
+
+func (id ID) Compare(other ID) int {
+	if c := cmp.Compare(id.Partition, other.Partition); c != 0 {
+		return c
 	}
-	if id.Namespace != other.Namespace {
-		return id.Namespace < other.Namespace
+	if c := cmp.Compare(id.Namespace, other.Namespace); c != 0 {
+		return c
 	}
-	return id.Name < other.Name
+	return cmp.Compare(id.Name, other.Name)
 }
 
 func (id *ID) Normalize() {
