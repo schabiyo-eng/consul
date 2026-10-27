@@ -4,12 +4,13 @@
 package local_test
 
 import (
+	"cmp"
 	"context"
 	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
-	"sort"
+	"slices"
 	"testing"
 	"time"
 
@@ -1141,8 +1142,8 @@ func TestAgentAntiEntropy_ConfigFileRegistrationToken(t *testing.T) {
 		&checks,
 	))
 
-	sort.Slice(checks.HealthChecks, func(i, j int) bool {
-		return checks.HealthChecks[i].CheckID < checks.HealthChecks[j].CheckID
+	slices.SortFunc(checks.HealthChecks, func(a, b *structs.HealthCheck) int {
+		return cmp.Compare(a.CheckID, b.CheckID)
 	})
 	assert.Len(t, checks.HealthChecks, 4)
 	assert.Equal(t, checks.HealthChecks[0].CheckID, types.CheckID("api inline check"))

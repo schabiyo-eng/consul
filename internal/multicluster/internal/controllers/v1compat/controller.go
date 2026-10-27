@@ -4,10 +4,10 @@
 package v1compat
 
 import (
+	"cmp"
 	"context"
 	"fmt"
 	"slices"
-	"sort"
 
 	"golang.org/x/exp/maps"
 
@@ -329,23 +329,14 @@ func (t *exportTracker) allExports() []structs.ExportedService {
 	}
 
 	services := maps.Keys(t.services)
-	sort.Slice(services, func(i, j int) bool {
+	slices.SortFunc(services, func(a, b resource.ReferenceKey) int {
 		// the partitions must already be equal because we are only
 		// looking at resource exports for a single partition.
 
-		if services[i].Namespace < services[j].Namespace {
-			return false
-		} else if services[i].Namespace > services[j].Namespace {
-			return true
+		if c := cmp.Compare(b.Namespace, a.Namespace); c != 0 {
+			return c
 		}
-
-		if services[i].Name < services[j].Name {
-			return false
-		} else if services[i].Name > services[j].Name {
-			return true
-		}
-
-		return false
+		return cmp.Compare(b.Name, a.Name)
 	})
 	for _, svcKey := range services {
 		exports = append(exports, structs.ExportedService{

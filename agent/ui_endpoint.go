@@ -4,11 +4,13 @@
 package agent
 
 import (
+	"cmp"
 	"fmt"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
 	"path"
+	"slices"
 	"sort"
 	"strings"
 
@@ -674,8 +676,14 @@ func prepSummaryOutput(summaries map[structs.PeeredServiceName]*ServiceSummary, 
 		}
 		resp = append(resp, sum)
 	}
-	sort.Slice(resp, func(i, j int) bool {
-		return resp[i].LessThan(resp[j])
+	slices.SortFunc(resp, func(a, b *ServiceSummary) int {
+		if a.LessThan(b) {
+			return -1
+		}
+		if b.LessThan(a) {
+			return 1
+		}
+		return cmp.Compare(a.PeerName, b.PeerName)
 	})
 	return resp
 }

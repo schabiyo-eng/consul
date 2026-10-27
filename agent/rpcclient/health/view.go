@@ -4,10 +4,11 @@
 package health
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"reflect"
-	"sort"
+	"slices"
 	"strings"
 
 	"github.com/hashicorp/consul/agent/structs"
@@ -191,13 +192,11 @@ func (m multiFilterEvaluator) Evaluate(data any) (bool, error) {
 // Sort results by Node.Node, if 2 instances match, order by Service.ID
 // Will allow result to be stable sorted and match queries without cache
 func sortCheckServiceNodes(serviceNodes *structs.IndexedCheckServiceNodes) {
-	sort.SliceStable(serviceNodes.Nodes, func(i, j int) bool {
-		left := serviceNodes.Nodes[i]
-		right := serviceNodes.Nodes[j]
-		if left.Node.Node == right.Node.Node {
-			return left.Service.ID < right.Service.ID
+	slices.SortStableFunc(serviceNodes.Nodes, func(left, right structs.CheckServiceNode) int {
+		if c := cmp.Compare(left.Node.Node, right.Node.Node); c != 0 {
+			return c
 		}
-		return left.Node.Node < right.Node.Node
+		return cmp.Compare(left.Service.ID, right.Service.ID)
 	})
 }
 

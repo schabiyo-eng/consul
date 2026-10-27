@@ -9,7 +9,7 @@ import (
 	"math/rand"
 	"net"
 	"net/url"
-	"sort"
+	"slices"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -140,8 +140,16 @@ func TestBalancer(t *testing.T) {
 		// server didn't get our first request.
 		var otherServer *server
 		balancerBuilder.shuffler = func(addrs []resolver.Address) {
-			sort.Slice(addrs, func(a, b int) bool {
-				return addrs[a].Addr == otherServer.addr
+			slices.SortStableFunc(addrs, func(a, b resolver.Address) int {
+				aOther, bOther := a.Addr == otherServer.addr, b.Addr == otherServer.addr
+				switch {
+				case aOther == bOther:
+					return 0
+				case aOther:
+					return -1
+				default:
+					return 1
+				}
 			})
 		}
 

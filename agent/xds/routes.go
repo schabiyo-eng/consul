@@ -4,6 +4,7 @@
 package xds
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"net"
@@ -372,8 +373,8 @@ func makeNamedAddressesRoute(routeName string, addresses map[string]string, vali
 	}
 
 	// sort virtual hosts to have a stable order
-	sort.SliceStable(route.VirtualHosts, func(i, j int) bool {
-		return route.VirtualHosts[i].Name > route.VirtualHosts[j].Name
+	slices.SortStableFunc(route.VirtualHosts, func(a, b *envoy_route_v3.VirtualHost) int {
+		return cmp.Compare(b.Name, a.Name)
 	})
 	return route, nil
 }

@@ -4,9 +4,10 @@
 package proxycfg
 
 import (
+	"cmp"
 	"context"
 	"fmt"
-	"sort"
+	"slices"
 	"strings"
 
 	"github.com/hashicorp/go-hclog"
@@ -646,11 +647,11 @@ func (c *configSnapshotMeshGateway) GatewayKeys() []GatewayKey {
 
 	// Always sort the results to ensure we generate deterministic things over
 	// xDS, such as mesh-gateway listener filter chains.
-	sort.Slice(keys, func(i, j int) bool {
-		if keys[i].Datacenter != keys[j].Datacenter {
-			return keys[i].Datacenter < keys[j].Datacenter
+	slices.SortFunc(keys, func(a, b GatewayKey) int {
+		if c := cmp.Compare(a.Datacenter, b.Datacenter); c != 0 {
+			return c
 		}
-		return keys[i].Partition < keys[j].Partition
+		return cmp.Compare(a.Partition, b.Partition)
 	})
 	return keys
 }

@@ -6,6 +6,7 @@ package discoverychain
 import (
 	"fmt"
 	"hash/crc32"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -312,8 +313,14 @@ func consolidateHTTPRoutes(matchesByHostname map[string][]hostnameMatch, listene
 		}
 
 		// Sort rules for this hostname in order of precedence
-		sort.SliceStable(rules, func(i, j int) bool {
-			return compareHTTPRules(rules[i].match, rules[j].match)
+		slices.SortStableFunc(rules, func(a, b hostnameMatch) int {
+			if compareHTTPRules(a.match, b.match) {
+				return -1
+			}
+			if compareHTTPRules(b.match, a.match) {
+				return 1
+			}
+			return 0
 		})
 
 		// Add all rules for this hostname

@@ -4,7 +4,8 @@
 package state
 
 import (
-	"sort"
+	"cmp"
+	"slices"
 	"testing"
 
 	"github.com/hashicorp/go-memdb"
@@ -128,8 +129,8 @@ func (tc indexerTestCase) run(t *testing.T, indexer memdb.Indexer) {
 	}
 
 	sortMultiByteSlice := func(v [][]byte) {
-		sort.Slice(v, func(i, j int) bool {
-			return string(v[i]) < string(v[j])
+		slices.SortFunc(v, func(a, b []byte) int {
+			return cmp.Compare(string(a), string(b))
 		})
 	}
 

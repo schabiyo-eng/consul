@@ -9,6 +9,7 @@ import (
 	"hash"
 	"hash/fnv"
 	"math"
+	"slices"
 	"sort"
 	"time"
 )
@@ -108,9 +109,7 @@ func addSlice[T any](h *customHasher, values []T, addValue func(*customHasher, T
 		addValue(elementHasher, value)
 		elementHashes = append(elementHashes, elementHasher.Sum64())
 	}
-	sort.Slice(elementHashes, func(i, j int) bool {
-		return elementHashes[i] < elementHashes[j]
-	})
+	slices.Sort(elementHashes)
 
 	for _, elementHash := range elementHashes {
 		h.addUint64(elementHash)

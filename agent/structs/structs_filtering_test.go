@@ -4,10 +4,11 @@
 package structs
 
 import (
+	"cmp"
 	"flag"
 	"fmt"
 	"os"
-	"sort"
+	"slices"
 	"strings"
 	"sync"
 	"testing"
@@ -943,8 +944,8 @@ func (d *fieldDumper) DumpFields(name string, fields bexpr.FieldConfigurations) 
 		return true
 	})
 
-	sort.Slice(selectorOps, func(i, j int) bool {
-		return selectorOps[i][0] < selectorOps[j][0]
+	slices.SortFunc(selectorOps, func(a, b [2]string) int {
+		return cmp.Compare(a[0], b[0])
 	})
 
 	d.lock.Lock()

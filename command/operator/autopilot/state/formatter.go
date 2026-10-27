@@ -5,9 +5,10 @@ package state
 
 import (
 	"bytes"
+	"cmp"
 	"encoding/json"
 	"fmt"
-	"sort"
+	"slices"
 
 	"github.com/hashicorp/consul/api"
 )
@@ -102,8 +103,8 @@ func formatServer(srv *api.AutopilotServer) string {
 			outputs = append(outputs, mapOutput{key: k, value: fmt.Sprintf("         %q: %q\n", k, v)})
 		}
 
-		sort.Slice(outputs, func(i, j int) bool {
-			return outputs[i].key < outputs[j].key
+		slices.SortFunc(outputs, func(a, b mapOutput) int {
+			return cmp.Compare(a.key, b.key)
 		})
 
 		for _, output := range outputs {
@@ -136,8 +137,8 @@ func (f *prettyFormatter) FormatState(state *api.AutopilotState) (string, error)
 		for zoneName, zone := range state.RedundancyZones {
 			outputs = append(outputs, mapOutput{key: zoneName, value: formatZone(zoneName, &zone)})
 		}
-		sort.Slice(outputs, func(i, j int) bool {
-			return outputs[i].key < outputs[j].key
+		slices.SortFunc(outputs, func(a, b mapOutput) int {
+			return cmp.Compare(a.key, b.key)
 		})
 
 		for _, output := range outputs {
@@ -182,8 +183,8 @@ func (f *prettyFormatter) FormatState(state *api.AutopilotState) (string, error)
 		outputs = append(outputs, mapOutput{key: id, value: formatServer(&srv)})
 	}
 
-	sort.Slice(outputs, func(i, j int) bool {
-		return outputs[i].key < outputs[j].key
+	slices.SortFunc(outputs, func(a, b mapOutput) int {
+		return cmp.Compare(a.key, b.key)
 	})
 
 	for _, output := range outputs {

@@ -12,12 +12,13 @@
 package featuregate
 
 import (
+	"cmp"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"regexp"
-	"sort"
+	"slices"
 
 	"github.com/hashicorp/go-version"
 )
@@ -120,8 +121,8 @@ func (r *registry) Definitions() []Definition {
 	for _, definition := range r.definitions {
 		definitions = append(definitions, definition)
 	}
-	sort.Slice(definitions, func(i, j int) bool {
-		return definitions[i].Name < definitions[j].Name
+	slices.SortFunc(definitions, func(a, b Definition) int {
+		return cmp.Compare(a.Name, b.Name)
 	})
 	return definitions
 }

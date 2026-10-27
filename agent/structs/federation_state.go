@@ -4,7 +4,8 @@
 package structs
 
 import (
-	"sort"
+	"cmp"
+	"slices"
 	"time"
 )
 
@@ -43,8 +44,8 @@ type FederationStates []*FederationState
 
 // Sort sorts federation states by their datacenter.
 func (listings FederationStates) Sort() {
-	sort.Slice(listings, func(i, j int) bool {
-		return listings[i].Datacenter < listings[j].Datacenter
+	slices.SortFunc(listings, func(a, b *FederationState) int {
+		return cmp.Compare(a.Datacenter, b.Datacenter)
 	})
 }
 

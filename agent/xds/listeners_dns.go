@@ -4,7 +4,9 @@
 package xds
 
 import (
+	"cmp"
 	"net"
+	"slices"
 	"sort"
 	"strconv"
 	"time"
@@ -189,8 +191,8 @@ func makeVirtualDNSDomains(cfgSnap *proxycfg.ConfigSnapshot) []*envoy_dns_table_
 	}
 
 	// Stable sort by FQDN to avoid spurious LDS updates from map iteration order.
-	sort.Slice(domains, func(i, j int) bool {
-		return domains[i].Name < domains[j].Name
+	slices.SortFunc(domains, func(a, b *envoy_dns_table_v3.DnsTable_DnsVirtualDomain) int {
+		return cmp.Compare(a.Name, b.Name)
 	})
 
 	return domains

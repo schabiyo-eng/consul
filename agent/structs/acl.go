@@ -4,11 +4,13 @@
 package structs
 
 import (
+	"cmp"
 	"encoding/binary"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"hash"
+	"slices"
 	"sort"
 	"strings"
 	"time"
@@ -635,14 +637,14 @@ func (token *ACLToken) Stub() *ACLTokenListStub {
 }
 
 func (tokens ACLTokens) Sort() {
-	sort.Slice(tokens, func(i, j int) bool {
-		return tokens[i].AccessorID < tokens[j].AccessorID
+	slices.SortFunc(tokens, func(a, b *ACLToken) int {
+		return cmp.Compare(a.AccessorID, b.AccessorID)
 	})
 }
 
 func (tokens ACLTokenListStubs) Sort() {
-	sort.Slice(tokens, func(i, j int) bool {
-		return tokens[i].AccessorID < tokens[j].AccessorID
+	slices.SortFunc(tokens, func(a, b *ACLTokenListStub) int {
+		return cmp.Compare(a.AccessorID, b.AccessorID)
 	})
 }
 
@@ -797,14 +799,14 @@ func (policies ACLPolicies) HashKey() string {
 }
 
 func (policies ACLPolicies) Sort() {
-	sort.Slice(policies, func(i, j int) bool {
-		return policies[i].ID < policies[j].ID
+	slices.SortFunc(policies, func(a, b *ACLPolicy) int {
+		return cmp.Compare(a.ID, b.ID)
 	})
 }
 
 func (policies ACLPolicyListStubs) Sort() {
-	sort.Slice(policies, func(i, j int) bool {
-		return policies[i].ID < policies[j].ID
+	slices.SortFunc(policies, func(a, b *ACLPolicyListStub) int {
+		return cmp.Compare(a.ID, b.ID)
 	})
 }
 
@@ -881,8 +883,8 @@ func (roles ACLRoles) HashKey() string {
 }
 
 func (roles ACLRoles) Sort() {
-	sort.Slice(roles, func(i, j int) bool {
-		return roles[i].ID < roles[j].ID
+	slices.SortFunc(roles, func(a, b *ACLRole) int {
+		return cmp.Compare(a.ID, b.ID)
 	})
 }
 
@@ -1170,8 +1172,8 @@ func (r *ACLBindingRule) Clone() *ACLBindingRule {
 type ACLBindingRules []*ACLBindingRule
 
 func (rules ACLBindingRules) Sort() {
-	sort.Slice(rules, func(i, j int) bool {
-		return rules[i].ID < rules[j].ID
+	slices.SortFunc(rules, func(a, b *ACLBindingRule) int {
+		return cmp.Compare(a.ID, b.ID)
 	})
 }
 
@@ -1228,14 +1230,14 @@ type ACLAuthMethods []*ACLAuthMethod
 type ACLAuthMethodListStubs []*ACLAuthMethodListStub
 
 func (methods ACLAuthMethods) Sort() {
-	sort.Slice(methods, func(i, j int) bool {
-		return methods[i].Name < methods[j].Name
+	slices.SortFunc(methods, func(a, b *ACLAuthMethod) int {
+		return cmp.Compare(a.Name, b.Name)
 	})
 }
 
 func (methods ACLAuthMethodListStubs) Sort() {
-	sort.Slice(methods, func(i, j int) bool {
-		return methods[i].Name < methods[j].Name
+	slices.SortFunc(methods, func(a, b *ACLAuthMethodListStub) int {
+		return cmp.Compare(a.Name, b.Name)
 	})
 }
 

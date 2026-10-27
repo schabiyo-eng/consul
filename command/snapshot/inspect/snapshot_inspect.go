@@ -4,13 +4,14 @@
 package inspect
 
 import (
+	"cmp"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"io"
 	"os"
 	"path"
-	"sort"
+	"slices"
 	"strings"
 
 	"github.com/hashicorp/consul-net-rpc/go-msgpack/codec"
@@ -238,13 +239,12 @@ func generateKVStats(info SnapshotInfo) []typeStats {
 // sortTypeStats sorts the stat slice by size and then
 // alphabetically in the case the size is identical
 func sortTypeStats(stats []typeStats) []typeStats {
-	sort.Slice(stats, func(i, j int) bool {
-		// sort alphabetically if size is equal
-		if stats[i].Sum == stats[j].Sum {
-			return stats[i].Name < stats[j].Name
+	slices.SortFunc(stats, func(a, b typeStats) int {
+		if c := cmp.Compare(b.Sum, a.Sum); c != 0 {
+			return c
 		}
-
-		return stats[i].Sum > stats[j].Sum
+		// sort alphabetically if size is equal
+		return cmp.Compare(a.Name, b.Name)
 	})
 
 	return stats

@@ -5,8 +5,10 @@ package instances
 
 import (
 	"bytes"
+	"cmp"
 	"flag"
 	"fmt"
+	"slices"
 	"sort"
 	"strings"
 	"text/tabwriter"
@@ -244,17 +246,17 @@ type serviceCount struct {
 
 // Sort entries by datacenter > partition > namespace
 func sortServiceCounts(counts []serviceCount) {
-	sort.Slice(counts, func(i, j int) bool {
-		if counts[i].datacenter != counts[j].datacenter {
-			return counts[i].datacenter < counts[j].datacenter
+	slices.SortFunc(counts, func(a, b serviceCount) int {
+		if c := cmp.Compare(a.datacenter, b.datacenter); c != 0 {
+			return c
 		}
-		if counts[i].partition != counts[j].partition {
-			return counts[i].partition < counts[j].partition
+		if c := cmp.Compare(a.partition, b.partition); c != 0 {
+			return c
 		}
-		if counts[i].namespace != counts[j].namespace {
-			return counts[i].namespace < counts[j].namespace
+		if c := cmp.Compare(a.namespace, b.namespace); c != 0 {
+			return c
 		}
-		return counts[i].serviceType < counts[j].serviceType
+		return cmp.Compare(a.serviceType, b.serviceType)
 	})
 }
 

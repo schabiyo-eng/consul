@@ -5,11 +5,12 @@ package peerstream
 
 import (
 	"bytes"
+	"cmp"
 	"context"
 	"fmt"
 	"io"
 	"net"
-	"sort"
+	"slices"
 	"sync"
 	"testing"
 	"time"
@@ -1892,35 +1893,33 @@ func expectReplEvents(t *testing.T, client *MockClient, checkFns ...func(t *test
 
 	require.Len(t, out, num)
 
-	sort.SliceStable(out, func(i, j int) bool {
-		a, b := out[i], out[j]
-
+	slices.SortStableFunc(out, func(a, b *pbpeerstream.ReplicationMessage) int {
 		typeA := fmt.Sprintf("%T", a.GetPayload())
 		typeB := fmt.Sprintf("%T", b.GetPayload())
-		if typeA != typeB {
-			return typeA < typeB
+		if c := cmp.Compare(typeA, typeB); c != 0 {
+			return c
 		}
 
 		switch a.GetPayload().(type) {
 		case *pbpeerstream.ReplicationMessage_Request_:
 			reqA, reqB := a.GetRequest(), b.GetRequest()
-			if reqA.ResourceURL != reqB.ResourceURL {
-				return reqA.ResourceURL < reqB.ResourceURL
+			if c := cmp.Compare(reqA.ResourceURL, reqB.ResourceURL); c != 0 {
+				return c
 			}
-			return reqA.ResponseNonce < reqB.ResponseNonce
+			return cmp.Compare(reqA.ResponseNonce, reqB.ResponseNonce)
 
 		case *pbpeerstream.ReplicationMessage_Response_:
 			respA, respB := a.GetResponse(), b.GetResponse()
-			if respA.ResourceURL != respB.ResourceURL {
-				return respA.ResourceURL < respB.ResourceURL
+			if c := cmp.Compare(respA.ResourceURL, respB.ResourceURL); c != 0 {
+				return c
 			}
-			if respA.ResourceID != respB.ResourceID {
-				return respA.ResourceID < respB.ResourceID
+			if c := cmp.Compare(respA.ResourceID, respB.ResourceID); c != 0 {
+				return c
 			}
-			return respA.Nonce < respB.Nonce
+			return cmp.Compare(respA.Nonce, respB.Nonce)
 
 		case *pbpeerstream.ReplicationMessage_Terminated_:
-			return false
+			return 0
 
 		default:
 			panic("unknown type")

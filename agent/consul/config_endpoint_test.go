@@ -4,9 +4,10 @@
 package consul
 
 import (
+	"cmp"
 	"fmt"
 	"os"
-	"sort"
+	"slices"
 	"testing"
 	"time"
 
@@ -1880,8 +1881,8 @@ func TestConfigEntry_ResolveServiceConfig_Upstreams(t *testing.T) {
 			tc.expect.QueryMeta = out.QueryMeta
 
 			// Order of this slice is also not deterministic since it's populated from a map
-			sort.SliceStable(out.UpstreamConfigs, func(i, j int) bool {
-				return out.UpstreamConfigs[i].Upstream.String() < out.UpstreamConfigs[j].Upstream.String()
+			slices.SortStableFunc(out.UpstreamConfigs, func(a, b structs.OpaqueUpstreamConfig) int {
+				return cmp.Compare(a.Upstream.String(), b.Upstream.String())
 			})
 
 			require.Equal(t, tc.expect, out)

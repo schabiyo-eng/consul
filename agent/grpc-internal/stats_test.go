@@ -6,7 +6,8 @@ package internal
 import (
 	"context"
 	"net"
-	"sort"
+	"slices"
+	"strings"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -72,15 +73,14 @@ func TestHandler_EmitsStats(t *testing.T) {
 	// Occasionally the active_stream=0 metric may be emitted before the
 	// active_conns=0 metric. The order of those metrics is not really important
 	// so we sort the calls to match the expected.
-	sort.Slice(sink.GaugeCalls, func(i, j int) bool {
-		if i < 2 || j < 2 {
-			return i < j
-		}
-		if len(sink.GaugeCalls[i].Key) < 4 || len(sink.GaugeCalls[j].Key) < 4 {
-			return i < j
-		}
-		return sink.GaugeCalls[i].Key[3] < sink.GaugeCalls[j].Key[3]
-	})
+	if len(sink.GaugeCalls) > 2 {
+		slices.SortStableFunc(sink.GaugeCalls[2:], func(a, b testutil.MetricCall) int {
+			if len(a.Key) < 4 || len(b.Key) < 4 {
+				return 0
+			}
+			return strings.Compare(a.Key[3], b.Key[3])
+		})
+	}
 
 	cmpMetricCalls := cmp.AllowUnexported(testutil.MetricCall{})
 	expLabels := []metrics.Label{{

@@ -4,9 +4,10 @@
 package xds
 
 import (
+	"cmp"
 	"fmt"
 	"path/filepath"
-	"sort"
+	"slices"
 	"testing"
 	"time"
 
@@ -92,19 +93,19 @@ func TestAllResourcesFromSnapshot(t *testing.T) {
 
 		//
 		// Deprecated: delete
-		resourceSortingFunc := func(items []proto.Message, typeURL string) func(i, j int) bool {
-			return func(i, j int) bool {
+		resourceSortingFunc := func(typeURL string) func(a, b proto.Message) int {
+			return func(a, b proto.Message) int {
 				switch typeURL {
 				case xdscommon.ListenerType:
-					return items[i].(*envoy_listener_v3.Listener).Name < items[j].(*envoy_listener_v3.Listener).Name
+					return cmp.Compare(a.(*envoy_listener_v3.Listener).Name, b.(*envoy_listener_v3.Listener).Name)
 				case xdscommon.RouteType:
-					return items[i].(*envoy_route_v3.RouteConfiguration).Name < items[j].(*envoy_route_v3.RouteConfiguration).Name
+					return cmp.Compare(a.(*envoy_route_v3.RouteConfiguration).Name, b.(*envoy_route_v3.RouteConfiguration).Name)
 				case xdscommon.ClusterType:
-					return items[i].(*envoy_cluster_v3.Cluster).Name < items[j].(*envoy_cluster_v3.Cluster).Name
+					return cmp.Compare(a.(*envoy_cluster_v3.Cluster).Name, b.(*envoy_cluster_v3.Cluster).Name)
 				case xdscommon.EndpointType:
-					return items[i].(*envoy_endpoint_v3.ClusterLoadAssignment).ClusterName < items[j].(*envoy_endpoint_v3.ClusterLoadAssignment).ClusterName
+					return cmp.Compare(a.(*envoy_endpoint_v3.ClusterLoadAssignment).ClusterName, b.(*envoy_endpoint_v3.ClusterLoadAssignment).ClusterName)
 				case xdscommon.SecretType:
-					return items[i].(*envoy_tls_v3.Secret).Name < items[j].(*envoy_tls_v3.Secret).Name
+					return cmp.Compare(a.(*envoy_tls_v3.Secret).Name, b.(*envoy_tls_v3.Secret).Name)
 				default:
 					panic("not possible")
 				}
@@ -129,7 +130,7 @@ func TestAllResourcesFromSnapshot(t *testing.T) {
 				items, ok := resources[typeUrl]
 				require.True(t, ok)
 
-				sort.Slice(items, resourceSortingFunc(items, typeUrl))
+				slices.SortFunc(items, resourceSortingFunc(typeUrl))
 
 				r, err := response.CreateResponse(typeUrl, "00000001", "00000001", items)
 				require.NoError(t, err)

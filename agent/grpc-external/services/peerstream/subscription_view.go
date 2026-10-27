@@ -4,8 +4,9 @@
 package peerstream
 
 import (
+	"cmp"
 	"fmt"
-	"sort"
+	"slices"
 
 	"github.com/hashicorp/go-hclog"
 
@@ -153,7 +154,7 @@ func (s *exportedServicesView) Result(index uint64) any {
 
 // sortCheckServiceNodes stable sorts the results to match memdb semantics.
 func sortCheckServiceNodes(n *pbservice.IndexedCheckServiceNodes) {
-	sort.SliceStable(n.Nodes, func(i, j int) bool {
-		return n.Nodes[i].UniqueID() < n.Nodes[j].UniqueID()
+	slices.SortStableFunc(n.Nodes, func(a, b *pbservice.CheckServiceNode) int {
+		return cmp.Compare(a.UniqueID(), b.UniqueID())
 	})
 }

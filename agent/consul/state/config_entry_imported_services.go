@@ -4,8 +4,9 @@
 package state
 
 import (
+	"cmp"
 	"fmt"
-	"sort"
+	"slices"
 
 	"github.com/hashicorp/go-memdb"
 
@@ -114,14 +115,14 @@ func getUniqueImportedServices(importedServices []importedService) []importedSer
 		}
 	}
 
-	sort.Slice(uniqueImportedServices, func(i, j int) bool {
-		if uniqueImportedServices[i].service != uniqueImportedServices[j].service {
-			return uniqueImportedServices[i].service < uniqueImportedServices[j].service
+	slices.SortFunc(uniqueImportedServices, func(a, b importedService) int {
+		if c := cmp.Compare(a.service, b.service); c != 0 {
+			return c
 		}
-		if uniqueImportedServices[i].namespace != uniqueImportedServices[j].namespace {
-			return uniqueImportedServices[i].namespace < uniqueImportedServices[j].namespace
+		if c := cmp.Compare(a.namespace, b.namespace); c != 0 {
+			return c
 		}
-		return uniqueImportedServices[i].peer < uniqueImportedServices[j].peer
+		return cmp.Compare(a.peer, b.peer)
 	})
 
 	return uniqueImportedServices

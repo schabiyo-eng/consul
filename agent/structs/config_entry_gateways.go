@@ -4,12 +4,12 @@
 package structs
 
 import (
+	"cmp"
 	"encoding/json"
 	"fmt"
 	"net"
 	"reflect"
 	"regexp"
-	"sort"
 	"strconv"
 	"strings"
 
@@ -454,9 +454,14 @@ func (e *IngressGatewayConfigEntry) ListRelatedServices() []ServiceID {
 	for svc := range found {
 		out = append(out, svc)
 	}
-	sort.Slice(out, func(i, j int) bool {
-		return out[i].LessThan(&out[j].EnterpriseMeta) ||
-			out[i].ID < out[j].ID
+	slices.SortFunc(out, func(a, b ServiceID) int {
+		if a.LessThan(&b.EnterpriseMeta) {
+			return -1
+		}
+		if b.LessThan(&a.EnterpriseMeta) {
+			return 1
+		}
+		return cmp.Compare(a.ID, b.ID)
 	})
 	return out
 }
