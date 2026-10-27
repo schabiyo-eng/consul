@@ -5,7 +5,9 @@ package sprawl
 
 import (
 	"bytes"
+	"cmp"
 	"fmt"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -113,26 +115,14 @@ func (s *Sprawl) PrintDetails() error {
 
 	for _, cluster := range det.Clusters {
 		fmt.Fprintf(w, "CLUSTER\tTYPE\tCONTAINER\tNAME\tADDRS\tPORTS\t\n")
-		sort.Slice(cluster.Apps, func(i, j int) bool {
-			a := cluster.Apps[i]
-			b := cluster.Apps[j]
-
-			asc := score[a.Type]
-			bsc := score[b.Type]
-
-			if asc < bsc {
-				return true
-			} else if asc > bsc {
-				return false
+		slices.SortFunc(cluster.Apps, func(a, b appDetail) int {
+			if c := cmp.Compare(score[a.Type], score[b.Type]); c != 0 {
+				return c
 			}
-
-			if a.Container < b.Container {
-				return true
-			} else if a.Container > b.Container {
-				return false
+			if c := cmp.Compare(a.Container, b.Container); c != 0 {
+				return c
 			}
-
-			return a.Service < b.Service
+			return cmp.Compare(a.Service, b.Service)
 		})
 		for _, d := range cluster.Apps {
 			if d.Type == "server" && d.Container == cluster.Leader {
