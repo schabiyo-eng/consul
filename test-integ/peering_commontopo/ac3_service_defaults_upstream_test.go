@@ -236,20 +236,20 @@ func (s *ac3SvcDefaultsSuite) test(t *testing.T, ct *commonTopo) {
 
 // Executes the JQ filter against the given JSON string.
 // Iff there is one result, return that.
-func jqOne(config, filter string) (interface{}, error) {
+func jqOne(config, filter string) (any, error) {
 	query, err := gojq.Parse(filter)
 	if err != nil {
 		return nil, err
 	}
 
-	var m interface{}
+	var m any
 	err = json.Unmarshal([]byte(config), &m)
 	if err != nil {
 		return nil, err
 	}
 
 	iter := query.Run(m)
-	result := []interface{}{}
+	result := []any{}
 	for {
 		v, ok := iter.Next()
 		if !ok {

@@ -125,7 +125,7 @@ func (s *ac4ProxyDefaultsSuite) setup(t *testing.T, ct *commonTopo) {
 			Kind:      api.ProxyDefaults,
 			Name:      api.ProxyConfigGlobal,
 			Partition: ConfigEntryPartition(server.ID.Partition),
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"protocol":                 "http",
 				"local_request_timeout_ms": 500,
 			},
