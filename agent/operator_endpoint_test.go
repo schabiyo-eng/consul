@@ -377,7 +377,7 @@ func TestOperator_Keyring_LocalOnly(t *testing.T) {
 	cases := []struct {
 		description string
 		method      string
-		local       interface{}
+		local       any
 		ok          bool
 	}{
 		{"all ok", "GET", true, true},

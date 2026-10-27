@@ -153,7 +153,7 @@ func getEnvIntWithDefault(t *testing.T, key string, d int64) int64 {
 	return int64(v)
 }
 
-func assertEqual(t *testing.T, x, y interface{}) {
+func assertEqual(t *testing.T, x, y any) {
 	t.Helper()
 	if diff := cmp.Diff(x, y, cmpopts.EquateEmpty()); diff != "" {
 		t.Fatalf("assertion failed: values are not equal\n--- original\n+++ result\n\n%v", diff)
@@ -203,7 +203,7 @@ func randStructsUpstream(u *structs.Upstream, c fuzz.Continue) {
 // interface{} (most likely used in a map[string]interface{}).
 // The random data does not contain any ints (or float32) because protobuf
 // converts them to float64, which will cause the test to fail.
-func randInterface(m *interface{}, c fuzz.Continue) {
+func randInterface(m *any, c fuzz.Continue) {
 	switch c.Intn(6) {
 	case 0:
 		*m = nil
@@ -214,9 +214,9 @@ func randInterface(m *interface{}, c fuzz.Continue) {
 	case 3:
 		*m = c.RandString()
 	case 4:
-		*m = []interface{}{c.RandString(), c.RandBool(), nil, c.Float64()}
+		*m = []any{c.RandString(), c.RandBool(), nil, c.Float64()}
 	case 5:
-		*m = map[string]interface{}{
+		*m = map[string]any{
 			c.RandString(): c.RandString(),
 			c.RandString(): c.Float64(),
 			c.RandString(): nil,

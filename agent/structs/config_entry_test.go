@@ -62,7 +62,7 @@ func TestConfigEntries_ACLs(t *testing.T) {
 				Kind: ServiceDefaults,
 				Name: "web",
 				EnvoyExtensions: EnvoyExtensions{
-					{Name: api.BuiltinAWSLambdaExtension, Arguments: map[string]interface{}{"ARN": "arn:aws:lambda:us-east-1:111122223333:function:my-function"}},
+					{Name: api.BuiltinAWSLambdaExtension, Arguments: map[string]any{"ARN": "arn:aws:lambda:us-east-1:111122223333:function:my-function"}},
 				},
 			},
 			expectACLs: []testACL{
@@ -87,7 +87,7 @@ func TestConfigEntries_ACLs(t *testing.T) {
 				Kind: ServiceDefaults,
 				Name: "web",
 				EnvoyExtensions: EnvoyExtensions{
-					{Name: api.BuiltinLuaExtension, Arguments: map[string]interface{}{
+					{Name: api.BuiltinLuaExtension, Arguments: map[string]any{
 						"Script":   "function envoy_on_request(h) end",
 						"Listener": "inbound",
 					}},
@@ -127,13 +127,13 @@ func TestConfigEntries_ACLs(t *testing.T) {
 				Kind: ServiceDefaults,
 				Name: "web",
 				EnvoyExtensions: EnvoyExtensions{
-					{Name: api.BuiltinWasmExtension, Arguments: map[string]interface{}{
+					{Name: api.BuiltinWasmExtension, Arguments: map[string]any{
 						"Protocol":     "http",
 						"ListenerType": "inbound",
-						"PluginConfig": map[string]interface{}{
-							"VmConfig": map[string]interface{}{
-								"Code": map[string]interface{}{
-									"Local": map[string]interface{}{
+						"PluginConfig": map[string]any{
+							"VmConfig": map[string]any{
+								"Code": map[string]any{
+									"Local": map[string]any{
 										"Filename": "/etc/envoy/plugin.wasm",
 									},
 								},
@@ -470,7 +470,7 @@ func TestDecodeConfigEntry_ServiceDefaults(t *testing.T) {
 		tc := tc
 
 		testbody := func(t *testing.T, body string) {
-			var raw map[string]interface{}
+			var raw map[string]any
 			err := hcl.Decode(&raw, body)
 			require.NoError(t, err)
 
@@ -573,10 +573,10 @@ func TestDecodeConfigEntry(t *testing.T) {
 					"foo": "bar",
 					"gir": "zim",
 				},
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"foo": 19,
 					"bar": "abc",
-					"moreconfig": map[string]interface{}{
+					"moreconfig": map[string]any{
 						"moar": "config",
 					},
 					"balance_inbound_connections": "exact_balance",
@@ -2893,7 +2893,7 @@ func TestDecodeConfigEntry(t *testing.T) {
 		tc := tc
 
 		testbody := func(t *testing.T, body string) {
-			var raw map[string]interface{}
+			var raw map[string]any
 			err := hcl.Decode(&raw, body)
 			require.NoError(t, err)
 
@@ -3010,9 +3010,9 @@ func TestServiceConfigRequest(t *testing.T) {
 
 func TestServiceConfigResponse_MsgPack(t *testing.T) {
 	a := ServiceConfigResponse{
-		ProxyConfig: map[string]interface{}{
+		ProxyConfig: map[string]any{
 			"string": "foo",
-			"map": map[string]interface{}{
+			"map": map[string]any{
 				"baz": "bar",
 			},
 		},
@@ -3021,9 +3021,9 @@ func TestServiceConfigResponse_MsgPack(t *testing.T) {
 				Upstream: PeeredServiceName{
 					ServiceName: NewServiceName("a", acl.DefaultEnterpriseMeta()),
 				},
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"string": "aaaa",
-					"map": map[string]interface{}{
+					"map": map[string]any{
 						"baz": "aa",
 					},
 				},
@@ -3032,9 +3032,9 @@ func TestServiceConfigResponse_MsgPack(t *testing.T) {
 				Upstream: PeeredServiceName{
 					ServiceName: NewServiceName("b", acl.DefaultEnterpriseMeta()),
 				},
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"string": "bbbb",
-					"map": map[string]interface{}{
+					"map": map[string]any{
 						"baz": "bb",
 					},
 				},
@@ -3065,7 +3065,7 @@ func TestConfigEntryResponseMarshalling(t *testing.T) {
 			Entry: &ProxyConfigEntry{
 				Kind: ProxyDefaults,
 				Name: ProxyConfigGlobal,
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"foo": "bar",
 				},
 			},
@@ -3656,7 +3656,7 @@ func TestServiceConfigEntry(t *testing.T) {
 				EnvoyExtensions: []EnvoyExtension{
 					{
 						Name: api.BuiltinAWSLambdaExtension,
-						Arguments: map[string]interface{}{
+						Arguments: map[string]any{
 							"ARN": "some-arn",
 						},
 					},
@@ -3719,8 +3719,8 @@ func TestUpstreamConfig_MergeInto(t *testing.T) {
 	tt := []struct {
 		name        string
 		source      UpstreamConfig
-		destination map[string]interface{}
-		want        map[string]interface{}
+		destination map[string]any
+		want        map[string]any
 	}{
 		{
 			name: "kitchen sink",
@@ -3744,8 +3744,8 @@ func TestUpstreamConfig_MergeInto(t *testing.T) {
 				},
 				MeshGateway: MeshGatewayConfig{Mode: MeshGatewayModeRemote},
 			},
-			destination: make(map[string]interface{}),
-			want: map[string]interface{}{
+			destination: make(map[string]any),
+			want: map[string]any{
 				"balance_outbound_connections": "exact_balance",
 				"envoy_listener_json":          "foo",
 				"envoy_cluster_json":           "bar",
@@ -3788,7 +3788,7 @@ func TestUpstreamConfig_MergeInto(t *testing.T) {
 				},
 				MeshGateway: MeshGatewayConfig{Mode: MeshGatewayModeRemote},
 			},
-			destination: map[string]interface{}{
+			destination: map[string]any{
 				"balance_outbound_connections": "",
 				"envoy_listener_json":          "zip",
 				"envoy_cluster_json":           "zap",
@@ -3808,7 +3808,7 @@ func TestUpstreamConfig_MergeInto(t *testing.T) {
 				},
 				"mesh_gateway": MeshGatewayConfig{Mode: MeshGatewayModeLocal},
 			},
-			want: map[string]interface{}{
+			want: map[string]any{
 				"balance_outbound_connections": "exact_balance",
 				"envoy_listener_json":          "foo",
 				"envoy_cluster_json":           "bar",
@@ -3832,7 +3832,7 @@ func TestUpstreamConfig_MergeInto(t *testing.T) {
 		{
 			name:   "empty source leaves destination intact",
 			source: UpstreamConfig{},
-			destination: map[string]interface{}{
+			destination: map[string]any{
 				"balance_outbound_connections": "exact_balance",
 				"envoy_listener_json":          "zip",
 				"envoy_cluster_json":           "zap",
@@ -3852,7 +3852,7 @@ func TestUpstreamConfig_MergeInto(t *testing.T) {
 				},
 				"mesh_gateway": MeshGatewayConfig{Mode: MeshGatewayModeLocal},
 			},
-			want: map[string]interface{}{
+			want: map[string]any{
 				"balance_outbound_connections": "exact_balance",
 				"envoy_listener_json":          "zip",
 				"envoy_cluster_json":           "zap",
@@ -3876,8 +3876,8 @@ func TestUpstreamConfig_MergeInto(t *testing.T) {
 		{
 			name:        "empty source and destination is a noop",
 			source:      UpstreamConfig{},
-			destination: make(map[string]interface{}),
-			want:        map[string]interface{}{},
+			destination: make(map[string]any),
+			want:        map[string]any{},
 		},
 	}
 	for _, tc := range tt {
@@ -3891,7 +3891,7 @@ func TestUpstreamConfig_MergeInto(t *testing.T) {
 func TestParseUpstreamConfig(t *testing.T) {
 	tests := []struct {
 		name  string
-		input map[string]interface{}
+		input map[string]any
 		want  UpstreamConfig
 	}{
 		{
@@ -3904,7 +3904,7 @@ func TestParseUpstreamConfig(t *testing.T) {
 		},
 		{
 			name:  "defaults - empty",
-			input: map[string]interface{}{},
+			input: map[string]any{},
 			want: UpstreamConfig{
 				ConnectTimeoutMs: 5000,
 				Protocol:         "tcp",
@@ -3912,7 +3912,7 @@ func TestParseUpstreamConfig(t *testing.T) {
 		},
 		{
 			name: "defaults - other stuff",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"foo":       "bar",
 				"envoy_foo": "envoy_bar",
 			},
@@ -3923,7 +3923,7 @@ func TestParseUpstreamConfig(t *testing.T) {
 		},
 		{
 			name: "protocol override",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"protocol": "http",
 			},
 			want: UpstreamConfig{
@@ -3933,7 +3933,7 @@ func TestParseUpstreamConfig(t *testing.T) {
 		},
 		{
 			name: "connect timeout override, string",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"connect_timeout_ms": "1000",
 			},
 			want: UpstreamConfig{
@@ -3943,7 +3943,7 @@ func TestParseUpstreamConfig(t *testing.T) {
 		},
 		{
 			name: "connect timeout override, float ",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"connect_timeout_ms": float64(1000.0),
 			},
 			want: UpstreamConfig{
@@ -3953,7 +3953,7 @@ func TestParseUpstreamConfig(t *testing.T) {
 		},
 		{
 			name: "connect timeout override, int ",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"connect_timeout_ms": 1000,
 			},
 			want: UpstreamConfig{
@@ -3963,8 +3963,8 @@ func TestParseUpstreamConfig(t *testing.T) {
 		},
 		{
 			name: "connect limits map",
-			input: map[string]interface{}{
-				"limits": map[string]interface{}{
+			input: map[string]any{
+				"limits": map[string]any{
 					"max_connections":         50,
 					"max_pending_requests":    60,
 					"max_concurrent_requests": 70,
@@ -3982,8 +3982,8 @@ func TestParseUpstreamConfig(t *testing.T) {
 		},
 		{
 			name: "connect limits map zero",
-			input: map[string]interface{}{
-				"limits": map[string]interface{}{
+			input: map[string]any{
+				"limits": map[string]any{
 					"max_connections":         0,
 					"max_pending_requests":    0,
 					"max_concurrent_requests": 0,
@@ -4001,8 +4001,8 @@ func TestParseUpstreamConfig(t *testing.T) {
 		},
 		{
 			name: "passive health check map",
-			input: map[string]interface{}{
-				"passive_health_check": map[string]interface{}{
+			input: map[string]any{
+				"passive_health_check": map[string]any{
 					"interval":                  "22s",
 					"max_failures":              7,
 					"enforcing_consecutive_5xx": 8,
@@ -4024,8 +4024,8 @@ func TestParseUpstreamConfig(t *testing.T) {
 		},
 		{
 			name: "mesh gateway map",
-			input: map[string]interface{}{
-				"mesh_gateway": map[string]interface{}{
+			input: map[string]any{
+				"mesh_gateway": map[string]any{
 					"Mode": "remote",
 				},
 			},
@@ -4068,7 +4068,7 @@ func TestProxyConfigEntry(t *testing.T) {
 		"proxy config entry has invalid opaque config": {
 			entry: &ProxyConfigEntry{
 				Name: "global",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"envoy_hcp_metrics_bind_socket_dir": "/Consul/is/a/networking/platform/that/enables/securing/your/networking/",
 				},
 			},
@@ -4153,7 +4153,7 @@ func TestProxyConfigEntry_ComputeProtocol(t *testing.T) {
 		pd := &ProxyConfigEntry{
 			Kind: ProxyDefaults,
 			Name: "global",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"protocol": "http",
 			},
 		}
@@ -4162,7 +4162,7 @@ func TestProxyConfigEntry_ComputeProtocol(t *testing.T) {
 			Kind:     ProxyDefaults,
 			Name:     "global",
 			Protocol: "http",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"protocol": "http",
 			},
 		}, pd)
@@ -4171,7 +4171,7 @@ func TestProxyConfigEntry_ComputeProtocol(t *testing.T) {
 		pd := &ProxyConfigEntry{
 			Kind: ProxyDefaults,
 			Name: "global",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"protocol": "http",
 			},
 		}
@@ -4181,7 +4181,7 @@ func TestProxyConfigEntry_ComputeProtocol(t *testing.T) {
 			Kind:     ProxyDefaults,
 			Name:     "global",
 			Protocol: "http",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"protocol": "http",
 			},
 			EnterpriseMeta: *acl.DefaultEnterpriseMeta(),
@@ -4304,16 +4304,16 @@ func durationPointer(d time.Duration) *time.Duration {
 
 func TestValidateOpaqueConfigMap(t *testing.T) {
 	tt := map[string]struct {
-		input     map[string]interface{}
+		input     map[string]any
 		expectErr string
 	}{
 		"hcp metrics socket dir is valid": {
-			input: map[string]interface{}{
+			input: map[string]any{
 				"envoy_hcp_metrics_bind_socket_dir": "/etc/consul.d/hcp"},
 			expectErr: "",
 		},
 		"hcp metrics socket dir is too long": {
-			input: map[string]interface{}{
+			input: map[string]any{
 				"envoy_hcp_metrics_bind_socket_dir": "/Consul/is/a/networking/platform/that/enables/securing/your/networking/",
 			},
 			expectErr: "envoy_hcp_metrics_bind_socket_dir length 71 exceeds max 70",

@@ -78,7 +78,7 @@ func TestDecodeConfigEntry_CE(t *testing.T) {
 		tc := tc
 
 		testbody := func(t *testing.T, body string) {
-			var raw map[string]interface{}
+			var raw map[string]any
 			err := hcl.Decode(&raw, body)
 			require.NoError(t, err)
 

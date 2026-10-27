@@ -55,7 +55,7 @@ func (m *mockAutoConfigBackend) DatacenterJoinAddresses(partition, segment strin
 	return addrs, ret.Error(1)
 }
 
-func (m *mockAutoConfigBackend) ForwardRPC(method string, req structs.RPCInfo, reply interface{}) (bool, error) {
+func (m *mockAutoConfigBackend) ForwardRPC(method string, req structs.RPCInfo, reply any) (bool, error) {
 	ret := m.Called(method, req, reply)
 	return ret.Bool(0), ret.Error(1)
 }
@@ -84,14 +84,14 @@ func testJWTStandardClaims() jwt.Claims {
 	}
 }
 
-func signJWT(t *testing.T, privKey string, claims jwt.Claims, privateClaims interface{}) string {
+func signJWT(t *testing.T, privKey string, claims jwt.Claims, privateClaims any) string {
 	t.Helper()
 	token, err := oidcauthtest.SignJWT(privKey, claims, privateClaims)
 	require.NoError(t, err)
 	return token
 }
 
-func signJWTWithStandardClaims(t *testing.T, privKey string, claims interface{}) string {
+func signJWTWithStandardClaims(t *testing.T, privKey string, claims any) string {
 	t.Helper()
 	return signJWT(t, privKey, testJWTStandardClaims(), claims)
 }
@@ -149,7 +149,7 @@ func TestAutoConfigInitialConfiguration(t *testing.T) {
 			Name:           "Auth Config Authorizer",
 			Type:           "jwt",
 			EnterpriseMeta: *structs.DefaultEnterpriseMetaInDefaultPartition(),
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"BoundAudiences":       []string{"consul"},
 				"BoundIssuer":          "consul",
 				"JWTValidationPubKeys": []string{pub},
@@ -239,14 +239,14 @@ func TestAutoConfigInitialConfiguration(t *testing.T) {
 			request: &pbautoconf.AutoConfigRequest{
 				Node: "test-node",
 				// this is signed using an incorrect private key
-				JWT: signJWTWithStandardClaims(t, altpriv, map[string]interface{}{"consul_node_name": "test-node"}),
+				JWT: signJWTWithStandardClaims(t, altpriv, map[string]any{"consul_node_name": "test-node"}),
 			},
 			err: "Permission denied: Failed JWT authorization: no known key successfully validated the token signature",
 		},
 		"bad-req-node": {
 			request: &pbautoconf.AutoConfigRequest{
 				Node: "bad node",
-				JWT:  signJWTWithStandardClaims(t, priv, map[string]interface{}{"consul_node_name": "test-node"}),
+				JWT:  signJWTWithStandardClaims(t, priv, map[string]any{"consul_node_name": "test-node"}),
 			},
 			err: "Invalid request field. node =",
 		},
@@ -254,7 +254,7 @@ func TestAutoConfigInitialConfiguration(t *testing.T) {
 			request: &pbautoconf.AutoConfigRequest{
 				Node:    "test-node",
 				Segment: "bad segment",
-				JWT:     signJWTWithStandardClaims(t, priv, map[string]interface{}{"consul_node_name": "test-node"}),
+				JWT:     signJWTWithStandardClaims(t, priv, map[string]any{"consul_node_name": "test-node"}),
 			},
 			err: "Invalid request field. segment =",
 		},
@@ -262,21 +262,21 @@ func TestAutoConfigInitialConfiguration(t *testing.T) {
 			request: &pbautoconf.AutoConfigRequest{
 				Node:      "test-node",
 				Partition: "bad partition",
-				JWT:       signJWTWithStandardClaims(t, priv, map[string]interface{}{"consul_node_name": "test-node"}),
+				JWT:       signJWTWithStandardClaims(t, priv, map[string]any{"consul_node_name": "test-node"}),
 			},
 			err: "Invalid request field. partition =",
 		},
 		"claim-assertion-failed": {
 			request: &pbautoconf.AutoConfigRequest{
 				Node: "test-node",
-				JWT:  signJWTWithStandardClaims(t, priv, map[string]interface{}{"wrong_claim": "test-node"}),
+				JWT:  signJWTWithStandardClaims(t, priv, map[string]any{"wrong_claim": "test-node"}),
 			},
 			err: "Permission denied: Failed JWT claim assertion",
 		},
 		"bad-csr-id": {
 			request: &pbautoconf.AutoConfigRequest{
 				Node: "test-node",
-				JWT:  signJWTWithStandardClaims(t, priv, map[string]interface{}{"consul_node_name": "test-node"}),
+				JWT:  signJWTWithStandardClaims(t, priv, map[string]any{"consul_node_name": "test-node"}),
 				CSR:  altCSR,
 			},
 			err: "Spiffe ID agent name (alt) of the certificate signing request is not for the correct node (test-node)",
@@ -284,7 +284,7 @@ func TestAutoConfigInitialConfiguration(t *testing.T) {
 		"good": {
 			request: &pbautoconf.AutoConfigRequest{
 				Node: "test-node",
-				JWT:  signJWTWithStandardClaims(t, priv, map[string]interface{}{"consul_node_name": "test-node"}),
+				JWT:  signJWTWithStandardClaims(t, priv, map[string]any{"consul_node_name": "test-node"}),
 				CSR:  csr,
 			},
 			expected: &pbautoconf.AutoConfigResponse{

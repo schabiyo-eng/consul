@@ -11,11 +11,11 @@ import (
 // so that if we don't run sentinel for some reason (not enabled or a basic
 // policy check means we don't have to) then we don't spend the effort to make
 // the map.
-type ScopeFn func() map[string]interface{}
+type ScopeFn func() map[string]any
 
 // ScopeKVUpsert returns the standard sentinel scope for a KV create or update.
-func ScopeKVUpsert(key string, value []byte, flags uint64) map[string]interface{} {
-	return map[string]interface{}{
+func ScopeKVUpsert(key string, value []byte, flags uint64) map[string]any {
+	return map[string]any{
 		"key":   key,
 		"value": string(value),
 		"flags": flags,
@@ -24,8 +24,8 @@ func ScopeKVUpsert(key string, value []byte, flags uint64) map[string]interface{
 
 // ScopeCatalogUpsert returns the standard sentinel scope for a catalog create
 // or update. Service is allowed to be nil.
-func ScopeCatalogUpsert(node *api.Node, service *api.AgentService) map[string]interface{} {
-	return map[string]interface{}{
+func ScopeCatalogUpsert(node *api.Node, service *api.AgentService) map[string]any {
+	return map[string]any{
 		"node":    node,
 		"service": service,
 	}

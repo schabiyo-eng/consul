@@ -52,7 +52,7 @@ func caConfigTableSchema() *memdb.TableSchema {
 				AllowMissing: true,
 				Unique:       true,
 				Indexer: &memdb.ConditionalIndex{
-					Conditional: func(obj interface{}) (bool, error) { return true, nil },
+					Conditional: func(obj any) (bool, error) { return true, nil },
 				},
 			},
 		},

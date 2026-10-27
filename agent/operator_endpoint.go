@@ -24,7 +24,7 @@ import (
 
 // OperatorRaftConfiguration is used to inspect the current Raft configuration.
 // This supports the stale query mode in case the cluster doesn't have a leader.
-func (s *HTTPHandlers) OperatorRaftConfiguration(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) OperatorRaftConfiguration(resp http.ResponseWriter, req *http.Request) (any, error) {
 	var args structs.DCSpecificRequest
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
 		return nil, nil
@@ -39,7 +39,7 @@ func (s *HTTPHandlers) OperatorRaftConfiguration(resp http.ResponseWriter, req *
 }
 
 // OperatorRaftTransferLeader is used to transfer raft cluster leadership to another node
-func (s *HTTPHandlers) OperatorRaftTransferLeader(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) OperatorRaftTransferLeader(resp http.ResponseWriter, req *http.Request) (any, error) {
 
 	var entMeta acl.EnterpriseMeta
 	if err := s.parseEntMetaPartition(req, &entMeta); err != nil {
@@ -77,7 +77,7 @@ func (s *HTTPHandlers) OperatorRaftTransferLeader(resp http.ResponseWriter, req 
 
 // OperatorRaftPeer supports actions on Raft peers. Currently we only support
 // removing peers by address.
-func (s *HTTPHandlers) OperatorRaftPeer(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) OperatorRaftPeer(resp http.ResponseWriter, req *http.Request) (any, error) {
 	var args structs.RaftRemovePeerRequest
 	s.parseDC(req, &args.Datacenter)
 	s.parseToken(req, &args.Token)
@@ -122,7 +122,7 @@ type keyringArgs struct {
 }
 
 // OperatorKeyringEndpoint handles keyring operations (install, list, use, remove)
-func (s *HTTPHandlers) OperatorKeyringEndpoint(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) OperatorKeyringEndpoint(resp http.ResponseWriter, req *http.Request) (any, error) {
 	var args keyringArgs
 	if req.Method == "POST" || req.Method == "PUT" || req.Method == "DELETE" {
 		if err := decodeBody(req.Body, &args); err != nil {
@@ -174,7 +174,7 @@ func (s *HTTPHandlers) OperatorKeyringEndpoint(resp http.ResponseWriter, req *ht
 }
 
 // KeyringInstall is used to install a new gossip encryption key into the cluster
-func (s *HTTPHandlers) KeyringInstall(resp http.ResponseWriter, req *http.Request, args *keyringArgs) (interface{}, error) {
+func (s *HTTPHandlers) KeyringInstall(resp http.ResponseWriter, req *http.Request, args *keyringArgs) (any, error) {
 	responses, err := s.agent.InstallKey(args.Key, args.Token, args.RelayFactor)
 	if err != nil {
 		return nil, err
@@ -184,7 +184,7 @@ func (s *HTTPHandlers) KeyringInstall(resp http.ResponseWriter, req *http.Reques
 }
 
 // KeyringList is used to list the keys installed in the cluster
-func (s *HTTPHandlers) KeyringList(resp http.ResponseWriter, req *http.Request, args *keyringArgs) (interface{}, error) {
+func (s *HTTPHandlers) KeyringList(resp http.ResponseWriter, req *http.Request, args *keyringArgs) (any, error) {
 	responses, err := s.agent.ListKeys(args.Token, args.LocalOnly, args.RelayFactor)
 	if err != nil {
 		return nil, err
@@ -194,7 +194,7 @@ func (s *HTTPHandlers) KeyringList(resp http.ResponseWriter, req *http.Request, 
 }
 
 // KeyringRemove is used to list the keys installed in the cluster
-func (s *HTTPHandlers) KeyringRemove(resp http.ResponseWriter, req *http.Request, args *keyringArgs) (interface{}, error) {
+func (s *HTTPHandlers) KeyringRemove(resp http.ResponseWriter, req *http.Request, args *keyringArgs) (any, error) {
 	responses, err := s.agent.RemoveKey(args.Key, args.Token, args.RelayFactor)
 	if err != nil {
 		return nil, err
@@ -204,7 +204,7 @@ func (s *HTTPHandlers) KeyringRemove(resp http.ResponseWriter, req *http.Request
 }
 
 // KeyringUse is used to change the primary gossip encryption key
-func (s *HTTPHandlers) KeyringUse(resp http.ResponseWriter, req *http.Request, args *keyringArgs) (interface{}, error) {
+func (s *HTTPHandlers) KeyringUse(resp http.ResponseWriter, req *http.Request, args *keyringArgs) (any, error) {
 	responses, err := s.agent.UseKey(args.Key, args.Token, args.RelayFactor)
 	if err != nil {
 		return nil, err
@@ -237,7 +237,7 @@ func keyringErrorsOrNil(responses []*structs.KeyringResponse) error {
 
 // OperatorAutopilotConfiguration is used to inspect the current Autopilot configuration.
 // This supports the stale query mode in case the cluster doesn't have a leader.
-func (s *HTTPHandlers) OperatorAutopilotConfiguration(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) OperatorAutopilotConfiguration(resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Switch on the method
 	switch req.Method {
 	case "GET":
@@ -315,7 +315,7 @@ func (s *HTTPHandlers) OperatorAutopilotConfiguration(resp http.ResponseWriter, 
 }
 
 // OperatorServerHealth is used to get the health of the servers in the local DC
-func (s *HTTPHandlers) OperatorServerHealth(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) OperatorServerHealth(resp http.ResponseWriter, req *http.Request) (any, error) {
 	var args structs.DCSpecificRequest
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
 		return nil, nil
@@ -355,7 +355,7 @@ func (s *HTTPHandlers) OperatorServerHealth(resp http.ResponseWriter, req *http.
 	return out, nil
 }
 
-func (s *HTTPHandlers) OperatorAutopilotState(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) OperatorAutopilotState(resp http.ResponseWriter, req *http.Request) (any, error) {
 	var args structs.DCSpecificRequest
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
 		return nil, nil
@@ -370,7 +370,7 @@ func (s *HTTPHandlers) OperatorAutopilotState(resp http.ResponseWriter, req *htt
 	return out, nil
 }
 
-func (s *HTTPHandlers) OperatorUsage(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) OperatorUsage(resp http.ResponseWriter, req *http.Request) (any, error) {
 	metrics.IncrCounterWithLabels([]string{"client", "api", "operator_usage"}, 1,
 		s.nodeMetricsLabels())
 

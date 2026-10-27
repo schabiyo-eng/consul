@@ -638,7 +638,7 @@ func (a *AWSProvider) deletePCA() error {
 }
 
 // Cleanup implements Provider
-func (a *AWSProvider) Cleanup(providerTypeChange bool, otherConfig map[string]interface{}) error {
+func (a *AWSProvider) Cleanup(providerTypeChange bool, otherConfig map[string]any) error {
 	old := atomic.SwapUint32(&a.stopped, 1)
 	if old == 0 {
 		close(a.stopCh)
@@ -687,7 +687,7 @@ func (a *AWSProvider) SupportsCrossSigning() (bool, error) {
 }
 
 // ParseAWSCAConfig parses and validates AWS CA Provider configuration.
-func ParseAWSCAConfig(raw map[string]interface{}) (*structs.AWSCAProviderConfig, error) {
+func ParseAWSCAConfig(raw map[string]any) (*structs.AWSCAProviderConfig, error) {
 	config := structs.AWSCAProviderConfig{
 		CommonCAProviderConfig: defaultCommonConfig(),
 	}

@@ -69,12 +69,12 @@ func TestMakeHTTPWatchHandler(t *testing.T) {
 	handler(100, []string{"foo", "bar", "baz"})
 }
 
-type raw map[string]interface{}
+type raw map[string]any
 
 func TestMakeWatchPlan(t *testing.T) {
 	type testCase struct {
 		name        string
-		params      map[string]interface{}
+		params      map[string]any
 		expected    func(t *testing.T, plan *watch.Plan)
 		expectedErr string
 	}
@@ -121,7 +121,7 @@ func TestMakeWatchPlan(t *testing.T) {
 				"type":         "key",
 				"key":          "foo",
 				"handler_type": "script",
-				"args":         []interface{}{"./script.sh", "arg1"},
+				"args":         []any{"./script.sh", "arg1"},
 			},
 			expected: func(t *testing.T, plan *watch.Plan) {
 				require.Equal(t, plan.HandlerType, "script")
@@ -147,7 +147,7 @@ func TestMakeWatchPlan(t *testing.T) {
 				"type":         "key",
 				"key":          "foo",
 				"handler_type": "script",
-				"args":         []interface{}{"./script.sh", true},
+				"args":         []any{"./script.sh", true},
 			},
 			expectedErr: "Watch args must be a list of strings",
 		},
@@ -158,7 +158,7 @@ func TestMakeWatchPlan(t *testing.T) {
 				"key":          "foo",
 				"handler_type": "script",
 				"handler":      "./script.sh",
-				"args":         []interface{}{"arg1"},
+				"args":         []any{"arg1"},
 			},
 			expectedErr: "Only one watch handler allowed",
 		},

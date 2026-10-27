@@ -75,7 +75,7 @@ func TestConstructor(t *testing.T) {
 				},
 				EnvoyExtension: api.EnvoyExtension{
 					Name: extensionName,
-					Arguments: map[string]interface{}{
+					Arguments: map[string]any{
 						"ARN":                tc.arn,
 						"PayloadPassthrough": tc.payloadPassthrough,
 					},

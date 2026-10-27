@@ -45,7 +45,7 @@ func RequireAnyValidACLToken(resolver ACLResolver, token string) error {
 	return nil
 }
 
-func RequireNotNil(v interface{}, name string) {
+func RequireNotNil(v any, name string) {
 	if v == nil {
 		panic(name + " is required")
 	}

@@ -12,7 +12,7 @@ import (
 // DecodeJSON is a convenience function to create a JSON decoder
 // set it up to disallow unknown fields and then decode into the
 // given value
-func DecodeJSON(data io.Reader, out interface{}) error {
+func DecodeJSON(data io.Reader, out any) error {
 	if data == nil {
 		return io.EOF
 	}
@@ -25,6 +25,6 @@ func DecodeJSON(data io.Reader, out interface{}) error {
 // UnmarshalJSON is a convenience function around calling
 // DecodeJSON. It will mainly be useful in many of our
 // UnmarshalJSON methods for structs.
-func UnmarshalJSON(data []byte, out interface{}) error {
+func UnmarshalJSON(data []byte, out any) error {
 	return DecodeJSON(bytes.NewReader(data), out)
 }

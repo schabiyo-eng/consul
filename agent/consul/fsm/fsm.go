@@ -24,11 +24,11 @@ import (
 )
 
 // command is a command method on the FSM.
-type command func(buf []byte, index uint64) interface{}
+type command func(buf []byte, index uint64) any
 
 // unboundCommand is a command method on the FSM, not yet bound to an FSM
 // instance.
-type unboundCommand func(c *FSM, buf []byte, index uint64) interface{}
+type unboundCommand func(c *FSM, buf []byte, index uint64) any
 
 // commands is a map from message type to unbound command.
 var commands map[structs.MessageType]unboundCommand
@@ -140,7 +140,7 @@ func NewFromDeps(deps Deps) *FSM {
 	// Build out the apply dispatch table based on the registered commands.
 	for msg, fn := range commands {
 		thisFn := fn
-		fsm.apply[msg] = func(buf []byte, index uint64) interface{} {
+		fsm.apply[msg] = func(buf []byte, index uint64) any {
 			return thisFn(fsm, buf, index)
 		}
 	}
@@ -166,7 +166,7 @@ func (c *FSM) State() *state.Store {
 	return c.state
 }
 
-func (c *FSM) Apply(log *raft.Log) interface{} {
+func (c *FSM) Apply(log *raft.Log) any {
 	buf := log.Data
 	msgType := structs.MessageType(buf[0])
 
@@ -269,7 +269,7 @@ func (c *FSM) Restore(old io.ReadCloser) error {
 		default:
 			if structs.CEDowngrade && msg >= 64 {
 				c.logger.Warn("ignoring enterprise message as part of downgrade to CE", "type", msg)
-				var ignore interface{}
+				var ignore any
 				return dec.Decode(&ignore)
 			} else if msg >= 64 {
 				return fmt.Errorf("msg type <%d> is a Consul Enterprise log entry. Consul CE cannot restore it", msg)

@@ -662,7 +662,7 @@ func canRetry(info structs.RPCInfo, err error, start time.Time, config *Config, 
 // Returns a bool of if forwarding was performed, as well as any error. If
 // false is returned (with no error) it is assumed that the current server
 // should handle the request.
-func (s *Server) ForwardRPC(method string, info structs.RPCInfo, reply interface{}) (bool, error) {
+func (s *Server) ForwardRPC(method string, info structs.RPCInfo, reply any) (bool, error) {
 	forwardToDC := func(dc string) error {
 		return s.forwardDC(method, dc, info, reply)
 	}
@@ -868,7 +868,7 @@ func (s *Server) getLeader() (bool, *metadata.Server, error) {
 }
 
 // forwardDC is used to forward an RPC call to a remote DC, or fail if no servers
-func (s *Server) forwardDC(method, dc string, args interface{}, reply interface{}) error {
+func (s *Server) forwardDC(method, dc string, args any, reply any) error {
 	manager, server, ok := s.router.FindRoute(dc)
 	if !ok {
 		if s.router.HasDatacenter(dc) {
@@ -901,7 +901,7 @@ func (s *Server) forwardDC(method, dc string, args interface{}, reply interface{
 // keyringRPCs is used to forward an RPC request to a server in each dc. This
 // will only error for RPC-related errors. Otherwise, application-level errors
 // can be sent in the response objects.
-func (s *Server) keyringRPCs(method string, args interface{}, dcs []string) (*structs.KeyringResponses, error) {
+func (s *Server) keyringRPCs(method string, args any, dcs []string) (*structs.KeyringResponses, error) {
 
 	errorCh := make(chan error, len(dcs))
 	respCh := make(chan *structs.KeyringResponses, len(dcs))
@@ -929,11 +929,11 @@ func (s *Server) keyringRPCs(method string, args interface{}, dcs []string) (*st
 	return responses, nil
 }
 
-type raftEncoder func(structs.MessageType, interface{}) ([]byte, error)
+type raftEncoder func(structs.MessageType, any) ([]byte, error)
 
 // leaderRaftApply is used by the leader to persist data to Raft for internal cluster management activities.
 // This method MUST not be called from RPC endpoints, since it would result in duplicated RPC metrics.
-func (s *Server) leaderRaftApply(method string, t structs.MessageType, msg interface{}) (interface{}, error) {
+func (s *Server) leaderRaftApply(method string, t structs.MessageType, msg any) (any, error) {
 	start := time.Now()
 
 	resp, err := s.raftApplyMsgpack(t, msg)
@@ -945,19 +945,19 @@ func (s *Server) leaderRaftApply(method string, t structs.MessageType, msg inter
 // raftApplyMsgpack encodes the msg using msgpack and calls raft.Apply. See
 // raftApplyWithEncoder.
 // Deprecated: use raftApplyMsgpack
-func (s *Server) raftApply(t structs.MessageType, msg interface{}) (interface{}, error) {
+func (s *Server) raftApply(t structs.MessageType, msg any) (any, error) {
 	return s.raftApplyMsgpack(t, msg)
 }
 
 // raftApplyMsgpack encodes the msg using msgpack and calls raft.Apply. See
 // raftApplyEncoded.
-func (s *Server) raftApplyMsgpack(t structs.MessageType, msg interface{}) (interface{}, error) {
+func (s *Server) raftApplyMsgpack(t structs.MessageType, msg any) (any, error) {
 	return s.raftApplyWithEncoder(t, msg, structs.Encode)
 }
 
 // raftApplyProtobuf encodes the msg using protobuf and calls raft.Apply. See
 // raftApplyEncoded.
-func (s *Server) raftApplyProtobuf(t structs.MessageType, msg interface{}) (interface{}, error) {
+func (s *Server) raftApplyProtobuf(t structs.MessageType, msg any) (any, error) {
 	return s.raftApplyWithEncoder(t, msg, structs.EncodeProtoInterface)
 }
 
@@ -965,9 +965,9 @@ func (s *Server) raftApplyProtobuf(t structs.MessageType, msg interface{}) (inte
 // encoded message. See raftApplyEncoded.
 func (s *Server) raftApplyWithEncoder(
 	t structs.MessageType,
-	msg interface{},
+	msg any,
 	encoder raftEncoder,
-) (response interface{}, err error) {
+) (response any, err error) {
 	if encoder == nil {
 		return nil, fmt.Errorf("Failed to encode request: nil encoder")
 	}

@@ -48,7 +48,7 @@ type ProviderConfig struct {
 
 	// RawConfig is the user configuration for the provider and is
 	// provider-specific to be interpreted as the provider wishes.
-	RawConfig map[string]interface{}
+	RawConfig map[string]any
 
 	// State contains the State the same provider last persisted. It is provided
 	// after a restart or reconfiguration, or on a leader election on a new server
@@ -115,7 +115,7 @@ type Provider interface {
 	// Vault provider is in use and there is no type change occuring, the Vault
 	// provider should check if the intermediate PKI path is changing. If it is not
 	// changing then the provider should not remove that path from Vault.
-	Cleanup(providerTypeChange bool, otherConfig map[string]interface{}) error
+	Cleanup(providerTypeChange bool, otherConfig map[string]any) error
 
 	// TODO: when CAManager has separate types for primary/secondary invert this
 	// relationship so that PrimaryProvider/SecondaryProvider embed Provider

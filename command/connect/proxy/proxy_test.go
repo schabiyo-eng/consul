@@ -208,7 +208,7 @@ func TestFlagUpstreams_ConnectTimeout(t *testing.T) {
 	testCases := []struct {
 		name           string
 		upstreamFlag   string
-		configOverride map[string]interface{}
+		configOverride map[string]any
 		expectedMs     int
 	}{
 		{
@@ -219,7 +219,7 @@ func TestFlagUpstreams_ConnectTimeout(t *testing.T) {
 		{
 			name:         "custom timeout via config",
 			upstreamFlag: "db:8080",
-			configOverride: map[string]interface{}{
+			configOverride: map[string]any{
 				"connect_timeout_ms": 5000,
 			},
 			expectedMs: 5000,
@@ -227,7 +227,7 @@ func TestFlagUpstreams_ConnectTimeout(t *testing.T) {
 		{
 			name:         "zero timeout",
 			upstreamFlag: "cache:6379",
-			configOverride: map[string]interface{}{
+			configOverride: map[string]any{
 				"connect_timeout_ms": 0,
 			},
 			expectedMs: 0,

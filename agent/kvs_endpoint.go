@@ -18,7 +18,7 @@ import (
 	"github.com/hashicorp/consul/api"
 )
 
-func (s *HTTPHandlers) KVSEndpoint(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) KVSEndpoint(resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Set default DC
 	args := structs.KeyRequest{}
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
@@ -81,7 +81,7 @@ func (s *HTTPHandlers) KVSEndpoint(resp http.ResponseWriter, req *http.Request) 
 }
 
 // KVSGet handles a GET request
-func (s *HTTPHandlers) KVSGet(resp http.ResponseWriter, req *http.Request, args *structs.KeyRequest) (interface{}, error) {
+func (s *HTTPHandlers) KVSGet(resp http.ResponseWriter, req *http.Request, args *structs.KeyRequest) (any, error) {
 	// Check for recurse
 	method := "KVS.Get"
 	params := req.URL.Query()
@@ -137,7 +137,7 @@ func (s *HTTPHandlers) KVSGet(resp http.ResponseWriter, req *http.Request, args 
 }
 
 // KVSGetKeys handles a GET request for keys
-func (s *HTTPHandlers) KVSGetKeys(resp http.ResponseWriter, req *http.Request, args *structs.KeyRequest) (interface{}, error) {
+func (s *HTTPHandlers) KVSGetKeys(resp http.ResponseWriter, req *http.Request, args *structs.KeyRequest) (any, error) {
 	if err := s.parseEntMeta(req, &args.EnterpriseMeta); err != nil {
 		return nil, err
 	}
@@ -184,7 +184,7 @@ func (s *HTTPHandlers) KVSGetKeys(resp http.ResponseWriter, req *http.Request, a
 }
 
 // KVSPut handles a PUT request
-func (s *HTTPHandlers) KVSPut(resp http.ResponseWriter, req *http.Request, args *structs.KeyRequest) (interface{}, error) {
+func (s *HTTPHandlers) KVSPut(resp http.ResponseWriter, req *http.Request, args *structs.KeyRequest) (any, error) {
 	if err := s.parseEntMetaNoWildcard(req, &args.EnterpriseMeta); err != nil {
 		return nil, err
 	}
@@ -294,7 +294,7 @@ func (s *HTTPHandlers) KVSPut(resp http.ResponseWriter, req *http.Request, args 
 }
 
 // KVSPut handles a DELETE request
-func (s *HTTPHandlers) KVSDelete(resp http.ResponseWriter, req *http.Request, args *structs.KeyRequest) (interface{}, error) {
+func (s *HTTPHandlers) KVSDelete(resp http.ResponseWriter, req *http.Request, args *structs.KeyRequest) (any, error) {
 	if err := s.parseEntMetaNoWildcard(req, &args.EnterpriseMeta); err != nil {
 		return nil, err
 	}

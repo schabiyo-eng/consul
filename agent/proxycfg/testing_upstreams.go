@@ -482,7 +482,7 @@ func setupTestVariationDiscoveryChain(
 				Name:           structs.ProxyConfigGlobal,
 				EnterpriseMeta: em,
 				Protocol:       "http",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"protocol": "http",
 				},
 			},
@@ -542,7 +542,7 @@ func setupTestVariationDiscoveryChain(
 				Name:           structs.ProxyConfigGlobal,
 				EnterpriseMeta: entMeta,
 				Protocol:       "http",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"protocol": "http",
 				},
 			},
@@ -643,7 +643,7 @@ func setupTestVariationDiscoveryChain(
 				Name:           structs.ProxyConfigGlobal,
 				EnterpriseMeta: entMeta,
 				Protocol:       "http",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"protocol": "http",
 				},
 			},
@@ -699,7 +699,7 @@ func setupTestVariationDiscoveryChain(
 				Name:           structs.ProxyConfigGlobal,
 				EnterpriseMeta: entMeta,
 				Protocol:       "grpc",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"protocol": "grpc",
 				},
 			},
@@ -735,7 +735,7 @@ func setupTestVariationDiscoveryChain(
 				Name:           structs.ProxyConfigGlobal,
 				EnterpriseMeta: entMeta,
 				Protocol:       "http",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"protocol": "http",
 				},
 			},
@@ -987,7 +987,7 @@ func setupTestVariationDiscoveryChain(
 				Name:           structs.ProxyConfigGlobal,
 				EnterpriseMeta: entMeta,
 				Protocol:       "http",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"protocol": "http",
 				},
 			},
@@ -1043,7 +1043,7 @@ func setupTestVariationDiscoveryChain(
 				Name:           structs.ProxyConfigGlobal,
 				EnterpriseMeta: entMeta,
 				Protocol:       "http",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"protocol": "http",
 				},
 			},
@@ -1080,7 +1080,7 @@ func setupTestVariationDiscoveryChain(
 				Name:           structs.ProxyConfigGlobal,
 				EnterpriseMeta: entMeta,
 				Protocol:       "http",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"protocol": "http",
 				},
 			},

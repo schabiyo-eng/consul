@@ -50,7 +50,7 @@ func TestACL_Disabled_Response(t *testing.T) {
 
 	type testCase struct {
 		name string
-		fn   func(resp http.ResponseWriter, req *http.Request) (interface{}, error)
+		fn   func(resp http.ResponseWriter, req *http.Request) (any, error)
 	}
 
 	tests := []testCase{
@@ -89,7 +89,7 @@ func TestACL_Disabled_Response(t *testing.T) {
 	}
 }
 
-func jsonBody(v interface{}) io.Reader {
+func jsonBody(v any) io.Reader {
 	body := bytes.NewBuffer(nil)
 	enc := json.NewEncoder(body)
 	enc.Encode(v)
@@ -1549,7 +1549,7 @@ func TestACL_LoginProcedure_HTTP(t *testing.T) {
 				Name:        "test",
 				Type:        "testing",
 				Description: "test",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"SessionID": testSessionID,
 				},
 			}
@@ -1578,7 +1578,7 @@ func TestACL_LoginProcedure_HTTP(t *testing.T) {
 				Name:        "other",
 				Type:        "testing",
 				Description: "test",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"SessionID": testSessionID,
 				},
 				TokenLocality: "global",
@@ -1609,7 +1609,7 @@ func TestACL_LoginProcedure_HTTP(t *testing.T) {
 				Name:        "other",
 				Type:        "testing",
 				Description: "test",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"SessionID": testSessionID,
 				},
 				TokenLocality: "global",
@@ -1629,7 +1629,7 @@ func TestACL_LoginProcedure_HTTP(t *testing.T) {
 				Name:        "test",
 				Type:        "testing",
 				Description: "test",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"SessionID": testSessionID,
 				},
 			}
@@ -1647,7 +1647,7 @@ func TestACL_LoginProcedure_HTTP(t *testing.T) {
 				Name:        "test",
 				Type:        "testing",
 				Description: "updated description",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"SessionID": testSessionID,
 				},
 			}
@@ -2107,7 +2107,7 @@ func TestACLEndpoint_LoginLogout_jwt(t *testing.T) {
 	oidcServer := oidcauthtest.Start(t)
 	pubKey, privKey := oidcServer.SigningKeys()
 
-	type mConfig = map[string]interface{}
+	type mConfig = map[string]any
 	cases := map[string]struct {
 		f         func(config mConfig)
 		issuer    string
@@ -2138,7 +2138,7 @@ func TestACLEndpoint_LoginLogout_jwt(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			method, err := upsertTestCustomizedAuthMethod(a.RPC, TestDefaultInitialManagementToken, "dc1", func(method *structs.ACLAuthMethod) {
 				method.Type = "jwt"
-				method.Config = map[string]interface{}{
+				method.Config = map[string]any{
 					"JWTSupportedAlgs": []string{"ES256"},
 					"ClaimMappings": map[string]string{
 						"first_name":   "name",
@@ -2739,7 +2739,7 @@ func TestACL_Authorize(t *testing.T) {
 	})
 }
 
-type rpcFn func(context.Context, string, interface{}, interface{}) error
+type rpcFn func(context.Context, string, any, any) error
 
 func upsertTestCustomizedAuthMethod(
 	rpc rpcFn, initialManagementToken string, datacenter string,

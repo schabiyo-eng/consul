@@ -17,7 +17,7 @@ import (
 )
 
 // EventFire is used to fire a new event
-func (s *HTTPHandlers) EventFire(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) EventFire(resp http.ResponseWriter, req *http.Request) (any, error) {
 
 	// Get the datacenter
 	var dc string
@@ -84,7 +84,7 @@ func (s *HTTPHandlers) EventFire(resp http.ResponseWriter, req *http.Request) (i
 }
 
 // EventList is used to retrieve the recent list of events
-func (s *HTTPHandlers) EventList(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) EventList(resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Parse the query options, since we simulate a blocking query
 	var b structs.QueryOptions
 	if parseWait(resp, req, &b) {

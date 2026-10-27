@@ -56,7 +56,7 @@ func NewRequestRecorder(logger hclog.Logger, isLeader func() bool, localDC strin
 	}
 }
 
-func (r *RequestRecorder) Record(requestName string, rpcType string, start time.Time, request interface{}, respErrored bool) {
+func (r *RequestRecorder) Record(requestName string, rpcType string, start time.Time, request any, respErrored bool) {
 	elapsed := time.Since(start).Microseconds()
 	elapsedMs := float32(elapsed) / 1000
 	reqType := requestType(request)
@@ -80,9 +80,9 @@ func (r *RequestRecorder) Record(requestName string, rpcType string, start time.
 
 }
 
-func flattenLabels(labels []metrics.Label) []interface{} {
+func flattenLabels(labels []metrics.Label) []any {
 
-	var labelArr []interface{}
+	var labelArr []any
 	for _, label := range labels {
 		labelArr = append(labelArr, label.Name, label.Value)
 	}
@@ -90,7 +90,7 @@ func flattenLabels(labels []metrics.Label) []interface{} {
 	return labelArr
 }
 
-func (r *RequestRecorder) addOptionalLabels(request interface{}, labels []metrics.Label) []metrics.Label {
+func (r *RequestRecorder) addOptionalLabels(request any, labels []metrics.Label) []metrics.Label {
 	if rq, ok := request.(readQuery); ok {
 		labels = append(labels,
 			metrics.Label{
@@ -117,7 +117,7 @@ func (r *RequestRecorder) addOptionalLabels(request interface{}, labels []metric
 	return labels
 }
 
-func requestType(req interface{}) string {
+func requestType(req any) string {
 	if r, ok := req.(interface{ IsRead() bool }); ok {
 		if r.IsRead() {
 			return "read"

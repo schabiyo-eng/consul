@@ -51,7 +51,7 @@ func TestValidateExtensions(t *testing.T) {
 		"invalid consul version constraint": {
 			input: []api.EnvoyExtension{{
 				Name: "builtin/aws/lambda",
-				Arguments: map[string]interface{}{
+				Arguments: map[string]any{
 					"ARN": "arn:aws:lambda:us-east-1:111111111111:function:lambda-1234",
 				},
 				ConsulVersion: "bad",
@@ -63,7 +63,7 @@ func TestValidateExtensions(t *testing.T) {
 		"invalid envoy version constraint": {
 			input: []api.EnvoyExtension{{
 				Name: "builtin/aws/lambda",
-				Arguments: map[string]interface{}{
+				Arguments: map[string]any{
 					"ARN": "arn:aws:lambda:us-east-1:111111111111:function:lambda-1234",
 				},
 				EnvoyVersion: "bad",

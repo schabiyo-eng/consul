@@ -66,7 +66,7 @@ func TestConfigUtil_Values(t *testing.T) {
 		},
 	}
 	for i, c := range cases {
-		var raw interface{}
+		var raw any
 		dec := json.NewDecoder(bytes.NewBufferString(c.in))
 		if err := dec.Decode(&raw); err != nil {
 			t.Fatalf("(case %d) err: %v", i, err)

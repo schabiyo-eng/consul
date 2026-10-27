@@ -30,63 +30,63 @@ func NewGRPCLogger(logLevel string, logger hclog.Logger) *GRPCLogger {
 }
 
 // Info implements grpclog.LoggerV2
-func (g *GRPCLogger) Info(args ...interface{}) {
+func (g *GRPCLogger) Info(args ...any) {
 	// gRPC's INFO level is more akin to Consul's TRACE level
 	g.logger.Trace(fmt.Sprint(args...))
 }
 
 // Infoln implements grpclog.LoggerV2
-func (g *GRPCLogger) Infoln(args ...interface{}) {
+func (g *GRPCLogger) Infoln(args ...any) {
 	g.Info(fmt.Sprint(args...))
 }
 
 // Infof implements grpclog.LoggerV2
-func (g *GRPCLogger) Infof(format string, args ...interface{}) {
+func (g *GRPCLogger) Infof(format string, args ...any) {
 	g.Info(fmt.Sprintf(format, args...))
 }
 
 // Warning implements grpclog.LoggerV2
-func (g *GRPCLogger) Warning(args ...interface{}) {
+func (g *GRPCLogger) Warning(args ...any) {
 	g.logger.Warn(fmt.Sprint(args...))
 }
 
 // Warningln implements grpclog.LoggerV2
-func (g *GRPCLogger) Warningln(args ...interface{}) {
+func (g *GRPCLogger) Warningln(args ...any) {
 	g.Warning(fmt.Sprint(args...))
 }
 
 // Warningf implements grpclog.LoggerV2
-func (g *GRPCLogger) Warningf(format string, args ...interface{}) {
+func (g *GRPCLogger) Warningf(format string, args ...any) {
 	g.Warning(fmt.Sprintf(format, args...))
 }
 
 // Error implements grpclog.LoggerV2
-func (g *GRPCLogger) Error(args ...interface{}) {
+func (g *GRPCLogger) Error(args ...any) {
 	g.logger.Error(fmt.Sprint(args...))
 }
 
 // Errorln implements grpclog.LoggerV2
-func (g *GRPCLogger) Errorln(args ...interface{}) {
+func (g *GRPCLogger) Errorln(args ...any) {
 	g.Error(fmt.Sprint(args...))
 }
 
 // Errorf implements grpclog.LoggerV2
-func (g *GRPCLogger) Errorf(format string, args ...interface{}) {
+func (g *GRPCLogger) Errorf(format string, args ...any) {
 	g.Error(fmt.Sprintf(format, args...))
 }
 
 // Fatal implements grpclog.LoggerV2
-func (g *GRPCLogger) Fatal(args ...interface{}) {
+func (g *GRPCLogger) Fatal(args ...any) {
 	g.logger.Error(fmt.Sprint(args...))
 }
 
 // Fatalln implements grpclog.LoggerV2
-func (g *GRPCLogger) Fatalln(args ...interface{}) {
+func (g *GRPCLogger) Fatalln(args ...any) {
 	g.Fatal(fmt.Sprint(args...))
 }
 
 // Fatalf implements grpclog.LoggerV2
-func (g *GRPCLogger) Fatalf(format string, args ...interface{}) {
+func (g *GRPCLogger) Fatalf(format string, args ...any) {
 	g.Fatal(fmt.Sprintf(format, args...))
 }
 

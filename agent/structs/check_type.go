@@ -74,23 +74,23 @@ type CheckType struct {
 func (t *CheckType) UnmarshalJSON(data []byte) (err error) {
 	type Alias CheckType
 	aux := &struct {
-		Interval                       interface{}
-		Timeout                        interface{}
-		TTL                            interface{}
-		DeregisterCriticalServiceAfter interface{}
+		Interval                       any
+		Timeout                        any
+		TTL                            any
+		DeregisterCriticalServiceAfter any
 
 		// Translate fields
 
 		// "args" -> ScriptArgs
-		Args                                []string    `json:"args"`
-		ScriptArgsSnake                     []string    `json:"script_args"`
-		DeregisterCriticalServiceAfterSnake interface{} `json:"deregister_critical_service_after"`
-		DockerContainerIDSnake              string      `json:"docker_container_id"`
-		TLSServerNameSnake                  string      `json:"tls_server_name"`
-		TLSSkipVerifySnake                  bool        `json:"tls_skip_verify"`
-		TCPUseTLSSnake                      bool        `json:"tcp_use_tls"`
-		GRPCUseTLSSnake                     bool        `json:"grpc_use_tls"`
-		H2PingUseTLSSnake                   bool        `json:"h2ping_use_tls"`
+		Args                                []string `json:"args"`
+		ScriptArgsSnake                     []string `json:"script_args"`
+		DeregisterCriticalServiceAfterSnake any      `json:"deregister_critical_service_after"`
+		DockerContainerIDSnake              string   `json:"docker_container_id"`
+		TLSServerNameSnake                  string   `json:"tls_server_name"`
+		TLSSkipVerifySnake                  bool     `json:"tls_skip_verify"`
+		TCPUseTLSSnake                      bool     `json:"tcp_use_tls"`
+		GRPCUseTLSSnake                     bool     `json:"grpc_use_tls"`
+		H2PingUseTLSSnake                   bool     `json:"h2ping_use_tls"`
 
 		// These are going to be ignored but since we are disallowing unknown fields
 		// during parsing we have to be explicit about parsing but not using these.

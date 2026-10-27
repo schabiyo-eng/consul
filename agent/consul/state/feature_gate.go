@@ -33,7 +33,7 @@ func singletonFeatureGateTableSchema(name string) *memdb.TableSchema {
 				AllowMissing: true,
 				Unique:       true,
 				Indexer: &memdb.ConditionalIndex{
-					Conditional: func(interface{}) (bool, error) { return true, nil },
+					Conditional: func(any) (bool, error) { return true, nil },
 				},
 			},
 		},
@@ -144,7 +144,7 @@ func (s *Store) FeatureGateUpdate(idx uint64, req *structs.FeatureGateUpdateRequ
 	return true, nil
 }
 
-func raftModifyIndex(value interface{}) uint64 {
+func raftModifyIndex(value any) uint64 {
 	switch typed := value.(type) {
 	case *structs.FeatureGatePolicy:
 		if typed == nil {

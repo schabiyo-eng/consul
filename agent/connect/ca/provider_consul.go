@@ -61,7 +61,7 @@ func NewConsulProvider(delegate ConsulProviderStateDelegate, logger hclog.Logger
 
 type ConsulProviderStateDelegate interface {
 	ProviderState(id string) (*structs.CAConsulProviderState, error)
-	ApplyCARequest(*structs.CARequest) (interface{}, error)
+	ApplyCARequest(*structs.CARequest) (any, error)
 }
 
 func hexStringHash(input string) string {
@@ -293,7 +293,7 @@ func (c *ConsulProvider) ActiveLeafSigningCert() (string, error) {
 }
 
 // Remove the state store entry for this provider instance.
-func (c *ConsulProvider) Cleanup(_ bool, _ map[string]interface{}) error {
+func (c *ConsulProvider) Cleanup(_ bool, _ map[string]any) error {
 	// This method only gets called for final cleanup. Therefore we don't
 	// need to worry about the case where a ca config update is made to
 	// change the cert ttls but leaving the private key and root cert the
@@ -648,7 +648,7 @@ func (c *ConsulProvider) generateCA(privateKey string, sn uint64, rootCertTTL ti
 	return buf.String(), nil
 }
 
-func (c *ConsulProvider) parseTestState(rawConfig map[string]interface{}, state map[string]string) {
+func (c *ConsulProvider) parseTestState(rawConfig map[string]any, state map[string]string) {
 	c.testState = nil
 	if rawTestState, ok := rawConfig["test_state"]; ok {
 		if ts, ok := rawTestState.(map[string]string); ok {
@@ -663,7 +663,7 @@ func (c *ConsulProvider) parseTestState(rawConfig map[string]interface{}, state 
 		// is test-only code (undocumented config key) and we'd rather not leave a
 		// way to error CA setup and leave cluster unavailable in prod by
 		// accidentally setting a bad test_state config.
-		if ts, ok := rawTestState.(map[string]interface{}); ok {
+		if ts, ok := rawTestState.(map[string]any); ok {
 			c.testState = make(map[string]string)
 			for k, v := range ts {
 				if s, ok := v.(string); ok {

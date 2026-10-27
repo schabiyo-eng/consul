@@ -106,7 +106,7 @@ func TestConfigWrite(t *testing.T) {
 		require.True(t, ok)
 		require.Equal(t, api.ProxyDefaults, proxy.Kind)
 		require.Equal(t, api.ProxyConfigGlobal, proxy.Name)
-		require.Equal(t, map[string]interface{}{"foo": "bar", "bar": 1.0}, proxy.Config)
+		require.Equal(t, map[string]any{"foo": "bar", "bar": 1.0}, proxy.Config)
 	})
 
 	t.Run("No config", func(t *testing.T) {

@@ -17,7 +17,7 @@ import (
 	"github.com/hashicorp/consul/lib/decode"
 )
 
-func (s *HTTPHandlers) DiscoveryChainRead(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) DiscoveryChainRead(resp http.ResponseWriter, req *http.Request) (any, error) {
 	var args structs.DiscoveryChainRequest
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
 		return nil, nil
@@ -36,7 +36,7 @@ func (s *HTTPHandlers) DiscoveryChainRead(resp http.ResponseWriter, req *http.Re
 	args.WithEnterpriseMeta(&entMeta)
 
 	if req.Method == "POST" {
-		var raw map[string]interface{}
+		var raw map[string]any
 		if err := decodeBody(req.Body, &raw); err != nil {
 			return nil, HTTPError{StatusCode: http.StatusBadRequest, Reason: fmt.Sprintf("Request decoding failed: %v", err)}
 		}
@@ -103,7 +103,7 @@ type discoveryChainReadResponse struct {
 	Chain *structs.CompiledDiscoveryChain
 }
 
-func decodeDiscoveryChainReadRequest(raw map[string]interface{}) (*discoveryChainReadRequest, error) {
+func decodeDiscoveryChainReadRequest(raw map[string]any) (*discoveryChainReadRequest, error) {
 	var apiReq discoveryChainReadRequest
 	// TODO(dnephin): at this time only JSON payloads are read, so it is unlikely
 	// that HookWeakDecodeFromSlice is necessary. It was added while porting

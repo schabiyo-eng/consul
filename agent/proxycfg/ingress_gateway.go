@@ -201,7 +201,7 @@ func makeUpstream(g *structs.GatewayService) structs.Upstream {
 		IngressHosts:         g.Hosts,
 		// Pass the protocol that was configured on the ingress listener in order
 		// to force that protocol on the Envoy listener.
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": g.Protocol,
 		},
 	}

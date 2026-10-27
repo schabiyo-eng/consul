@@ -474,7 +474,7 @@ func validateAndApplyEnvoyExtension(logger hclog.Logger, cfgSnap *proxycfg.Confi
 
 	svc := runtimeConfig.ServiceName
 
-	errorParams := []interface{}{
+	errorParams := []any{
 		"extension", runtimeConfig.EnvoyExtension.Name,
 		"service", svc.Name,
 		"namespace", svc.Namespace,

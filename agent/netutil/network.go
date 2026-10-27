@@ -40,7 +40,7 @@ func GetMockGetAgentBindAddrFunc(ip string) func(config *api.Config, cached bool
 }
 
 // GetAgentConfig retrieves the agent's configuration using the local Consul agent's API.
-func GetAgentConfig(config *api.Config) (map[string]map[string]interface{}, error) {
+func GetAgentConfig(config *api.Config) (map[string]map[string]any, error) {
 	if config == nil {
 		config = api.DefaultConfig()
 	}
@@ -89,7 +89,7 @@ func IsDualStack(config *api.Config, cached bool) (bool, error) {
 }
 
 // GetAgentConfigDTO retrieves the agent's configuration using the local Consul agent's API.
-func GetAgentConfigWithDTO(req *IPStackRequestDTO) (map[string]map[string]interface{}, error) {
+func GetAgentConfigWithDTO(req *IPStackRequestDTO) (map[string]map[string]any, error) {
 	var client *api.Client
 	var err error
 

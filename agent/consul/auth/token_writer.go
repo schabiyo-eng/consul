@@ -46,7 +46,7 @@ type TokenWriterConfig struct {
 	LocalTokensEnabled  bool
 }
 
-type RaftApplyFn func(structs.MessageType, interface{}) (interface{}, error)
+type RaftApplyFn func(structs.MessageType, any) (any, error)
 
 //go:generate mockery --name ACLCache --inpackage
 type ACLCache interface {

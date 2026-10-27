@@ -11,7 +11,7 @@ import (
 
 func TestAppendSliceValue_implements(t *testing.T) {
 	t.Parallel()
-	var raw interface{} = new(AppendSliceValue)
+	var raw any = new(AppendSliceValue)
 	if _, ok := raw.(flag.Value); !ok {
 		t.Fatalf("AppendSliceValue should be a Value")
 	}

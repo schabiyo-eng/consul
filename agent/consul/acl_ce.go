@@ -13,7 +13,7 @@ import (
 )
 
 // EnterpriseACLResolverDelegate stub
-type EnterpriseACLResolverDelegate interface{}
+type EnterpriseACLResolverDelegate any
 
 func (s *Server) replicationEnterpriseMeta() *acl.EnterpriseMeta {
 	return structs.ReplicationEnterpriseMeta()

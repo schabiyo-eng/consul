@@ -16,8 +16,8 @@ import (
 // TestCacheGetCh returns a channel that returns the result of the Get call.
 // This is useful for testing timing and concurrency with Get calls. Any
 // error will be logged, so the result value should always be asserted.
-func TestCacheGetCh(t testinf.T, c *Cache, typ string, r Request) <-chan interface{} {
-	resultCh := make(chan interface{})
+func TestCacheGetCh(t testinf.T, c *Cache, typ string, r Request) <-chan any {
+	resultCh := make(chan any)
 	go func() {
 		result, _, err := c.Get(context.Background(), typ, r)
 		if err != nil {
@@ -35,7 +35,7 @@ func TestCacheGetCh(t testinf.T, c *Cache, typ string, r Request) <-chan interfa
 // TestCacheGetChResult tests that the result from TestCacheGetCh matches
 // within a reasonable period of time (it expects it to be "immediate" but
 // waits some milliseconds).
-func TestCacheGetChResult(t testinf.T, ch <-chan interface{}, expected interface{}) {
+func TestCacheGetChResult(t testinf.T, ch <-chan any, expected any) {
 	t.Helper()
 
 	select {

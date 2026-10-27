@@ -109,7 +109,7 @@ func (c *statsHandler) HandleConn(_ context.Context, s stats.ConnStats) {
 
 // Intercept matches the Unary interceptor function signature. This unary interceptor will count RPC requests
 // but does not handle any connection processing or perform RPC "tagging"
-func (c *statsHandler) Intercept(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
+func (c *statsHandler) Intercept(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp any, err error) {
 	c.metrics.IncrCounterWithLabels([]string{"grpc", "server", "request", "count"}, 1, c.labels)
 	return handler(ctx, req)
 }
@@ -130,7 +130,7 @@ func NewActiveStreamCounter(m *metrics.Metrics, labels []metrics.Label) *activeS
 // GRPCCountingStreamInterceptor is a grpc.ServerStreamInterceptor that emits a
 // a metric of the count of open streams.
 func (i *activeStreamCounter) Intercept(
-	srv interface{},
+	srv any,
 	ss grpc.ServerStream,
 	_ *grpc.StreamServerInfo,
 	handler grpc.StreamHandler,

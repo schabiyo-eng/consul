@@ -197,7 +197,7 @@ type fakeCache struct {
 	configEntryName string
 }
 
-func (f *fakeCache) Get(_ context.Context, t string, _ cache.Request) (interface{}, cache.ResultMeta, error) {
+func (f *fakeCache) Get(_ context.Context, t string, _ cache.Request) (any, cache.ResultMeta, error) {
 	f.calls = append(f.calls, t)
 	result := &structs.ConfigEntryResponse{}
 	switch f.configEntryType {
@@ -222,7 +222,7 @@ type fakeNetRPC struct {
 	calls []string
 }
 
-func (f *fakeNetRPC) RPC(ctx context.Context, method string, req interface{}, out interface{}) error {
+func (f *fakeNetRPC) RPC(ctx context.Context, method string, req any, out any) error {
 	f.calls = append(f.calls, method)
 	r, ok := req.(*structs.ConfigEntryQuery)
 	if !ok {

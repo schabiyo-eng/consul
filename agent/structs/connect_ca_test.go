@@ -20,7 +20,7 @@ func TestCAConfiguration_GetCommonConfig(t *testing.T) {
 		{
 			name: "basic defaults",
 			cfg: &CAConfiguration{
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"LeafCertTTL":         "72h",
 					"IntermediateCertTTL": "4320h",
 					"CSRMaxPerSecond":     "50",
@@ -41,7 +41,7 @@ func TestCAConfiguration_GetCommonConfig(t *testing.T) {
 			// what matters in real life.
 			name: "basic defaults after encoding fun",
 			cfg: &CAConfiguration{
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"LeafCertTTL":         []uint8("72h"),
 					"IntermediateCertTTL": []uint8("4320h"),
 				},

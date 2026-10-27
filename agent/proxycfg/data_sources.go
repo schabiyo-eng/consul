@@ -16,7 +16,7 @@ import (
 // agent cache entry).
 type UpdateEvent struct {
 	CorrelationID string
-	Result        interface{}
+	Result        any
 	Err           error
 }
 

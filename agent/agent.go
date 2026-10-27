@@ -201,7 +201,7 @@ type delegate interface {
 	// default partition and namespace from the token.
 	ResolveTokenAndDefaultMeta(token string, entMeta *acl.EnterpriseMeta, authzContext *acl.AuthorizerContext) (resolver.Result, error)
 
-	RPC(ctx context.Context, method string, args interface{}, reply interface{}) error
+	RPC(ctx context.Context, method string, args any, reply any) error
 
 	// ResourceServiceClient is a client for the gRPC Resource Service.
 	ResourceServiceClient() pbresource.ResourceServiceClient
@@ -1706,7 +1706,7 @@ func segmentConfig(config *config.RuntimeConfig) ([]consul.NetworkSegment, error
 // under a unique name while making it accessible under the provided
 // name. This allows overwriting handlers for the golang net/rpc
 // service which does not allow this.
-func (a *Agent) registerEndpoint(name string, handler interface{}) error {
+func (a *Agent) registerEndpoint(name string, handler any) error {
 	srv, ok := a.delegate.(*consul.Server)
 	if !ok {
 		panic("agent must be a server")
@@ -1720,7 +1720,7 @@ func (a *Agent) registerEndpoint(name string, handler interface{}) error {
 
 // RPC is used to make an RPC call to the Consul servers
 // This allows the agent to implement the Consul.Interface
-func (a *Agent) RPC(ctx context.Context, method string, args interface{}, reply interface{}) error {
+func (a *Agent) RPC(ctx context.Context, method string, args any, reply any) error {
 	a.endpointsLock.RLock()
 	// fast path: only translate if there are overrides
 	if len(a.endpoints) > 0 {
@@ -4471,7 +4471,7 @@ func (a *Agent) getRuntimeConfigForDisplay() *config.RuntimeConfig {
 // Callers like the AgentService endpoint will want to return the current result if a hash isn't provided.
 // On the other hand, for cache notifications we always want to block. This avoids an empty first response.
 func (a *Agent) LocalBlockingQuery(alwaysBlock bool, hash string, wait time.Duration,
-	fn func(ws memdb.WatchSet) (string, interface{}, error)) (string, interface{}, error) {
+	fn func(ws memdb.WatchSet) (string, any, error)) (string, any, error) {
 
 	// If we are not blocking we can skip tracking and allocating - nil WatchSet
 	// is still valid to call Add on and will just be a no op.

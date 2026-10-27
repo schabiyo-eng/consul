@@ -56,7 +56,7 @@ func TestPrettyFormatter_FormatAuthMethod(t *testing.T) {
 			Name:        "min-method",
 			Type:        "jwt",
 			Description: "Minimal auth method",
-			Config:      map[string]interface{}{"key": "value"},
+			Config:      map[string]any{"key": "value"},
 		}
 
 		out, err := formatter.FormatAuthMethod(method)
@@ -102,7 +102,7 @@ func TestPrettyFormatter_FormatAuthMethod(t *testing.T) {
 			},
 			CreateIndex: 100,
 			ModifyIndex: 200,
-			Config:      map[string]interface{}{"url": "https://k8s.io"},
+			Config:      map[string]any{"url": "https://k8s.io"},
 		}
 
 		out, err := formatter.FormatAuthMethod(method)
@@ -135,7 +135,7 @@ func TestPrettyFormatter_FormatAuthMethod(t *testing.T) {
 		formatter := newPrettyFormatter(false)
 
 		// Create a map with a channel to force json.MarshalIndent to fail
-		unsupportedMap := map[string]interface{}{
+		unsupportedMap := map[string]any{
 			"bad_field": make(chan int),
 		}
 
@@ -218,7 +218,7 @@ func TestJSONFormatter_FormatAuthMethod(t *testing.T) {
 		Name:            "json-method",
 		Type:            "jwt",
 		TokenNameFormat: "${auth_method_type}-test",
-		Config:          map[string]interface{}{"key": "value"},
+		Config:          map[string]any{"key": "value"},
 	}
 
 	out, err := formatter.FormatAuthMethod(method)

@@ -402,7 +402,7 @@ func TestOIDC_ClaimsFromAuthCode(t *testing.T) {
 
 		// set provider claims that will be returned by the mock server
 		customClaims := sampleClaims(nonce)
-		customClaims["COLOR"] = []interface{}{"yellow"}
+		customClaims["COLOR"] = []any{"yellow"}
 		srv.SetCustomClaims(customClaims)
 
 		// set mock provider's expected code
@@ -661,15 +661,15 @@ func TestOIDC_ClaimsFromAuthCode(t *testing.T) {
 	})
 }
 
-func sampleClaims(nonce string) map[string]interface{} {
-	return map[string]interface{}{
+func sampleClaims(nonce string) map[string]any {
+	return map[string]any{
 		"nonce": nonce,
 		"email": "bob@example.com",
 		"COLOR": "green",
 		"sk":    "42",
 		"Age":   85,
 		"Admin": true,
-		"nested": map[string]interface{}{
+		"nested": map[string]any{
 			"Size":        "medium",
 			"division":    3,
 			"remote":      true,

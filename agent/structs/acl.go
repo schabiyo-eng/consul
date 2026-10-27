@@ -380,7 +380,7 @@ type ACLToken struct {
 func (t *ACLToken) UnmarshalJSON(data []byte) (err error) {
 	type Alias ACLToken
 	aux := &struct {
-		ExpirationTTL interface{}
+		ExpirationTTL any
 		Hash          string
 		*Alias
 	}{
@@ -1271,7 +1271,7 @@ type ACLAuthMethod struct {
 	// Configuration is arbitrary configuration for the auth method. This
 	// should only contain primitive values and containers (such as lists and
 	// maps).
-	Config map[string]interface{}
+	Config map[string]any
 
 	// Embedded Enterprise ACL Meta
 	acl.EnterpriseMeta `mapstructure:",squash"`
@@ -1301,7 +1301,7 @@ func (m *ACLAuthMethod) MarshalJSON() ([]byte, error) {
 func (m *ACLAuthMethod) UnmarshalJSON(data []byte) (err error) {
 	type Alias ACLAuthMethod
 	aux := &struct {
-		MaxTokenTTL interface{}
+		MaxTokenTTL any
 		*Alias
 	}{
 		Alias: (*Alias)(m),
@@ -1328,7 +1328,7 @@ func (m *ACLAuthMethod) GetClaimMappings() map[string]string {
 		return nil
 	}
 
-	claimMappings, ok := m.Config["ClaimMappings"].(map[string]interface{})
+	claimMappings, ok := m.Config["ClaimMappings"].(map[string]any)
 	if !ok {
 		return nil
 	}

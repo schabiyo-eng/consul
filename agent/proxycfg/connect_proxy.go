@@ -461,7 +461,7 @@ func (s *handlerConnectProxy) handleUpdate(ctx context.Context, u UpdateEvent, s
 
 			seenUpstreams[uid] = struct{}{}
 
-			cfgMap := make(map[string]interface{})
+			cfgMap := make(map[string]any)
 			u, ok := snap.ConnectProxy.UpstreamConfig[uid]
 			if ok {
 				cfgMap = u.Config
@@ -705,7 +705,7 @@ type telemetryCollectorConfig struct {
 	TelemetryCollectorBindSocketDir string `mapstructure:"envoy_telemetry_collector_bind_socket_dir"`
 }
 
-func parseTelemetryCollectorConfig(m map[string]interface{}) (telemetryCollectorConfig, error) {
+func parseTelemetryCollectorConfig(m map[string]any) (telemetryCollectorConfig, error) {
 	var cfg telemetryCollectorConfig
 	err := mapstructure.WeakDecode(m, &cfg)
 
@@ -745,7 +745,7 @@ func (s *handlerConnectProxy) maybeInitializeTelemetryCollectorWatches(ctx conte
 		DestinationPartition: s.proxyID.PartitionOrDefault(),
 		DestinationName:      api.TelemetryCollectorName,
 		LocalBindSocketPath:  path,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "grpc",
 		},
 	}

@@ -12,7 +12,7 @@ import (
 	"github.com/hashicorp/consul/agent/structs"
 )
 
-func ParseConsulCAConfig(raw map[string]interface{}) (*structs.ConsulCAProviderConfig, error) {
+func ParseConsulCAConfig(raw map[string]any) (*structs.ConsulCAProviderConfig, error) {
 	config := defaultConsulCAProviderConfig()
 	decodeConf := &mapstructure.DecoderConfig{
 		DecodeHook:       structs.ParseDurationFunc(),

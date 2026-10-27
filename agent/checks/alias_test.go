@@ -544,7 +544,7 @@ type mockRPC struct {
 	Replies map[string]*atomic.Value
 }
 
-func (m *mockRPC) AddReply(method string, reply interface{}) {
+func (m *mockRPC) AddReply(method string, reply any) {
 	if m.Replies == nil {
 		m.Replies = make(map[string]*atomic.Value)
 	}
@@ -554,7 +554,7 @@ func (m *mockRPC) AddReply(method string, reply interface{}) {
 
 }
 
-func (m *mockRPC) RPC(ctx context.Context, method string, args interface{}, reply interface{}) error {
+func (m *mockRPC) RPC(ctx context.Context, method string, args any, reply any) error {
 	atomic.AddUint32(&m.Calls, 1)
 	m.Args.Store(args)
 

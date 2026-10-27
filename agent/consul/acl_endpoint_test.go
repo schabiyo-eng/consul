@@ -4179,7 +4179,7 @@ func TestACLEndpoint_SecureIntroEndpoints_OnlyCreateLocalData(t *testing.T) {
 				Name:        "testmethod",
 				Description: "test original",
 				Type:        "testing",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"SessionID": testSessionID_2,
 				},
 			},
@@ -4206,7 +4206,7 @@ func TestACLEndpoint_SecureIntroEndpoints_OnlyCreateLocalData(t *testing.T) {
 			AuthMethod: structs.ACLAuthMethod{
 				Name:        "testmethod",
 				Description: "test updated",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"SessionID": testSessionID_2,
 				},
 			},
@@ -4408,7 +4408,7 @@ func TestACLEndpoint_SecureIntroEndpoints_OnlyCreateLocalData(t *testing.T) {
 			AuthMethod: structs.ACLAuthMethod{
 				Name: "primarymethod",
 				Type: "testing",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"SessionID": testSessionID_1,
 				},
 			},
@@ -4919,7 +4919,7 @@ func TestACLEndpoint_Login(t *testing.T) {
 		// subtest.
 		updated := *method
 		updated.Description = "updated for the test"
-		updated.Config = map[string]interface{}{
+		updated.Config = map[string]any{
 			"SessionID": testSessionID_2,
 		}
 
@@ -4973,7 +4973,7 @@ func TestACLEndpoint_Login_with_MaxTokenTTL(t *testing.T) {
 
 	method, err := upsertTestCustomizedAuthMethod(codec, TestDefaultInitialManagementToken, "dc1", func(method *structs.ACLAuthMethod) {
 		method.MaxTokenTTL = 5 * time.Minute
-		method.Config = map[string]interface{}{
+		method.Config = map[string]any{
 			"SessionID": testSessionID,
 		}
 	})
@@ -5092,7 +5092,7 @@ func TestACLEndpoint_Login_with_TokenLocality(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			method, err := upsertTestCustomizedAuthMethod(codec, TestDefaultInitialManagementToken, "dc1", func(method *structs.ACLAuthMethod) {
 				method.TokenLocality = tc.tokenLocality
-				method.Config = map[string]interface{}{
+				method.Config = map[string]any{
 					"SessionID": testSessionID,
 				}
 			})
@@ -5333,7 +5333,7 @@ func TestACLEndpoint_Login_jwt(t *testing.T) {
 	oidcServer := oidcauthtest.Start(t)
 	pubKey, privKey := oidcServer.SigningKeys()
 
-	type mConfig = map[string]interface{}
+	type mConfig = map[string]any
 	cases := map[string]struct {
 		f         func(config mConfig)
 		issuer    string
@@ -5364,7 +5364,7 @@ func TestACLEndpoint_Login_jwt(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			method, err := upsertTestCustomizedAuthMethod(codec, TestDefaultInitialManagementToken, "dc1", func(method *structs.ACLAuthMethod) {
 				method.Type = "jwt"
-				method.Config = map[string]interface{}{
+				method.Config = map[string]any{
 					"JWTSupportedAlgs": []string{"ES256"},
 					"ClaimMappings": map[string]string{
 						"first_name":   "name",
@@ -5550,7 +5550,7 @@ func TestACLEndpoint_Logout(t *testing.T) {
 	})
 }
 
-func gatherIDs(t *testing.T, v interface{}) []string {
+func gatherIDs(t *testing.T, v any) []string {
 	t.Helper()
 
 	var out []string
@@ -5913,7 +5913,7 @@ func upsertTestAuthMethod(
 	sessionID string,
 ) (*structs.ACLAuthMethod, error) {
 	return upsertTestCustomizedAuthMethod(codec, initialManagementToken, datacenter, func(method *structs.ACLAuthMethod) {
-		method.Config = map[string]interface{}{
+		method.Config = map[string]any{
 			"SessionID": sessionID,
 		}
 	})
@@ -5972,7 +5972,7 @@ func upsertTestKubernetesAuthMethod(
 		AuthMethod: structs.ACLAuthMethod{
 			Name: "test-method-" + name,
 			Type: "kubernetes",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"Host":              kubeHost,
 				"CACert":            caCert,
 				"ServiceAccountJWT": kubeJWT,

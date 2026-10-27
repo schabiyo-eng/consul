@@ -91,7 +91,7 @@ type Handler struct {
 // It is passed the current RuntimeConfig being applied and a map containing the
 // current data that will be passed to the template. It should be modified
 // directly to inject additional context.
-type UIDataTransform func(data map[string]interface{}) error
+type UIDataTransform func(data map[string]any) error
 
 // NewHandler returns a Handler that can be used to serve UI http requests. It
 // accepts a full agent config since properties like ACLs being enabled affect
@@ -278,7 +278,7 @@ func (h *Handler) renderIndexFile(cfg *config.RuntimeConfig, fsys fs.FS) (fs.Fil
 	}
 
 	tpl, err := template.New("index").Funcs(template.FuncMap{
-		"jsonEncode": func(data map[string]interface{}) (string, error) {
+		"jsonEncode": func(data map[string]any) (string, error) {
 			bs, err := json.MarshalIndent(data, "", "  ")
 			if err != nil {
 				return "", fmt.Errorf("failed jsonEncode: %w", err)

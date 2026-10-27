@@ -172,7 +172,7 @@ func (n *checkServiceNodeSorter) Less(i, j int) bool {
 }
 
 // newSorterByDistanceFrom returns a sorter for the given type.
-func (s *Server) newSorterByDistanceFrom(cs librtt.CoordinateSet, subj interface{}) (sort.Interface, error) {
+func (s *Server) newSorterByDistanceFrom(cs librtt.CoordinateSet, subj any) (sort.Interface, error) {
 	switch v := subj.(type) {
 	case structs.Nodes:
 		return s.newNodeSorter(cs, v)
@@ -192,7 +192,7 @@ func (s *Server) newSorterByDistanceFrom(cs librtt.CoordinateSet, subj interface
 // will get stable sorted at the end of the list.
 //
 // If coordinates are disabled this will be a no-op.
-func (s *Server) sortNodesByDistanceFrom(source structs.QuerySource, subj interface{}) error {
+func (s *Server) sortNodesByDistanceFrom(source structs.QuerySource, subj any) error {
 	// We can't sort if there's no source node.
 	if source.Node == "" {
 		return nil

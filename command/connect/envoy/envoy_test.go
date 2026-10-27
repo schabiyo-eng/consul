@@ -125,7 +125,7 @@ type generateConfigTestCase struct {
 	Flags             []string
 	Env               []string
 	Files             map[string]string
-	ProxyConfig       map[string]interface{}
+	ProxyConfig       map[string]any
 	ProxyDefaults     api.ProxyConfigEntry
 	NamespacesEnabled bool
 	XDSPorts          agent.GRPCPorts // used to mock an agent's configured gRPC ports. Plaintext defaults to 8502 and TLS defaults to 8503.
@@ -294,7 +294,7 @@ func TestGenerateConfig(t *testing.T) {
 		{
 			Name:  "telemetry-collector",
 			Flags: []string{"-proxy-id", "test-proxy"},
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				"envoy_telemetry_collector_bind_socket_dir": "/tmp/consul/telemetry-collector",
 			},
 			WantArgs: BootstrapTplArgs{
@@ -318,7 +318,7 @@ func TestGenerateConfig(t *testing.T) {
 			Name:        "telemetry-collector-dualstack",
 			Flags:       []string{"-proxy-id", "test-proxy"},
 			IsDualStack: true,
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				"envoy_telemetry_collector_bind_socket_dir": "/tmp/consul/telemetry-collector",
 			},
 			WantArgs: BootstrapTplArgs{
@@ -342,7 +342,7 @@ func TestGenerateConfig(t *testing.T) {
 			Name: "prometheus-metrics",
 			Flags: []string{"-proxy-id", "test-proxy",
 				"-prometheus-backend-port", "20100", "-prometheus-scrape-path", "/scrape-path"},
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				// When envoy_prometheus_bind_addr is set, if
 				// PrometheusBackendPort is set, there will be a
 				// "prometheus_backend" cluster in the Envoy configuration.
@@ -371,7 +371,7 @@ func TestGenerateConfig(t *testing.T) {
 			Flags: []string{"-proxy-id", "test-proxy",
 				"-prometheus-backend-port", "20100", "-prometheus-scrape-path", "/scrape-path"},
 			IsDualStack: true,
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				// When envoy_prometheus_bind_addr is set, if
 				// PrometheusBackendPort is set, there will be a
 				// "prometheus_backend" cluster in the Envoy configuration.
@@ -401,7 +401,7 @@ func TestGenerateConfig(t *testing.T) {
 				"-prometheus-backend-port", "20100", "-prometheus-scrape-path", "/scrape-path",
 				"-prometheus-ca-file", "../../../test/key/ourdomain.cer", "-prometheus-cert-file", "../../../test/key/ourdomain_server.cer",
 				"-prometheus-key-file", "../../../test/key/ourdomain_server.key"},
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				// When envoy_prometheus_bind_addr is set, if
 				// PrometheusBackendPort is set, there will be a
 				// "prometheus_backend" cluster in the Envoy configuration.
@@ -435,7 +435,7 @@ func TestGenerateConfig(t *testing.T) {
 				"-prometheus-ca-file", "../../../test/key/ourdomain.cer", "-prometheus-cert-file", "../../../test/key/ourdomain_server.cer",
 				"-prometheus-key-file", "../../../test/key/ourdomain_server.key"},
 			IsDualStack: true,
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				// When envoy_prometheus_bind_addr is set, if
 				// PrometheusBackendPort is set, there will be a
 				// "prometheus_backend" cluster in the Envoy configuration.
@@ -468,7 +468,7 @@ func TestGenerateConfig(t *testing.T) {
 				"-prometheus-backend-port", "20100", "-prometheus-scrape-path", "/scrape-path",
 				"-prometheus-ca-path", "../../../test/ca_path", "-prometheus-cert-file", "../../../test/key/ourdomain_server.cer",
 				"-prometheus-key-file", "../../../test/key/ourdomain_server.key"},
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				// When envoy_prometheus_bind_addr is set, if
 				// PrometheusBackendPort is set, there will be a
 				// "prometheus_backend" cluster in the Envoy configuration.
@@ -502,7 +502,7 @@ func TestGenerateConfig(t *testing.T) {
 				"-prometheus-ca-path", "../../../test/ca_path", "-prometheus-cert-file", "../../../test/key/ourdomain_server.cer",
 				"-prometheus-key-file", "../../../test/key/ourdomain_server.key"},
 			IsDualStack: true,
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				// When envoy_prometheus_bind_addr is set, if
 				// PrometheusBackendPort is set, there will be a
 				// "prometheus_backend" cluster in the Envoy configuration.
@@ -1248,7 +1248,7 @@ func TestGenerateConfig(t *testing.T) {
 		{
 			Name:  "custom-bootstrap",
 			Flags: []string{"-proxy-id", "test-proxy"},
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				// Add a completely custom bootstrap template. Never mind if this is
 				// invalid envoy config just as long as it works and gets the variables
 				// interplated.
@@ -1299,7 +1299,7 @@ func TestGenerateConfig(t *testing.T) {
 			Name:        "custom-bootstrap-dualstack",
 			Flags:       []string{"-proxy-id", "test-proxy"},
 			IsDualStack: true,
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				// Add a completely custom bootstrap template. Never mind if this is
 				// invalid envoy config just as long as it works and gets the variables
 				// interplated.
@@ -1349,7 +1349,7 @@ func TestGenerateConfig(t *testing.T) {
 		{
 			Name:  "extra_-single",
 			Flags: []string{"-proxy-id", "test-proxy"},
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				// Add a custom sections with interpolated variables. These are all
 				// invalid config syntax too but we are just testing they have the right
 				// effect.
@@ -1387,7 +1387,7 @@ func TestGenerateConfig(t *testing.T) {
 			Name:        "extra_-single-dualstack",
 			Flags:       []string{"-proxy-id", "test-proxy"},
 			IsDualStack: true,
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				// Add a custom sections with interpolated variables. These are all
 				// invalid config syntax too but we are just testing they have the right
 				// effect.
@@ -1424,7 +1424,7 @@ func TestGenerateConfig(t *testing.T) {
 		{
 			Name:  "extra_-multiple",
 			Flags: []string{"-proxy-id", "test-proxy"},
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				// Add a custom sections with interpolated variables. These are all
 				// invalid config syntax too but we are just testing they have the right
 				// effect.
@@ -1467,7 +1467,7 @@ func TestGenerateConfig(t *testing.T) {
 			Name:        "extra_-multiple-dualstack",
 			Flags:       []string{"-proxy-id", "test-proxy"},
 			IsDualStack: true,
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				// Add a custom sections with interpolated variables. These are all
 				// invalid config syntax too but we are just testing they have the right
 				// effect.
@@ -1509,7 +1509,7 @@ func TestGenerateConfig(t *testing.T) {
 		{
 			Name:  "stats-config-override",
 			Flags: []string{"-proxy-id", "test-proxy"},
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				// Add a custom sections with interpolated variables. These are all
 				// invalid config syntax too but we are just testing they have the right
 				// effect.
@@ -1539,7 +1539,7 @@ func TestGenerateConfig(t *testing.T) {
 			Name:        "stats-config-override-dualstack",
 			Flags:       []string{"-proxy-id", "test-proxy"},
 			IsDualStack: true,
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				// Add a custom sections with interpolated variables. These are all
 				// invalid config syntax too but we are just testing they have the right
 				// effect.
@@ -1568,7 +1568,7 @@ func TestGenerateConfig(t *testing.T) {
 		{
 			Name:  "zipkin-tracing-config",
 			Flags: []string{"-proxy-id", "test-proxy"},
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				// Add a custom sections with interpolated variables. These are all
 				// invalid config syntax too but we are just testing they have the right
 				// effect.
@@ -1628,7 +1628,7 @@ func TestGenerateConfig(t *testing.T) {
 			Name:        "zipkin-tracing-config-dualstack",
 			Flags:       []string{"-proxy-id", "test-proxy"},
 			IsDualStack: true,
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				// Add a custom sections with interpolated variables. These are all
 				// invalid config syntax too but we are just testing they have the right
 				// effect.
@@ -2482,7 +2482,7 @@ func partitionFromQuery(r *http.Request) string {
 	return "default"
 }
 
-func testMockAgentProxyConfig(cfg map[string]interface{}, namespacesEnabled bool) http.HandlerFunc {
+func testMockAgentProxyConfig(cfg map[string]any, namespacesEnabled bool) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Parse the proxy-id from the end of the URL (blindly assuming it's correct
 		// format)
@@ -2690,17 +2690,17 @@ func testMockAgentSelf(
 ) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		resp := agent.Self{
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"Datacenter": "dc1",
 			},
 		}
 
 		if agentSelf110 {
-			resp.DebugConfig = map[string]interface{}{
+			resp.DebugConfig = map[string]any{
 				"GRPCPort": wantXDSPorts.Plaintext,
 			}
 		} else if grpcDisabled {
-			resp.DebugConfig = map[string]interface{}{
+			resp.DebugConfig = map[string]any{
 				"GRPCPort": -1,
 			}
 			// the real agent does not populate XDS if grpc or

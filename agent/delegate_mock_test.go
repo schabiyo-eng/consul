@@ -58,7 +58,7 @@ func (m *delegateMock) ResolveTokenAndDefaultMeta(token string, entMeta *acl.Ent
 	return ret.Get(0).(resolver.Result), ret.Error(1)
 }
 
-func (m *delegateMock) RPC(ctx context.Context, method string, args interface{}, reply interface{}) error {
+func (m *delegateMock) RPC(ctx context.Context, method string, args any, reply any) error {
 	return m.Called(method, args, reply).Error(0)
 }
 

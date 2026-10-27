@@ -32,7 +32,7 @@ func TestServiceManager_RegisterService(t *testing.T) {
 	// Register a global proxy and service config
 	testApplyConfigEntries(t, a,
 		&structs.ProxyConfigEntry{
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": 1,
 			},
 		},
@@ -81,7 +81,7 @@ func TestServiceManager_RegisterSidecar(t *testing.T) {
 	// Register a global proxy and service config
 	testApplyConfigEntries(t, a,
 		&structs.ProxyConfigEntry{
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": 1,
 			},
 		},
@@ -137,7 +137,7 @@ func TestServiceManager_RegisterSidecar(t *testing.T) {
 			DestinationServiceID:   "web",
 			LocalServiceAddress:    "127.0.0.1",
 			LocalServicePort:       8000,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo":      int64(1),
 				"protocol": "http",
 			},
@@ -147,7 +147,7 @@ func TestServiceManager_RegisterSidecar(t *testing.T) {
 					DestinationNamespace: "default",
 					DestinationPartition: "default",
 					LocalBindPort:        5000,
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"protocol": "tcp",
 					},
 				},
@@ -174,7 +174,7 @@ func TestServiceManager_RegisterMeshGateway(t *testing.T) {
 	// Register a global proxy and service config
 	testApplyConfigEntries(t, a,
 		&structs.ProxyConfigEntry{
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": 1,
 			},
 		},
@@ -206,7 +206,7 @@ func TestServiceManager_RegisterMeshGateway(t *testing.T) {
 		Port:            443,
 		TaggedAddresses: map[string]structs.ServiceAddress{},
 		Proxy: structs.ConnectProxyConfig{
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo":      int64(1),
 				"protocol": "http",
 			},
@@ -232,7 +232,7 @@ func TestServiceManager_RegisterTerminatingGateway(t *testing.T) {
 	// Register a global proxy and service config
 	testApplyConfigEntries(t, a,
 		&structs.ProxyConfigEntry{
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": 1,
 			},
 		},
@@ -264,7 +264,7 @@ func TestServiceManager_RegisterTerminatingGateway(t *testing.T) {
 		Port:            443,
 		TaggedAddresses: map[string]structs.ServiceAddress{},
 		Proxy: structs.ConnectProxyConfig{
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo":      int64(1),
 				"protocol": "http",
 			},
@@ -294,7 +294,7 @@ func TestServiceManager_PersistService_API(t *testing.T) {
 	// Register a global proxy and service config
 	testApplyConfigEntries(t, serverAgent,
 		&structs.ProxyConfigEntry{
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": 1,
 			},
 		},
@@ -361,7 +361,7 @@ func TestServiceManager_PersistService_API(t *testing.T) {
 			DestinationServiceID:   "web",
 			LocalServiceAddress:    "127.0.0.1",
 			LocalServicePort:       8000,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo":      int64(1),
 				"protocol": "http",
 			},
@@ -371,7 +371,7 @@ func TestServiceManager_PersistService_API(t *testing.T) {
 					DestinationNamespace: "default",
 					DestinationPartition: "default",
 					LocalBindPort:        5000,
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"protocol": "tcp",
 					},
 				},
@@ -418,7 +418,7 @@ func TestServiceManager_PersistService_API(t *testing.T) {
 	pcfg := persistedServiceConfig{
 		ServiceID: "web-sidecar-proxy",
 		Defaults: &structs.ServiceConfigResponse{
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				"foo":      1,
 				"protocol": "http",
 			},
@@ -427,7 +427,7 @@ func TestServiceManager_PersistService_API(t *testing.T) {
 					Upstream: structs.PeeredServiceName{
 						ServiceName: structs.NewServiceName("redis", nil),
 					},
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"protocol": "tcp",
 					},
 				},
@@ -468,7 +468,7 @@ func TestServiceManager_PersistService_API(t *testing.T) {
 	pcfg = persistedServiceConfig{
 		ServiceID: "web-sidecar-proxy",
 		Defaults: &structs.ServiceConfigResponse{
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				"foo":      1,
 				"protocol": "http",
 			},
@@ -477,7 +477,7 @@ func TestServiceManager_PersistService_API(t *testing.T) {
 					Upstream: structs.PeeredServiceName{
 						ServiceName: structs.NewServiceName("redis", nil),
 					},
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"protocol": "tcp",
 					},
 				},
@@ -534,7 +534,7 @@ func TestServiceManager_PersistService_ConfigFiles(t *testing.T) {
 	// Register a global proxy and service config
 	testApplyConfigEntries(t, serverAgent,
 		&structs.ProxyConfigEntry{
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": 1,
 			},
 		},
@@ -603,7 +603,7 @@ func TestServiceManager_PersistService_ConfigFiles(t *testing.T) {
 			DestinationServiceID:   "web",
 			LocalServiceAddress:    "127.0.0.1",
 			LocalServicePort:       8000,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo":      int64(1),
 				"protocol": "http",
 			},
@@ -614,7 +614,7 @@ func TestServiceManager_PersistService_ConfigFiles(t *testing.T) {
 					DestinationNamespace: "default",
 					DestinationPartition: "default",
 					LocalBindPort:        5000,
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"protocol": "tcp",
 					},
 				},
@@ -649,7 +649,7 @@ func TestServiceManager_PersistService_ConfigFiles(t *testing.T) {
 	expectJSONFile(t, configFile, persistedServiceConfig{
 		ServiceID: "web-sidecar-proxy",
 		Defaults: &structs.ServiceConfigResponse{
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				"foo":      1,
 				"protocol": "http",
 			},
@@ -658,7 +658,7 @@ func TestServiceManager_PersistService_ConfigFiles(t *testing.T) {
 					Upstream: structs.PeeredServiceName{
 						ServiceName: structs.NewServiceName("redis", nil),
 					},
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"protocol": "tcp",
 					},
 				},
@@ -709,7 +709,7 @@ func TestServiceManager_Disabled(t *testing.T) {
 	// Register a global proxy and service config
 	testApplyConfigEntries(t, a,
 		&structs.ProxyConfigEntry{
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": 1,
 			},
 		},
@@ -806,7 +806,7 @@ func requireFileIsPresent(t *testing.T, file string) {
 	}
 }
 
-func expectJSONFile(t *testing.T, file string, expect interface{}, fixupContentBeforeCompareFn func([]byte) ([]byte, error)) {
+func expectJSONFile(t *testing.T, file string, expect any, fixupContentBeforeCompareFn func([]byte) ([]byte, error)) {
 	t.Helper()
 
 	expected, err := json.Marshal(expect)
@@ -843,7 +843,7 @@ func fixPersistedServiceConfigForTest(content []byte) ([]byte, error) {
 // resetDefaultsQueryMeta will reset the embedded fields from structs.QueryMeta
 // to their zero values in the json object keyed under 'Defaults'.
 func resetDefaultsQueryMeta(content []byte) ([]byte, error) {
-	var raw map[string]interface{}
+	var raw map[string]any
 	if err := json.Unmarshal(content, &raw); err != nil {
 		return nil, err
 	}
@@ -852,7 +852,7 @@ func resetDefaultsQueryMeta(content []byte) ([]byte, error) {
 		return content, nil
 	}
 
-	rawDef, ok := def.(map[string]interface{})
+	rawDef, ok := def.(map[string]any)
 	if !ok {
 		return nil, fmt.Errorf("unexpected structure found in 'Defaults' key")
 	}
@@ -871,13 +871,13 @@ func resetDefaultsQueryMeta(content []byte) ([]byte, error) {
 	return json.Marshal(raw)
 }
 
-func convertToMap(v interface{}) (map[string]interface{}, error) {
+func convertToMap(v any) (map[string]any, error) {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return nil, err
 	}
 
-	var raw map[string]interface{}
+	var raw map[string]any
 	if err := json.Unmarshal(b, &raw); err != nil {
 		return nil, err
 	}

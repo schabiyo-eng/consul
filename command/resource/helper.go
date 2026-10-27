@@ -185,14 +185,14 @@ type WriteRequest struct {
 }
 
 type ListResponse struct {
-	Resources []map[string]interface{} `json:"resources"`
+	Resources []map[string]any `json:"resources"`
 }
 
 func (gvk *GVK) String() string {
 	return fmt.Sprintf("%s.%s.%s", gvk.Group, gvk.Version, gvk.Kind)
 }
 
-func (resource *Resource) Read(gvk *GVK, resourceName string, q *client.QueryOptions) (map[string]interface{}, error) {
+func (resource *Resource) Read(gvk *GVK, resourceName string, q *client.QueryOptions) (map[string]any, error) {
 	r := resource.C.NewRequest("GET", strings.ToLower(fmt.Sprintf("/api/%s/%s/%s/%s", gvk.Group, gvk.Version, gvk.Kind, resourceName)))
 	r.SetQueryOptions(q)
 	_, resp, err := resource.C.DoRequest(r)
@@ -204,7 +204,7 @@ func (resource *Resource) Read(gvk *GVK, resourceName string, q *client.QueryOpt
 		return nil, err
 	}
 
-	var out map[string]interface{}
+	var out map[string]any
 	if err := client.DecodeBody(resp, &out); err != nil {
 		return nil, err
 	}
@@ -226,7 +226,7 @@ func (resource *Resource) Delete(gvk *GVK, resourceName string, q *client.QueryO
 	return nil
 }
 
-func (resource *Resource) Apply(gvk *GVK, resourceName string, q *client.QueryOptions, payload *WriteRequest) (*map[string]interface{}, error) {
+func (resource *Resource) Apply(gvk *GVK, resourceName string, q *client.QueryOptions, payload *WriteRequest) (*map[string]any, error) {
 	url := strings.ToLower(fmt.Sprintf("/api/%s/%s/%s/%s", gvk.Group, gvk.Version, gvk.Kind, resourceName))
 
 	r := resource.C.NewRequest("PUT", url)
@@ -241,7 +241,7 @@ func (resource *Resource) Apply(gvk *GVK, resourceName string, q *client.QueryOp
 		return nil, err
 	}
 
-	var out map[string]interface{}
+	var out map[string]any
 
 	if err := client.DecodeBody(resp, &out); err != nil {
 		return nil, err

@@ -483,12 +483,12 @@ func (d *ACLResolverTestDelegate) IsServerManagementToken(token string) bool {
 
 // UseTestLocalData will force delegate-local maps to be used in lieu of the
 // global factory functions.
-func (d *ACLResolverTestDelegate) UseTestLocalData(data []interface{}) {
+func (d *ACLResolverTestDelegate) UseTestLocalData(data []any) {
 	d.testTokens = make(map[string]*structs.ACLToken)
 	d.testPolicies = make(map[string]*structs.ACLPolicy)
 	d.testRoles = make(map[string]*structs.ACLRole)
 
-	var rest []interface{}
+	var rest []any
 	for _, item := range data {
 		switch x := item.(type) {
 		case *structs.ACLToken:
@@ -686,7 +686,7 @@ func (d *ACLResolverTestDelegate) ResolveRoleFromID(roleID string) (bool, *struc
 	return testRoleForID(roleID)
 }
 
-func (d *ACLResolverTestDelegate) RPC(ctx context.Context, method string, args interface{}, reply interface{}) error {
+func (d *ACLResolverTestDelegate) RPC(ctx context.Context, method string, args any, reply any) error {
 	switch method {
 	case "ACL.TokenRead":
 		atomic.AddInt32(&d.remoteTokenResolutions, 1)
@@ -1673,7 +1673,7 @@ func testACLResolver_variousTokens(t *testing.T, delegate *ACLResolverTestDelega
 	})
 
 	runTwiceAndReset("Missing Policy", func(t *testing.T) {
-		delegate.UseTestLocalData([]interface{}{
+		delegate.UseTestLocalData([]any{
 			&structs.ACLToken{
 				AccessorID: "435a75af-1763-4980-89f4-f0951dda53b4",
 				SecretID:   "missing-policy",
@@ -1698,7 +1698,7 @@ func testACLResolver_variousTokens(t *testing.T, delegate *ACLResolverTestDelega
 	})
 
 	runTwiceAndReset("Missing Role", func(t *testing.T) {
-		delegate.UseTestLocalData([]interface{}{
+		delegate.UseTestLocalData([]any{
 			&structs.ACLToken{
 				AccessorID: "435a75af-1763-4980-89f4-f0951dda53b4",
 				SecretID:   "missing-role",
@@ -1731,7 +1731,7 @@ func testACLResolver_variousTokens(t *testing.T, delegate *ACLResolverTestDelega
 	})
 
 	runTwiceAndReset("Missing Policy on Role", func(t *testing.T) {
-		delegate.UseTestLocalData([]interface{}{
+		delegate.UseTestLocalData([]any{
 			&structs.ACLToken{
 				AccessorID: "435a75af-1763-4980-89f4-f0951dda53b4",
 				SecretID:   "missing-policy-on-role",
@@ -1765,7 +1765,7 @@ func testACLResolver_variousTokens(t *testing.T, delegate *ACLResolverTestDelega
 	})
 
 	runTwiceAndReset("Normal with Policy", func(t *testing.T) {
-		delegate.UseTestLocalData([]interface{}{
+		delegate.UseTestLocalData([]any{
 			&structs.ACLToken{
 				AccessorID: "5f57c1f6-6a89-4186-9445-531b316e01df",
 				SecretID:   "found",
@@ -1798,7 +1798,7 @@ func testACLResolver_variousTokens(t *testing.T, delegate *ACLResolverTestDelega
 	})
 
 	runTwiceAndReset("Normal with Role", func(t *testing.T) {
-		delegate.UseTestLocalData([]interface{}{
+		delegate.UseTestLocalData([]any{
 			&structs.ACLToken{
 				AccessorID: "5f57c1f6-6a89-4186-9445-531b316e01df",
 				SecretID:   "found-role",
@@ -1839,7 +1839,7 @@ func testACLResolver_variousTokens(t *testing.T, delegate *ACLResolverTestDelega
 	})
 
 	runTwiceAndReset("Normal with Policy and Role", func(t *testing.T) {
-		delegate.UseTestLocalData([]interface{}{
+		delegate.UseTestLocalData([]any{
 			&structs.ACLToken{
 				AccessorID: "5f57c1f6-6a89-4186-9445-531b316e01df",
 				SecretID:   "found-policy-and-role",
@@ -1892,7 +1892,7 @@ func testACLResolver_variousTokens(t *testing.T, delegate *ACLResolverTestDelega
 	})
 
 	runTwiceAndReset("Role With Node Identity", func(t *testing.T) {
-		delegate.UseTestLocalData([]interface{}{
+		delegate.UseTestLocalData([]any{
 			&structs.ACLToken{
 				AccessorID: "f3f47a09-de29-4c57-8f54-b65a9be79641",
 				SecretID:   "found-role-node-identity",
@@ -1925,7 +1925,7 @@ func testACLResolver_variousTokens(t *testing.T, delegate *ACLResolverTestDelega
 	})
 
 	runTwiceAndReset("Synthetic Policies Independently Cache", func(t *testing.T) {
-		delegate.UseTestLocalData([]interface{}{
+		delegate.UseTestLocalData([]any{
 			&structs.ACLToken{
 				AccessorID: "f6c5a5fb-4da4-422b-9abf-2c942813fc71",
 				SecretID:   "found-synthetic-policy-1",
@@ -2096,7 +2096,7 @@ func testACLResolver_variousTokens(t *testing.T, delegate *ACLResolverTestDelega
 	})
 
 	runTwiceAndReset("Anonymous", func(t *testing.T) {
-		delegate.UseTestLocalData([]interface{}{
+		delegate.UseTestLocalData([]any{
 			&structs.ACLToken{
 				AccessorID: "00000000-0000-0000-0000-000000000002",
 				SecretID:   anonymousToken,
@@ -2121,7 +2121,7 @@ func testACLResolver_variousTokens(t *testing.T, delegate *ACLResolverTestDelega
 	})
 
 	runTwiceAndReset("service and intention wildcard write", func(t *testing.T) {
-		delegate.UseTestLocalData([]interface{}{
+		delegate.UseTestLocalData([]any{
 			&structs.ACLToken{
 				AccessorID: "5f57c1f6-6a89-4186-9445-531b316e01df",
 				SecretID:   "with-intentions",

@@ -20,7 +20,7 @@ type preparedQueryCreateResponse struct {
 }
 
 // preparedQueryCreate makes a new prepared query.
-func (s *HTTPHandlers) preparedQueryCreate(_ http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) preparedQueryCreate(_ http.ResponseWriter, req *http.Request) (any, error) {
 	args := structs.PreparedQueryRequest{
 		Op: structs.PreparedQueryCreate,
 	}
@@ -38,7 +38,7 @@ func (s *HTTPHandlers) preparedQueryCreate(_ http.ResponseWriter, req *http.Requ
 }
 
 // preparedQueryList returns all the prepared queries.
-func (s *HTTPHandlers) preparedQueryList(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) preparedQueryList(resp http.ResponseWriter, req *http.Request) (any, error) {
 	var args structs.DCSpecificRequest
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
 		return nil, nil
@@ -65,7 +65,7 @@ RETRY_ONCE:
 }
 
 // PreparedQueryGeneral handles all the general prepared query requests.
-func (s *HTTPHandlers) PreparedQueryGeneral(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) PreparedQueryGeneral(resp http.ResponseWriter, req *http.Request) (any, error) {
 	switch req.Method {
 	case "POST":
 		return s.preparedQueryCreate(resp, req)
@@ -92,7 +92,7 @@ func parseLimit(req *http.Request, limit *int) error {
 }
 
 // preparedQueryExecute executes a prepared query.
-func (s *HTTPHandlers) preparedQueryExecute(id string, resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) preparedQueryExecute(id string, resp http.ResponseWriter, req *http.Request) (any, error) {
 	args := structs.PreparedQueryExecuteRequest{
 		QueryIDOrName: id,
 		Agent: structs.QuerySource{
@@ -175,7 +175,7 @@ func (s *HTTPHandlers) preparedQueryExecute(id string, resp http.ResponseWriter,
 // preparedQueryExplain shows which query a name resolves to, the fully
 // interpolated template (if it's a template), as well as additional info
 // about the execution of a query.
-func (s *HTTPHandlers) preparedQueryExplain(id string, resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) preparedQueryExplain(id string, resp http.ResponseWriter, req *http.Request) (any, error) {
 	args := structs.PreparedQueryExecuteRequest{
 		QueryIDOrName: id,
 		Agent: structs.QuerySource{
@@ -214,7 +214,7 @@ RETRY_ONCE:
 }
 
 // preparedQueryGet returns a single prepared query.
-func (s *HTTPHandlers) preparedQueryGet(id string, resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) preparedQueryGet(id string, resp http.ResponseWriter, req *http.Request) (any, error) {
 	args := structs.PreparedQuerySpecificRequest{
 		QueryID: id,
 	}
@@ -243,7 +243,7 @@ RETRY_ONCE:
 }
 
 // preparedQueryUpdate updates a prepared query.
-func (s *HTTPHandlers) preparedQueryUpdate(id string, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) preparedQueryUpdate(id string, req *http.Request) (any, error) {
 	args := structs.PreparedQueryRequest{
 		Op: structs.PreparedQueryUpdate,
 	}
@@ -270,7 +270,7 @@ func (s *HTTPHandlers) preparedQueryUpdate(id string, req *http.Request) (interf
 }
 
 // preparedQueryDelete deletes prepared query.
-func (s *HTTPHandlers) preparedQueryDelete(id string, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) preparedQueryDelete(id string, req *http.Request) (any, error) {
 	args := structs.PreparedQueryRequest{
 		Op: structs.PreparedQueryDelete,
 		Query: &structs.PreparedQuery{
@@ -288,7 +288,7 @@ func (s *HTTPHandlers) preparedQueryDelete(id string, req *http.Request) (interf
 }
 
 // PreparedQuerySpecificOptions handles OPTIONS requests to prepared query endpoints.
-func (s *HTTPHandlers) preparedQuerySpecificOptions(resp http.ResponseWriter, req *http.Request) interface{} {
+func (s *HTTPHandlers) preparedQuerySpecificOptions(resp http.ResponseWriter, req *http.Request) any {
 	path := req.URL.Path
 	switch {
 	case strings.HasSuffix(path, "/execute"):
@@ -307,7 +307,7 @@ func (s *HTTPHandlers) preparedQuerySpecificOptions(resp http.ResponseWriter, re
 
 // PreparedQuerySpecific handles all the prepared query requests specific to a
 // particular query.
-func (s *HTTPHandlers) PreparedQuerySpecific(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) PreparedQuerySpecific(resp http.ResponseWriter, req *http.Request) (any, error) {
 	if req.Method == "OPTIONS" {
 		return s.preparedQuerySpecificOptions(resp, req), nil
 	}

@@ -20,7 +20,7 @@ import (
 )
 
 // PeeringEndpoint handles GET, DELETE on v1/peering/name
-func (s *HTTPHandlers) PeeringEndpoint(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) PeeringEndpoint(resp http.ResponseWriter, req *http.Request) (any, error) {
 	name := strings.TrimPrefix(req.URL.Path, "/v1/peering/")
 	if name == "" {
 		return nil, HTTPError{StatusCode: http.StatusBadRequest, Reason: "Must specify a name to fetch."}
@@ -39,7 +39,7 @@ func (s *HTTPHandlers) PeeringEndpoint(resp http.ResponseWriter, req *http.Reque
 
 // peeringRead fetches a peering that matches the name and partition.
 // This assumes that the name and partition parameters are valid
-func (s *HTTPHandlers) peeringRead(resp http.ResponseWriter, req *http.Request, name string) (interface{}, error) {
+func (s *HTTPHandlers) peeringRead(resp http.ResponseWriter, req *http.Request, name string) (any, error) {
 	var entMeta acl.EnterpriseMeta
 	if err := s.parseEntMetaPartition(req, &entMeta); err != nil {
 		return nil, err
@@ -79,7 +79,7 @@ func (s *HTTPHandlers) peeringRead(resp http.ResponseWriter, req *http.Request, 
 }
 
 // PeeringList fetches all peerings in the datacenter in CE or in a given partition in Consul Enterprise.
-func (s *HTTPHandlers) PeeringList(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) PeeringList(resp http.ResponseWriter, req *http.Request) (any, error) {
 	var entMeta acl.EnterpriseMeta
 	if err := s.parseEntMetaPartition(req, &entMeta); err != nil {
 		return nil, err
@@ -116,7 +116,7 @@ func (s *HTTPHandlers) PeeringList(resp http.ResponseWriter, req *http.Request) 
 
 // PeeringGenerateToken handles POSTs to the /v1/peering/token endpoint. The request
 // will always be forwarded via RPC to the local leader.
-func (s *HTTPHandlers) PeeringGenerateToken(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) PeeringGenerateToken(resp http.ResponseWriter, req *http.Request) (any, error) {
 	if req.Body == nil {
 		return nil, HTTPError{StatusCode: http.StatusBadRequest, Reason: "The peering arguments must be provided in the body"}
 	}
@@ -157,7 +157,7 @@ func (s *HTTPHandlers) PeeringGenerateToken(resp http.ResponseWriter, req *http.
 
 // PeeringEstablish handles POSTs to the /v1/peering/establish endpoint. The request
 // will always be forwarded via RPC to the local leader.
-func (s *HTTPHandlers) PeeringEstablish(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) PeeringEstablish(resp http.ResponseWriter, req *http.Request) (any, error) {
 	if req.Body == nil {
 		return nil, HTTPError{StatusCode: http.StatusBadRequest, Reason: "The peering arguments must be provided in the body"}
 	}
@@ -201,7 +201,7 @@ func (s *HTTPHandlers) PeeringEstablish(resp http.ResponseWriter, req *http.Requ
 
 // peeringDelete initiates a deletion for a peering that matches the name and partition.
 // This assumes that the name and partition parameters are valid.
-func (s *HTTPHandlers) peeringDelete(req *http.Request, name string) (interface{}, error) {
+func (s *HTTPHandlers) peeringDelete(req *http.Request, name string) (any, error) {
 	var entMeta acl.EnterpriseMeta
 	if err := s.parseEntMetaPartition(req, &entMeta); err != nil {
 		return nil, err

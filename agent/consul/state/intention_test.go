@@ -1916,7 +1916,7 @@ func TestStore_IntentionDecision(t *testing.T) {
 		&structs.ProxyConfigEntry{
 			Kind: structs.ProxyDefaults,
 			Name: structs.ProxyConfigGlobal,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"protocol": "http",
 			},
 		},

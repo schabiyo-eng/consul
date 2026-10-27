@@ -189,7 +189,7 @@ func testIndexerTableMeshTopology() map[string]indexerTestCase {
 	return map[string]indexerTestCase{
 		indexID: {
 			read: indexValue{
-				source: []interface{}{
+				source: []any{
 					structs.ServiceName{Name: "UpStReAm"},
 					structs.ServiceName{Name: "DownStream"},
 				},
@@ -237,7 +237,7 @@ func testIndexerTableGatewayServices() map[string]indexerTestCase {
 	return map[string]indexerTestCase{
 		indexID: {
 			read: indexValue{
-				source: []interface{}{
+				source: []any{
 					structs.ServiceName{Name: "GateWay"},
 					structs.ServiceName{Name: "SerVice"},
 					50123,

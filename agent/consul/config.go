@@ -621,7 +621,7 @@ func DefaultConfig() *Config {
 
 		CAConfig: &structs.CAConfiguration{
 			Provider: "consul",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"LeafCertTTL":         structs.DefaultLeafCertTTL,
 				"IntermediateCertTTL": structs.DefaultIntermediateCertTTL,
 				"RootCertTTL":         structs.DefaultRootCertTTL,

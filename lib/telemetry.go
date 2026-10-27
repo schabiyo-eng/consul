@@ -235,7 +235,7 @@ type TelemetryConfig struct {
 
 // MetricsHandler provides an http.Handler for displaying metrics.
 type MetricsHandler interface {
-	DisplayMetrics(resp http.ResponseWriter, req *http.Request) (interface{}, error)
+	DisplayMetrics(resp http.ResponseWriter, req *http.Request) (any, error)
 	Stream(ctx context.Context, encoder metrics.Encoder)
 }
 

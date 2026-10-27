@@ -44,7 +44,7 @@ func (s *sorter) Less(i, j int) bool {
 
 // CoordinateDatacenters returns the WAN nodes in each datacenter, along with
 // raw network coordinates.
-func (s *HTTPHandlers) CoordinateDatacenters(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) CoordinateDatacenters(resp http.ResponseWriter, req *http.Request) (any, error) {
 	if err := s.checkCoordinateDisabled(); err != nil {
 		return nil, err
 	}
@@ -73,7 +73,7 @@ func (s *HTTPHandlers) CoordinateDatacenters(resp http.ResponseWriter, req *http
 
 // CoordinateNodes returns the LAN nodes in the given datacenter, along with
 // raw network coordinates.
-func (s *HTTPHandlers) CoordinateNodes(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) CoordinateNodes(resp http.ResponseWriter, req *http.Request) (any, error) {
 	if err := s.checkCoordinateDisabled(); err != nil {
 		return nil, err
 	}
@@ -98,7 +98,7 @@ func (s *HTTPHandlers) CoordinateNodes(resp http.ResponseWriter, req *http.Reque
 
 // CoordinateNode returns the LAN node in the given datacenter, along with
 // raw network coordinates.
-func (s *HTTPHandlers) CoordinateNode(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) CoordinateNode(resp http.ResponseWriter, req *http.Request) (any, error) {
 	if err := s.checkCoordinateDisabled(); err != nil {
 		return nil, err
 	}
@@ -150,7 +150,7 @@ func filterCoordinates(req *http.Request, in structs.Coordinates) structs.Coordi
 }
 
 // CoordinateUpdate inserts or updates the LAN coordinate of a node.
-func (s *HTTPHandlers) CoordinateUpdate(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) CoordinateUpdate(resp http.ResponseWriter, req *http.Request) (any, error) {
 	if err := s.checkCoordinateDisabled(); err != nil {
 		return nil, err
 	}

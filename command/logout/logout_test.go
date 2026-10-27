@@ -136,7 +136,7 @@ func TestLogoutCommand(t *testing.T) {
 			&api.ACLAuthMethod{
 				Name: "test",
 				Type: "testing",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"SessionID": testSessionID,
 				},
 			},
@@ -270,7 +270,7 @@ func TestLogoutCommand_k8s(t *testing.T) {
 			&api.ACLAuthMethod{
 				Name: "k8s",
 				Type: "kubernetes",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"Host":   testSrv.Addr(),
 					"CACert": testSrv.CACert(),
 					// the "A" jwt will be the one with token review privs

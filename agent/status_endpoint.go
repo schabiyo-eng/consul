@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/consul/agent/structs"
 )
 
-func (s *HTTPHandlers) StatusLeader(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) StatusLeader(resp http.ResponseWriter, req *http.Request) (any, error) {
 	args := structs.DCSpecificRequest{}
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
 		return nil, nil
@@ -22,7 +22,7 @@ func (s *HTTPHandlers) StatusLeader(resp http.ResponseWriter, req *http.Request)
 	return out, nil
 }
 
-func (s *HTTPHandlers) StatusPeers(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) StatusPeers(resp http.ResponseWriter, req *http.Request) (any, error) {
 	args := structs.DCSpecificRequest{}
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
 		return nil, nil

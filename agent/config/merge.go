@@ -24,7 +24,7 @@ func Merge(files ...Config) Config {
 	return a
 }
 
-func merge(a, b interface{}) interface{} {
+func merge(a, b any) any {
 	return mergeValue(reflect.ValueOf(a), reflect.ValueOf(b)).Interface()
 }
 

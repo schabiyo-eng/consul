@@ -1807,7 +1807,7 @@ func newTestServer(t *testing.T, cb func(conf *consul.Config)) testingServer {
 	conf.CAConfig = &structs.CAConfiguration{
 		ClusterID: connect.TestClusterID,
 		Provider:  structs.ConsulCAProvider,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"PrivateKey":          ca.SigningKey,
 			"RootCert":            ca.RootCert,
 			"LeafCertTTL":         "72h",

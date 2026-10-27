@@ -198,11 +198,11 @@ func (s *serverACLResolverBackend) ResolveRoleFromID(roleID string) (bool, *stru
 	return s.InPrimaryDatacenter() || index > 0, role, acl.ErrNotFound
 }
 
-func (s *Server) filterACL(token string, subj interface{}) error {
+func (s *Server) filterACL(token string, subj any) error {
 	return filterACL(s.ACLResolver, token, subj)
 }
 
-func (s *Server) filterACLWithAuthorizer(authorizer acl.Authorizer, subj interface{}) {
+func (s *Server) filterACLWithAuthorizer(authorizer acl.Authorizer, subj any) {
 	filterACLWithAuthorizer(s.ACLResolver.logger, authorizer, subj)
 }
 

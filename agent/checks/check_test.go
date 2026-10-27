@@ -1175,7 +1175,7 @@ func mockUDPServer(ctx context.Context, network string, port int) {
 	}
 	defer ser.Close()
 
-	chClose := make(chan interface{})
+	chClose := make(chan any)
 	wg := sync.WaitGroup{}
 	wg.Add(1)
 

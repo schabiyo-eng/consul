@@ -50,7 +50,7 @@ func Constructor(ext api.EnvoyExtension) (extensioncommon.EnvoyExtender, error) 
 	}, nil
 }
 
-func (a *awsLambda) fromArguments(args map[string]interface{}) error {
+func (a *awsLambda) fromArguments(args map[string]any) error {
 	if err := mapstructure.Decode(args, a); err != nil {
 		return fmt.Errorf("error decoding extension arguments: %v", err)
 	}

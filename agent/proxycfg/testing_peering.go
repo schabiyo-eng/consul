@@ -58,7 +58,7 @@ func testConfigSnapshot(t testing.T, escapeOverride bool, useHTTP2 bool, nsFn fu
 
 		if escapeOverride {
 			if ns.Proxy.Upstreams[0].Config == nil {
-				ns.Proxy.Upstreams[0].Config = map[string]interface{}{}
+				ns.Proxy.Upstreams[0].Config = map[string]any{}
 			}
 
 			uid := NewUpstreamID(&ns.Proxy.Upstreams[0])

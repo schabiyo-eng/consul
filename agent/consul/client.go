@@ -280,7 +280,7 @@ func (c *Client) KeyManagerLAN() *serf.KeyManager {
 }
 
 // RPC is used to forward an RPC call to a consul server, or fail if no servers
-func (c *Client) RPC(ctx context.Context, method string, args interface{}, reply interface{}) error {
+func (c *Client) RPC(ctx context.Context, method string, args any, reply any) error {
 	// This is subtle but we start measuring the time on the client side
 	// right at the time of the first request, vs. on the first retry as
 	// is done on the server side inside forward(). This is because the

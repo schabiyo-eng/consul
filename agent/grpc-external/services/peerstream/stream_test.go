@@ -84,7 +84,7 @@ func TestStreamResources_Server_Follower(t *testing.T) {
 	deets := st.Details()
 
 	// expect a LeaderAddress message
-	exp := []interface{}{&pbpeerstream.LeaderAddress{Address: "expected:address"}}
+	exp := []any{&pbpeerstream.LeaderAddress{Address: "expected:address"}}
 	prototest.AssertDeepEqual(t, exp, deets)
 }
 
@@ -178,7 +178,7 @@ func TestStreamResources_Server_LeaderBecomesFollower(t *testing.T) {
 		require.True(t, ok, "need to get back a grpc status error")
 
 		// expect a LeaderAddress message
-		expect := []interface{}{
+		expect := []any{
 			&pbpeerstream.LeaderAddress{Address: "expected:address"},
 		}
 		prototest.AssertDeepEqual(t, expect, st.Details())

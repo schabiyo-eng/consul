@@ -107,26 +107,26 @@ func NewDurationFixer(fields ...string) durationFixer {
 }
 
 // FixupDurations is used to handle parsing any field names in the map to time.Durations
-func (d durationFixer) FixupDurations(raw interface{}) error {
-	rawMap, ok := raw.(map[string]interface{})
+func (d durationFixer) FixupDurations(raw any) error {
+	rawMap, ok := raw.(map[string]any)
 	if !ok {
 		return nil
 	}
 	for key, val := range rawMap {
 		switch val := val.(type) {
-		case map[string]interface{}:
+		case map[string]any:
 			if err := d.FixupDurations(val); err != nil {
 				return err
 			}
 
-		case []interface{}:
+		case []any:
 			for _, v := range val {
 				if err := d.FixupDurations(v); err != nil {
 					return err
 				}
 			}
 
-		case []map[string]interface{}:
+		case []map[string]any:
 			for _, v := range val {
 				if err := d.FixupDurations(v); err != nil {
 					return err

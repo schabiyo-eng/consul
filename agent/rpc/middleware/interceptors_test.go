@@ -97,7 +97,7 @@ type testCase struct {
 	// requestName is encouraged to be unique across tests to
 	// avoid lock contention
 	requestName string
-	requestI    interface{}
+	requestI    any
 	rpcType     string
 	errored     bool
 	isLeader    func() bool

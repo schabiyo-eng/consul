@@ -41,7 +41,7 @@ type Authenticator struct {
 	logger hclog.Logger
 
 	// parsedJWTPubKeys is the parsed form of config.JWTValidationPubKeys
-	parsedJWTPubKeys []interface{}
+	parsedJWTPubKeys []any
 
 	// provider is the coreos/go-oidc provider used for JWT validation
 	provider *oidc.Provider
@@ -74,7 +74,7 @@ func New(c *Config, logger hclog.Logger) (*Authenticator, error) {
 		return nil, err
 	}
 
-	var parsedJWTPubKeys []interface{}
+	var parsedJWTPubKeys []any
 	if c.Type == TypeJWT {
 		for _, v := range c.JWTValidationPubKeys {
 			key, err := parsePublicKeyPEM([]byte(v))

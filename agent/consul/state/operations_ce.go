@@ -12,7 +12,7 @@ import (
 )
 
 func getCompoundWithTxn(tx ReadTxn, table, index string,
-	_ *acl.EnterpriseMeta, idxVals ...interface{}) (memdb.ResultIterator, error) {
+	_ *acl.EnterpriseMeta, idxVals ...any) (memdb.ResultIterator, error) {
 
 	return tx.Get(table, index, idxVals...)
 }

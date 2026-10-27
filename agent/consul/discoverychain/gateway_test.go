@@ -886,7 +886,7 @@ func TestGatewayChainSynthesizer_ComplexChain(t *testing.T) {
 					Kind:     structs.ProxyConfigGlobal,
 					Name:     "global",
 					Protocol: "http",
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"protocol": "http",
 					},
 				},
@@ -1162,7 +1162,7 @@ func TestGatewaySynthesis_ProxyDefaultsFallback_StateFaithful(t *testing.T) {
 		Kind:     structs.ProxyDefaults,
 		Name:     structs.ProxyConfigGlobal,
 		Protocol: "http",
-		Config:   map[string]interface{}{"protocol": "http"},
+		Config:   map[string]any{"protocol": "http"},
 	}
 
 	// service "x" has a real service-router doing header-based routing

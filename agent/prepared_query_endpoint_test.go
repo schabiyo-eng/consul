@@ -129,12 +129,12 @@ func TestPreparedQuery_Create(t *testing.T) {
 
 	body := bytes.NewBuffer(nil)
 	enc := json.NewEncoder(body)
-	raw := map[string]interface{}{
+	raw := map[string]any{
 		"Name":    "my-query",
 		"Session": "my-session",
-		"Service": map[string]interface{}{
+		"Service": map[string]any{
 			"Service": "my-service",
-			"Failover": map[string]interface{}{
+			"Failover": map[string]any{
 				"NearestN":    4,
 				"Datacenters": []string{"dc1", "dc2"},
 			},
@@ -144,7 +144,7 @@ func TestPreparedQuery_Create(t *testing.T) {
 			"NodeMeta":       map[string]string{"somekey": "somevalue"},
 			"ServiceMeta":    map[string]string{"env": "prod"},
 		},
-		"DNS": map[string]interface{}{
+		"DNS": map[string]any{
 			"TTL": "10s",
 		},
 	}
@@ -926,13 +926,13 @@ func TestPreparedQuery_Update(t *testing.T) {
 
 	body := bytes.NewBuffer(nil)
 	enc := json.NewEncoder(body)
-	raw := map[string]interface{}{
+	raw := map[string]any{
 		"ID":      "this should get ignored",
 		"Name":    "my-query",
 		"Session": "my-session",
-		"Service": map[string]interface{}{
+		"Service": map[string]any{
 			"Service": "my-service",
-			"Failover": map[string]interface{}{
+			"Failover": map[string]any{
 				"NearestN":    4,
 				"Datacenters": []string{"dc1", "dc2"},
 			},
@@ -940,7 +940,7 @@ func TestPreparedQuery_Update(t *testing.T) {
 			"Tags":        []string{"foo", "bar"},
 			"NodeMeta":    map[string]string{"somekey": "somevalue"},
 		},
-		"DNS": map[string]interface{}{
+		"DNS": map[string]any{
 			"TTL": "10s",
 		},
 	}
@@ -994,7 +994,7 @@ func TestPreparedQuery_Delete(t *testing.T) {
 
 	body := bytes.NewBuffer(nil)
 	enc := json.NewEncoder(body)
-	raw := map[string]interface{}{
+	raw := map[string]any{
 		"ID": "this should get ignored",
 	}
 	if err := enc.Encode(raw); err != nil {
@@ -1072,9 +1072,9 @@ func TestPreparedQuery_Integration(t *testing.T) {
 	{
 		body := bytes.NewBuffer(nil)
 		enc := json.NewEncoder(body)
-		raw := map[string]interface{}{
+		raw := map[string]any{
 			"Name": "my-query",
-			"Service": map[string]interface{}{
+			"Service": map[string]any{
 				"Service": "my-service",
 			},
 		}
@@ -1166,9 +1166,9 @@ func TestPreparedQuery_Integration(t *testing.T) {
 	{
 		body := bytes.NewBuffer(nil)
 		enc := json.NewEncoder(body)
-		raw := map[string]interface{}{
+		raw := map[string]any{
 			"Name": "my-query",
-			"Service": map[string]interface{}{
+			"Service": map[string]any{
 				"Service":     "my-service",
 				"OnlyPassing": true,
 			},

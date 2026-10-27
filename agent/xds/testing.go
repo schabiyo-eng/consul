@@ -267,11 +267,11 @@ func (s *stubGrpcServerStream) Context() context.Context {
 }
 
 // SendMsg implements grpc.ServerStream as part of ADSDeltaStream
-func (s *stubGrpcServerStream) SendMsg(m interface{}) error {
+func (s *stubGrpcServerStream) SendMsg(m any) error {
 	return nil
 }
 
 // RecvMsg implements grpc.ServerStream as part of ADSDeltaStream
-func (s *stubGrpcServerStream) RecvMsg(m interface{}) error {
+func (s *stubGrpcServerStream) RecvMsg(m any) error {
 	return nil
 }

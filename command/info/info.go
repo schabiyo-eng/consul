@@ -66,7 +66,7 @@ func (c *cmd) Run(args []string) int {
 		c.UI.Output(key + ":")
 
 		// Sort the sub-keys
-		subvals, ok := stats[key].(map[string]interface{})
+		subvals, ok := stats[key].(map[string]any)
 		if !ok {
 			c.UI.Error(fmt.Sprintf("Got invalid subkey in stats: %v", subvals))
 			return 1

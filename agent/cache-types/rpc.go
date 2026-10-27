@@ -11,5 +11,5 @@ import "context"
 //
 //go:generate mockery --name RPC --inpackage
 type RPC interface {
-	RPC(ctx context.Context, method string, args interface{}, reply interface{}) error
+	RPC(ctx context.Context, method string, args any, reply any) error
 }

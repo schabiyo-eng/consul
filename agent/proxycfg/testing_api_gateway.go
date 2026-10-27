@@ -115,7 +115,7 @@ func TestConfigSnapshotAPIGateway(
 			&structs.ProxyConfigEntry{
 				Kind: structs.ProxyDefaults,
 				Name: structs.ProxyConfigGlobal,
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"protocol": route.GetProtocol(),
 				},
 			},

@@ -966,7 +966,7 @@ DOMAIN_LOOP:
 			DestinationPartition: service.PartitionOrDefault(),
 			IngressHosts:         service.Hosts,
 			LocalBindPort:        boundListener.Port,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"protocol": string(boundListener.Protocol),
 			},
 		})

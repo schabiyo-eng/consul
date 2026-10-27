@@ -143,7 +143,7 @@ type ACLResolverBackend interface {
 	ResolveRoleFromID(roleID string) (bool, *structs.ACLRole, error)
 	IsServerManagementToken(token string) bool
 	// TODO: separate methods for each RPC call (there are 4)
-	RPC(ctx context.Context, method string, args interface{}, reply interface{}) error
+	RPC(ctx context.Context, method string, args any, reply any) error
 	EnterpriseACLResolverDelegate
 }
 
@@ -442,7 +442,7 @@ func (r *ACLResolver) resolveIdentityFromToken(token string) (structs.ACLIdentit
 	metrics.IncrCounter([]string{"acl", "token", "cache_miss"}, 1)
 
 	// Background a RPC request and wait on it if we must
-	waitChan := r.identityGroup.DoChan(token, func() (interface{}, error) {
+	waitChan := r.identityGroup.DoChan(token, func() (any, error) {
 		identity, err := r.fetchAndCacheIdentityFromToken(token, cacheEntry)
 		return identity, err
 	})
@@ -817,7 +817,7 @@ func (r *ACLResolver) collectPoliciesForIdentity(identity structs.ACLIdentity, p
 	}
 
 	// Background a RPC request and wait on it if we must
-	waitChan := r.policyGroup.DoChan(identity.SecretToken(), func() (interface{}, error) {
+	waitChan := r.policyGroup.DoChan(identity.SecretToken(), func() (any, error) {
 		policies, err := r.fetchAndCachePoliciesForIdentity(identity, fetchIDs, expCacheMap)
 		return policies, err
 	})
@@ -917,7 +917,7 @@ func (r *ACLResolver) collectRolesForIdentity(identity structs.ACLIdentity, role
 		fetchIDs = append(fetchIDs, role.ID)
 	}
 
-	waitChan := r.roleGroup.DoChan(identity.SecretToken(), func() (interface{}, error) {
+	waitChan := r.roleGroup.DoChan(identity.SecretToken(), func() (any, error) {
 		roles, err := r.fetchAndCacheRolesForIdentity(identity, fetchIDs, expCacheMap)
 		return roles, err
 	})
@@ -1170,14 +1170,14 @@ func (r *ACLResolver) ResolveTokenAndDefaultMeta(
 	return result, err
 }
 
-func filterACLWithAuthorizer(logger hclog.Logger, authorizer acl.Authorizer, subj interface{}) {
+func filterACLWithAuthorizer(logger hclog.Logger, authorizer acl.Authorizer, subj any) {
 	aclfilter.New(authorizer, logger).Filter(subj)
 }
 
 // filterACL uses the ACLResolver to resolve the token in an acl.Authorizer,
 // then uses the acl.Authorizer to filter subj. Any entities in subj that are
 // not authorized for read access will be removed from subj.
-func filterACL(r *ACLResolver, tokenSecretID string, subj interface{}) error {
+func filterACL(r *ACLResolver, tokenSecretID string, subj any) error {
 	// Get the ACL from the token
 	authorizer, err := r.ResolveToken(tokenSecretID)
 	if err != nil {

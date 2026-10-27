@@ -69,7 +69,7 @@ func indexFromQuery(q Query) ([]byte, error) {
 	return b.Bytes(), nil
 }
 
-func indexFromServiceNameAsString(arg interface{}) ([]byte, error) {
+func indexFromServiceNameAsString(arg any) ([]byte, error) {
 	sn, ok := arg.(structs.ServiceName)
 	if !ok {
 		return nil, fmt.Errorf("unexpected type %T for ServiceName index", arg)

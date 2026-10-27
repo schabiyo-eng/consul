@@ -22,7 +22,7 @@ func updateTableIndexEntries(tx WriteTxn, tableName string, modifyIndex uint64, 
 	return nil
 }
 
-func aclPolicyGetByID(tx ReadTxn, id string, _ *acl.EnterpriseMeta) (<-chan struct{}, interface{}, error) {
+func aclPolicyGetByID(tx ReadTxn, id string, _ *acl.EnterpriseMeta) (<-chan struct{}, any, error) {
 	return tx.FirstWatch(tableACLPolicies, indexID, id)
 }
 
@@ -55,7 +55,7 @@ func (s *Store) ACLPolicyUpsertValidateEnterprise(*structs.ACLPolicy, *structs.A
 /////                        ACL Token Functions                          /////
 ///////////////////////////////////////////////////////////////////////////////
 
-func aclTokenGetFromIndex(tx ReadTxn, id string, index string, entMeta *acl.EnterpriseMeta) (<-chan struct{}, interface{}, error) {
+func aclTokenGetFromIndex(tx ReadTxn, id string, index string, entMeta *acl.EnterpriseMeta) (<-chan struct{}, any, error) {
 	return tx.FirstWatch(tableACLTokens, index, id)
 }
 
@@ -108,7 +108,7 @@ func (s *Store) ACLTokenUpsertValidateEnterprise(token *structs.ACLToken, existi
 /////                         ACL Role Functions                          /////
 ///////////////////////////////////////////////////////////////////////////////
 
-func aclRoleGetByID(tx ReadTxn, id string, _ *acl.EnterpriseMeta) (<-chan struct{}, interface{}, error) {
+func aclRoleGetByID(tx ReadTxn, id string, _ *acl.EnterpriseMeta) (<-chan struct{}, any, error) {
 	return tx.FirstWatch(tableACLRoles, indexID, id)
 }
 
@@ -141,7 +141,7 @@ func (s *Store) ACLRoleUpsertValidateEnterprise(role *structs.ACLRole, existing 
 /////                     ACL Binding Rule Functions                      /////
 ///////////////////////////////////////////////////////////////////////////////
 
-func aclBindingRuleGetByID(tx ReadTxn, id string, _ *acl.EnterpriseMeta) (<-chan struct{}, interface{}, error) {
+func aclBindingRuleGetByID(tx ReadTxn, id string, _ *acl.EnterpriseMeta) (<-chan struct{}, any, error) {
 	return tx.FirstWatch(tableACLBindingRules, indexID, id)
 }
 
@@ -182,7 +182,7 @@ func (s *Store) ACLBindingRuleUpsertValidateEnterprise(rule *structs.ACLBindingR
 /////                     ACL Auth Method Functions                       /////
 ///////////////////////////////////////////////////////////////////////////////
 
-func aclAuthMethodGetByName(tx ReadTxn, method string, _ *acl.EnterpriseMeta) (<-chan struct{}, interface{}, error) {
+func aclAuthMethodGetByName(tx ReadTxn, method string, _ *acl.EnterpriseMeta) (<-chan struct{}, any, error) {
 	return tx.FirstWatch(tableACLAuthMethods, indexID, Query{Value: method})
 }
 

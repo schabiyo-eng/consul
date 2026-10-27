@@ -31,7 +31,7 @@ func (m *subscriptionManager) notifyExportedServicesForPeerID(ctx context.Contex
 
 	// syncSubscriptionsAndBlock ensures that the subscriptions to the subscription backend
 	// match the list of services exported to the peer.
-	m.syncViaBlockingQuery(ctx, "exported-services", func(ctx context.Context, store StateStore, ws memdb.WatchSet) (interface{}, error) {
+	m.syncViaBlockingQuery(ctx, "exported-services", func(ctx context.Context, store StateStore, ws memdb.WatchSet) (any, error) {
 		// Get exported services for peer id
 		_, list, err := store.ExportedServicesForPeer(ws, peerID, m.config.Datacenter)
 		if err != nil {
@@ -51,7 +51,7 @@ func (m *subscriptionManager) notifyMeshGatewaysForPartition(ctx context.Context
 		return
 	}
 
-	m.syncViaBlockingQuery(ctx, "mesh-gateways", func(ctx context.Context, store StateStore, ws memdb.WatchSet) (interface{}, error) {
+	m.syncViaBlockingQuery(ctx, "mesh-gateways", func(ctx context.Context, store StateStore, ws memdb.WatchSet) (any, error) {
 		// Fetch our current list of all mesh gateways.
 		entMeta := structs.DefaultEnterpriseMetaInPartition(partition)
 		idx, nodes, err := store.ServiceDump(ws, structs.ServiceKindMeshGateway, true, entMeta, structs.DefaultPeerKeyword)
@@ -78,7 +78,7 @@ func (m *subscriptionManager) notifyMeshGatewaysForPartition(ctx context.Context
 func (m *subscriptionManager) syncViaBlockingQuery(
 	ctx context.Context,
 	queryType string,
-	queryFn func(ctx context.Context, store StateStore, ws memdb.WatchSet) (interface{}, error),
+	queryFn func(ctx context.Context, store StateStore, ws memdb.WatchSet) (any, error),
 	correlationID string,
 	updateCh chan<- cache.UpdateEvent,
 ) {

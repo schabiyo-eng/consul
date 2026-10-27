@@ -263,25 +263,25 @@ func TestConfigSnapshotTerminatingGateway(t testing.T, populateServices bool, ns
 			{
 				CorrelationID: serviceConfigIDPrefix + web.String(),
 				Result: &structs.ServiceConfigResponse{
-					ProxyConfig: map[string]interface{}{"protocol": "tcp"},
+					ProxyConfig: map[string]any{"protocol": "tcp"},
 				},
 			},
 			{
 				CorrelationID: serviceConfigIDPrefix + api.String(),
 				Result: &structs.ServiceConfigResponse{
-					ProxyConfig: map[string]interface{}{"protocol": "tcp"},
+					ProxyConfig: map[string]any{"protocol": "tcp"},
 				},
 			},
 			{
 				CorrelationID: serviceConfigIDPrefix + db.String(),
 				Result: &structs.ServiceConfigResponse{
-					ProxyConfig: map[string]interface{}{"protocol": "tcp"},
+					ProxyConfig: map[string]any{"protocol": "tcp"},
 				},
 			},
 			{
 				CorrelationID: serviceConfigIDPrefix + cache.String(),
 				Result: &structs.ServiceConfigResponse{
-					ProxyConfig: map[string]interface{}{"protocol": "tcp"},
+					ProxyConfig: map[string]any{"protocol": "tcp"},
 				},
 			},
 			// ========
@@ -460,7 +460,7 @@ func TestConfigSnapshotTerminatingGatewayDestinations(t testing.T, populateDesti
 				CorrelationID: serviceConfigIDPrefix + externalIPTCP.String(),
 				Result: &structs.ServiceConfigResponse{
 					Mode:        structs.ProxyModeTransparent,
-					ProxyConfig: map[string]interface{}{"protocol": "tcp"},
+					ProxyConfig: map[string]any{"protocol": "tcp"},
 					Destination: structs.DestinationConfig{
 						Addresses: []string{
 							"192.168.0.1",
@@ -475,7 +475,7 @@ func TestConfigSnapshotTerminatingGatewayDestinations(t testing.T, populateDesti
 				CorrelationID: serviceConfigIDPrefix + externalHostnameTCP.String(),
 				Result: &structs.ServiceConfigResponse{
 					Mode:        structs.ProxyModeTransparent,
-					ProxyConfig: map[string]interface{}{"protocol": "tcp"},
+					ProxyConfig: map[string]any{"protocol": "tcp"},
 					Destination: structs.DestinationConfig{
 						Addresses: []string{
 							"api.hashicorp.com",
@@ -489,7 +489,7 @@ func TestConfigSnapshotTerminatingGatewayDestinations(t testing.T, populateDesti
 				CorrelationID: serviceConfigIDPrefix + externalIPHTTP.String(),
 				Result: &structs.ServiceConfigResponse{
 					Mode:        structs.ProxyModeTransparent,
-					ProxyConfig: map[string]interface{}{"protocol": "http"},
+					ProxyConfig: map[string]any{"protocol": "http"},
 					Destination: structs.DestinationConfig{
 						Addresses: []string{"192.168.0.2"},
 						Port:      80,
@@ -500,7 +500,7 @@ func TestConfigSnapshotTerminatingGatewayDestinations(t testing.T, populateDesti
 				CorrelationID: serviceConfigIDPrefix + externalHostnameHTTP.String(),
 				Result: &structs.ServiceConfigResponse{
 					Mode:        structs.ProxyModeTransparent,
-					ProxyConfig: map[string]interface{}{"protocol": "http"},
+					ProxyConfig: map[string]any{"protocol": "http"},
 					Destination: structs.DestinationConfig{
 						Addresses: []string{"httpbin.org"},
 						Port:      80,
@@ -511,7 +511,7 @@ func TestConfigSnapshotTerminatingGatewayDestinations(t testing.T, populateDesti
 				CorrelationID: serviceConfigIDPrefix + externalHostnameWithSNI.String(),
 				Result: &structs.ServiceConfigResponse{
 					Mode:        structs.ProxyModeTransparent,
-					ProxyConfig: map[string]interface{}{"protocol": "tcp"},
+					ProxyConfig: map[string]any{"protocol": "tcp"},
 					Destination: structs.DestinationConfig{
 						Addresses: []string{"api.test.com"},
 						Port:      80,
@@ -572,7 +572,7 @@ func testConfigSnapshotTerminatingGatewayServiceSubsets(t testing.T, alsoAdjustC
 		{
 			CorrelationID: serviceConfigIDPrefix + web.String(),
 			Result: &structs.ServiceConfigResponse{
-				ProxyConfig: map[string]interface{}{"protocol": "http"},
+				ProxyConfig: map[string]any{"protocol": "http"},
 			},
 		},
 	}
@@ -596,7 +596,7 @@ func testConfigSnapshotTerminatingGatewayServiceSubsets(t testing.T, alsoAdjustC
 			{
 				CorrelationID: serviceConfigIDPrefix + web.String(),
 				Result: &structs.ServiceConfigResponse{
-					ProxyConfig: map[string]interface{}{"protocol": "http"},
+					ProxyConfig: map[string]any{"protocol": "http"},
 				},
 			},
 		})
@@ -697,7 +697,7 @@ func testConfigSnapshotTerminatingGatewayLBConfig(t testing.T, variant string) *
 		{
 			CorrelationID: serviceConfigIDPrefix + web.String(),
 			Result: &structs.ServiceConfigResponse{
-				ProxyConfig: map[string]interface{}{"protocol": "http"},
+				ProxyConfig: map[string]any{"protocol": "http"},
 			},
 		},
 		{
@@ -709,7 +709,7 @@ func testConfigSnapshotTerminatingGatewayLBConfig(t testing.T, variant string) *
 		{
 			CorrelationID: serviceConfigIDPrefix + web.String(),
 			Result: &structs.ServiceConfigResponse{
-				ProxyConfig: map[string]interface{}{"protocol": "http"},
+				ProxyConfig: map[string]any{"protocol": "http"},
 			},
 		},
 	})
@@ -760,7 +760,7 @@ func TestConfigSnapshotTerminatingGatewayHTTP2(t testing.T) *ConfigSnapshot {
 		{
 			CorrelationID: serviceConfigIDPrefix + web.String(),
 			Result: &structs.ServiceConfigResponse{
-				ProxyConfig: map[string]interface{}{"protocol": "http2"},
+				ProxyConfig: map[string]any{"protocol": "http2"},
 			},
 		},
 		{
@@ -821,7 +821,7 @@ func TestConfigSnapshotTerminatingGatewaySubsetsHTTP2(t testing.T) *ConfigSnapsh
 		{
 			CorrelationID: serviceConfigIDPrefix + web.String(),
 			Result: &structs.ServiceConfigResponse{
-				ProxyConfig: map[string]interface{}{"protocol": "http2"},
+				ProxyConfig: map[string]any{"protocol": "http2"},
 			},
 		},
 		{
@@ -898,13 +898,13 @@ func TestConfigSnapshotTerminatingGatewayHostnameSubsets(t testing.T) *ConfigSna
 		{
 			CorrelationID: serviceConfigIDPrefix + api.String(),
 			Result: &structs.ServiceConfigResponse{
-				ProxyConfig: map[string]interface{}{"protocol": "http"},
+				ProxyConfig: map[string]any{"protocol": "http"},
 			},
 		},
 		{
 			CorrelationID: serviceConfigIDPrefix + cache.String(),
 			Result: &structs.ServiceConfigResponse{
-				ProxyConfig: map[string]interface{}{"protocol": "http"},
+				ProxyConfig: map[string]any{"protocol": "http"},
 			},
 		},
 	})
@@ -958,7 +958,7 @@ func TestConfigSnapshotTerminatingGatewayIgnoreExtraResolvers(t testing.T) *Conf
 		{
 			CorrelationID: serviceConfigIDPrefix + web.String(),
 			Result: &structs.ServiceConfigResponse{
-				ProxyConfig: map[string]interface{}{"protocol": "http"},
+				ProxyConfig: map[string]any{"protocol": "http"},
 			},
 		},
 	})
@@ -969,11 +969,11 @@ func TestConfigSnapshotTerminatingGatewayWithLambdaService(t testing.T, extraUpd
 	updateEvents := append(extraUpdateEvents, UpdateEvent{
 		CorrelationID: serviceConfigIDPrefix + web.String(),
 		Result: &structs.ServiceConfigResponse{
-			ProxyConfig: map[string]interface{}{"protocol": "http"},
+			ProxyConfig: map[string]any{"protocol": "http"},
 			EnvoyExtensions: []structs.EnvoyExtension{
 				{
 					Name: api.BuiltinAWSLambdaExtension,
-					Arguments: map[string]interface{}{
+					Arguments: map[string]any{
 						"ARN":                "arn:aws:lambda:us-east-1:111111111111:function:lambda-1234",
 						"PayloadPassthrough": true,
 					},

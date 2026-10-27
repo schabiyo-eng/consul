@@ -38,7 +38,7 @@ func TestEnvoyExtensionsToStructs(t *testing.T) {
 		{
 			Name:     "ext1",
 			Required: true,
-			Arguments: map[string]interface{}{
+			Arguments: map[string]any{
 				"field1": "value1",
 				"field2": 3.14,
 			},
@@ -46,7 +46,7 @@ func TestEnvoyExtensionsToStructs(t *testing.T) {
 		{
 			Name:     "ext2",
 			Required: false,
-			Arguments: map[string]interface{}{
+			Arguments: map[string]any{
 				"field3": "value2",
 				"field4": 2.718,
 			},
@@ -62,7 +62,7 @@ func TestEnvoyExtensionsFromStructs(t *testing.T) {
 		{
 			Name:     "ext1",
 			Required: true,
-			Arguments: map[string]interface{}{
+			Arguments: map[string]any{
 				"field1": "value1",
 				"field2": 3.14,
 			},
@@ -70,7 +70,7 @@ func TestEnvoyExtensionsFromStructs(t *testing.T) {
 		{
 			Name:     "ext2",
 			Required: false,
-			Arguments: map[string]interface{}{
+			Arguments: map[string]any{
 				"field3": "value2",
 				"field4": 2.718,
 			},
@@ -104,18 +104,18 @@ func TestEnvoyExtensionsFromStructs(t *testing.T) {
 }
 
 func TestSliceToPBListValue(t *testing.T) {
-	s := []interface{}{1, 2, 3}
+	s := []any{1, 2, 3}
 	expected, _ := structpb.NewList(s)
 	tests := []struct {
-		input    []interface{}
+		input    []any
 		expected *structpb.ListValue
 	}{
 		{
-			[]interface{}{1, 2, 3},
+			[]any{1, 2, 3},
 			expected,
 		},
 		{
-			[]interface{}{},
+			[]any{},
 			nil,
 		},
 		{

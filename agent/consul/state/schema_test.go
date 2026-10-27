@@ -24,7 +24,7 @@ type indexerTestCase struct {
 }
 
 type indexValue struct {
-	source   interface{}
+	source   any
 	expected []byte
 	// expectedIndexMissing indicates that this test case should not produce an
 	// expected value. The indexer should report a required value was missing.
@@ -33,7 +33,7 @@ type indexValue struct {
 }
 
 type indexValueMulti struct {
-	source   interface{}
+	source   any
 	expected [][]byte
 }
 
@@ -90,8 +90,8 @@ func TestNewDBSchema_Indexers(t *testing.T) {
 }
 
 func (tc indexerTestCase) run(t *testing.T, indexer memdb.Indexer) {
-	args := []interface{}{tc.read.source}
-	if s, ok := tc.read.source.([]interface{}); ok {
+	args := []any{tc.read.source}
+	if s, ok := tc.read.source.([]any); ok {
 		// Indexes using memdb.CompoundIndex must be expanded to multiple args
 		args = s
 	}

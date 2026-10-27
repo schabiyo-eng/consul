@@ -232,7 +232,7 @@ func (c *cmd) Run(args []string) int {
 			return 1
 		}
 
-		newAuthMethod.Config = map[string]interface{}{
+		newAuthMethod.Config = map[string]any{
 			"Host":              c.k8sHost,
 			"CACert":            c.k8sCACert,
 			"ServiceAccountJWT": c.k8sServiceAccountJWT,

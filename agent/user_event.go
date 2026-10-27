@@ -297,12 +297,12 @@ var msgpackHandleUserEvent = &codec.MsgpackHandle{
 }
 
 // decodeMsgPackUserEvent is used to decode a MsgPack encoded object
-func decodeMsgPackUserEvent(buf []byte, out interface{}) error {
+func decodeMsgPackUserEvent(buf []byte, out any) error {
 	return codec.NewDecoder(bytes.NewReader(buf), msgpackHandleUserEvent).Decode(out)
 }
 
 // encodeMsgPackUserEvent is used to encode an object with msgpack
-func encodeMsgPackUserEvent(msg interface{}) ([]byte, error) {
+func encodeMsgPackUserEvent(msg any) ([]byte, error) {
 	var buf bytes.Buffer
 	err := codec.NewEncoder(&buf, msgpackHandleUserEvent).Encode(msg)
 	return buf.Bytes(), err

@@ -12,8 +12,8 @@ import (
 func TestMapWalk(t *testing.T) {
 	t.Parallel()
 	type tcase struct {
-		input      interface{}
-		expected   interface{}
+		input      any
+		expected   any
 		unexpected bool
 		err        bool
 	}
@@ -22,10 +22,10 @@ func TestMapWalk(t *testing.T) {
 		// basically tests that []uint8 gets turned into
 		// a string
 		"simple": {
-			input: map[string]interface{}{
+			input: map[string]any{
 				"foo": []uint8("bar"),
 			},
-			expected: map[string]interface{}{
+			expected: map[string]any{
 				"foo": "bar",
 			},
 		},
@@ -33,10 +33,10 @@ func TestMapWalk(t *testing.T) {
 		// just the require.Equal masking the underlying
 		// type differences
 		"uint8 conversion": {
-			input: map[string]interface{}{
+			input: map[string]any{
 				"foo": []uint8("bar"),
 			},
-			expected: map[string]interface{}{
+			expected: map[string]any{
 				"foo": []uint8("bar"),
 			},
 			unexpected: true,
@@ -44,41 +44,41 @@ func TestMapWalk(t *testing.T) {
 		// ensure we don't panic from trying to call reflect.Value.Type
 		// on a nil pointer
 		"nil pointer": {
-			input: map[string]interface{}{
+			input: map[string]any{
 				"foo": nil,
 			},
-			expected: map[string]interface{}{
+			expected: map[string]any{
 				"foo": nil,
 			},
 		},
 		// ensure nested maps get processed correctly
 		"nested": {
-			input: map[string]interface{}{
-				"foo": map[interface{}]interface{}{
+			input: map[string]any{
+				"foo": map[any]any{
 					"bar": []uint8("baz"),
 				},
 				"bar": []uint8("baz"),
 			},
-			expected: map[string]interface{}{
-				"foo": map[string]interface{}{
+			expected: map[string]any{
+				"foo": map[string]any{
 					"bar": "baz",
 				},
 				"bar": "baz",
 			},
 		},
 		"map with slice": {
-			input: map[string]interface{}{
+			input: map[string]any{
 				"foo": []uint8("bar"),
-				"bar": []interface{}{
+				"bar": []any{
 					[]uint8("one"),
 					[]uint8("two"),
 					3,
 					4,
 				},
 			},
-			expected: map[string]interface{}{
+			expected: map[string]any{
 				"foo": "bar",
-				"bar": []interface{}{
+				"bar": []any{
 					"one",
 					"two",
 					3,

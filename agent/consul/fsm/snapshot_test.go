@@ -145,7 +145,7 @@ func TestFSM_SnapshotRestore_CE(t *testing.T) {
 		Name:        "some-method",
 		Type:        "testing",
 		Description: "test snapshot auth method",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"SessionID": "952ebfa8-2a42-46f0-bcd3-fd98a842000e",
 		},
 	}
@@ -242,7 +242,7 @@ func TestFSM_SnapshotRestore_CE(t *testing.T) {
 	caConfig := &structs.CAConfiguration{
 		ClusterID: "foo",
 		Provider:  "consul",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"foo": "asdf",
 			"bar": 6.5,
 		},
@@ -1037,7 +1037,7 @@ func Test_restoreServiceVirtualIP(t *testing.T) {
 		},
 	}
 
-	run := func(t *testing.T, input interface{}) {
+	run := func(t *testing.T, input any) {
 		t.Helper()
 
 		var b []byte

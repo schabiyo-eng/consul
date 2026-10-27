@@ -312,7 +312,7 @@ type CAConfiguration struct {
 	// Configuration is arbitrary configuration for the provider. This
 	// should only contain primitive values and containers (such as lists
 	// and maps).
-	Config map[string]interface{}
+	Config map[string]any
 
 	// State is optionally used by the provider to persist information it needs
 	// between reloads like UUIDs of resources it manages. It only supports string
@@ -556,7 +556,7 @@ type VaultCAProviderConfig struct {
 type VaultAuthMethod struct {
 	Type      string
 	MountPath string `alias:"mount_path"`
-	Params    map[string]interface{}
+	Params    map[string]any
 }
 
 type AWSCAProviderConfig struct {
@@ -599,7 +599,7 @@ func ParseDurationFunc() mapstructure.DecodeHookFunc {
 	return func(
 		f reflect.Type,
 		t reflect.Type,
-		data interface{}) (interface{}, error) {
+		data any) (any, error) {
 		var v time.Duration
 		if t != reflect.TypeOf(v) {
 			return data, nil

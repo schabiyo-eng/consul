@@ -33,7 +33,7 @@ type View interface {
 	// separately and passed in in case the return type needs an Index field
 	// populating. This allows implementations to not worry about maintaining
 	// indexes seen during Update.
-	Result(index uint64) interface{}
+	Result(index uint64) any
 
 	// Reset the view to the zero state, done in preparation for receiving a new
 	// snapshot.
@@ -43,7 +43,7 @@ type View interface {
 // Result returned from the View.
 type Result struct {
 	Index uint64
-	Value interface{}
+	Value any
 	// Cached is true if the requested value was already available locally. If
 	// the value is false, it indicates that GetFromView had to wait for an update,
 	Cached bool

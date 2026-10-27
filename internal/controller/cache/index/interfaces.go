@@ -10,7 +10,7 @@ import "github.com/hashicorp/consul/proto-public/pbresource"
 //
 //go:generate mockery --name Indexer --with-expecter
 type Indexer interface {
-	FromArgs(args ...interface{}) ([]byte, error)
+	FromArgs(args ...any) ([]byte, error)
 }
 
 // SingleIndexer is the interface to use to extract a single index value from a

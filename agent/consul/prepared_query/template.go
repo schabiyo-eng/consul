@@ -131,7 +131,7 @@ func (ct *CompiledTemplate) Render(name string, source structs.QuerySource) (*st
 		ArgTypes:   []ast.Type{ast.TypeInt},
 		ReturnType: ast.TypeString,
 		Variadic:   false,
-		Callback: func(inputs []interface{}) (interface{}, error) {
+		Callback: func(inputs []any) (any, error) {
 			i, ok := inputs[0].(int)
 			if ok && i >= 0 && i < len(matches) {
 				return matches[i], nil

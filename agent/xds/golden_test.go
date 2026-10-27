@@ -109,7 +109,7 @@ func golden(t *testing.T, name, subname, latestSubname, got string) string {
 	// from the latest version.
 
 	if *update && got != "" {
-		var gotInterface, latestExpectedInterface interface{}
+		var gotInterface, latestExpectedInterface any
 		json.Unmarshal([]byte(got), &gotInterface)
 		json.Unmarshal([]byte(latestExpected), &latestExpectedInterface)
 

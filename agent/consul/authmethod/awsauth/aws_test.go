@@ -40,7 +40,7 @@ func TestNewValidator(t *testing.T) {
 	type AM = *structs.ACLAuthMethod
 	// Create the auth method, with an optional modification function.
 	makeMethod := func(modifyFn func(AM)) AM {
-		config := map[string]interface{}{
+		config := map[string]any{
 			"BoundIAMPrincipalARNs":  []string{f.AssumedRoleARN},
 			"EnableIAMEntityDetails": true,
 			"IAMEntityTags":          []string{"tag-1"},
@@ -96,14 +96,14 @@ func TestValidateLogin(t *testing.T) {
 	cases := map[string]struct {
 		server    *iamauthtest.Server
 		token     string
-		config    map[string]interface{}
+		config    map[string]any
 		expVars   map[string]string
 		expFields []string
 		expError  string
 	}{
 		"success - role login": {
 			server: f.ServerForRole,
-			config: map[string]interface{}{
+			config: map[string]any{
 				"BoundIAMPrincipalARNs": []string{f.CanonicalRoleARN},
 			},
 			expVars: map[string]string{
@@ -119,7 +119,7 @@ func TestValidateLogin(t *testing.T) {
 		},
 		"success - user login": {
 			server: f.ServerForUser,
-			config: map[string]interface{}{
+			config: map[string]any{
 				"BoundIAMPrincipalARNs": []string{f.UserARN},
 			},
 			expVars: map[string]string{
@@ -135,7 +135,7 @@ func TestValidateLogin(t *testing.T) {
 		},
 		"success - role login with entity details": {
 			server: f.ServerForUser,
-			config: map[string]interface{}{
+			config: map[string]any{
 				"BoundIAMPrincipalARNs":  []string{f.UserARN},
 				"EnableIAMEntityDetails": true,
 			},
@@ -154,7 +154,7 @@ func TestValidateLogin(t *testing.T) {
 		},
 		"success - user login with entity details": {
 			server: f.ServerForUser,
-			config: map[string]interface{}{
+			config: map[string]any{
 				"BoundIAMPrincipalARNs":  []string{f.UserARN},
 				"EnableIAMEntityDetails": true,
 			},
@@ -173,7 +173,7 @@ func TestValidateLogin(t *testing.T) {
 		},
 		"invalid token": {
 			server: f.ServerForUser,
-			config: map[string]interface{}{
+			config: map[string]any{
 				"BoundIAMPrincipalARNs": []string{f.UserARN},
 			},
 			token:    `invalid`,
@@ -181,7 +181,7 @@ func TestValidateLogin(t *testing.T) {
 		},
 		"empty json token": {
 			server: f.ServerForUser,
-			config: map[string]interface{}{
+			config: map[string]any{
 				"BoundIAMPrincipalARNs": []string{f.UserARN},
 			},
 			token:    `{}`,
@@ -189,7 +189,7 @@ func TestValidateLogin(t *testing.T) {
 		},
 		"empty json fields in token": {
 			server: f.ServerForUser,
-			config: map[string]interface{}{
+			config: map[string]any{
 				"BoundIAMPrincipalARNs": []string{f.UserARN},
 			},
 			token: `{"iam_http_request_method": "",
@@ -219,7 +219,7 @@ func TestValidateLogin(t *testing.T) {
 	}
 }
 
-func setup(t *testing.T, config map[string]interface{}, server *iamauthtest.Server) (*Validator, *httptest.Server, string) {
+func setup(t *testing.T, config map[string]any, server *iamauthtest.Server) (*Validator, *httptest.Server, string) {
 	t.Helper()
 
 	fakeAws := iamauthtest.NewTestServer(t, server)
@@ -260,12 +260,12 @@ func setup(t *testing.T, config map[string]interface{}, server *iamauthtest.Serv
 func TestNewIdentity(t *testing.T) {
 	principals := []string{"arn:aws:sts::1234567890:assumed-role/my-role/some-session"}
 	cases := map[string]struct {
-		config     map[string]interface{}
+		config     map[string]any
 		expVars    map[string]string
 		expFilters []string
 	}{
 		"entity details disabled": {
-			config: map[string]interface{}{
+			config: map[string]any{
 				"BoundIAMPrincipalARNs": principals,
 			},
 			expVars: map[string]string{
@@ -280,7 +280,7 @@ func TestNewIdentity(t *testing.T) {
 			},
 		},
 		"entity details enabled": {
-			config: map[string]interface{}{
+			config: map[string]any{
 				"BoundIAMPrincipalARNs":  principals,
 				"EnableIAMEntityDetails": true,
 			},
@@ -298,7 +298,7 @@ func TestNewIdentity(t *testing.T) {
 			},
 		},
 		"entity tags": {
-			config: map[string]interface{}{
+			config: map[string]any{
 				"BoundIAMPrincipalARNs":  principals,
 				"EnableIAMEntityDetails": true,
 				"IAMEntityTags": []string{

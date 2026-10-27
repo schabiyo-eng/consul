@@ -228,7 +228,7 @@ func TestLoginCommand(t *testing.T) {
 			&api.ACLAuthMethod{
 				Name: "test",
 				Type: "testing",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"SessionID": testSessionID,
 				},
 			},
@@ -331,7 +331,7 @@ func TestLoginCommand_k8s(t *testing.T) {
 			&api.ACLAuthMethod{
 				Name: "k8s",
 				Type: "kubernetes",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"Host":   testSrv.Addr(),
 					"CACert": testSrv.CACert(),
 					// the "A" jwt will be the one with token review privs
@@ -401,7 +401,7 @@ func TestLoginCommand_jwt(t *testing.T) {
 	oidcServer := oidcauthtest.Start(t)
 	pubKey, privKey := oidcServer.SigningKeys()
 
-	type mConfig = map[string]interface{}
+	type mConfig = map[string]any
 	cases := map[string]struct {
 		f         func(config mConfig)
 		issuer    string
@@ -433,7 +433,7 @@ func TestLoginCommand_jwt(t *testing.T) {
 			method := &api.ACLAuthMethod{
 				Name: "jwt",
 				Type: "jwt",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"JWTSupportedAlgs": []string{"ES256"},
 					"ClaimMappings": map[string]string{
 						"first_name":   "name",
@@ -542,14 +542,14 @@ func TestLoginCommand_aws_iam(t *testing.T) {
 	cases := map[string]struct {
 		awsServer          *iamauthtest.Server
 		cmdArgs            []string
-		config             map[string]interface{}
+		config             map[string]any
 		bindingRule        *api.ACLBindingRule
 		expServiceIdentity *api.ACLServiceIdentity
 	}{
 		"success - login with role": {
 			awsServer: f.ServerForRole,
 			cmdArgs:   []string{"-aws-auto-bearer-token"},
-			config: map[string]interface{}{
+			config: map[string]any{
 				// Test that an assumed-role arn is translated to the canonical role arn.
 				"BoundIAMPrincipalARNs": []string{f.CanonicalRoleARN},
 			},
@@ -566,7 +566,7 @@ func TestLoginCommand_aws_iam(t *testing.T) {
 		"success - login with role and entity details enabled": {
 			awsServer: f.ServerForRole,
 			cmdArgs:   []string{"-aws-auto-bearer-token", "-aws-include-entity"},
-			config: map[string]interface{}{
+			config: map[string]any{
 				// Test that we can login with full user path.
 				"BoundIAMPrincipalARNs":  []string{f.RoleARN},
 				"EnableIAMEntityDetails": true,
@@ -582,7 +582,7 @@ func TestLoginCommand_aws_iam(t *testing.T) {
 		"success - login with role and role tags": {
 			awsServer: f.ServerForRole,
 			cmdArgs:   []string{"-aws-auto-bearer-token", "-aws-include-entity"},
-			config: map[string]interface{}{
+			config: map[string]any{
 				// Test that we can login with a wildcard.
 				"BoundIAMPrincipalARNs":  []string{f.RoleARNWildcard},
 				"EnableIAMEntityDetails": true,
@@ -598,7 +598,7 @@ func TestLoginCommand_aws_iam(t *testing.T) {
 		"success - login with user and user tags": {
 			awsServer: f.ServerForUser,
 			cmdArgs:   []string{"-aws-auto-bearer-token", "-aws-include-entity"},
-			config: map[string]interface{}{
+			config: map[string]any{
 				// Test that we can login with a wildcard.
 				"BoundIAMPrincipalARNs":  []string{f.UserARNWildcard},
 				"EnableIAMEntityDetails": true,

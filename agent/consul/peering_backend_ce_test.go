@@ -33,7 +33,7 @@ func TestPeeringBackend_RejectsPartition(t *testing.T) {
 		c.CAConfig = &structs.CAConfiguration{
 			ClusterID: connect.TestClusterID,
 			Provider:  structs.ConsulCAProvider,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"PrivateKey": ca.SigningKey,
 				"RootCert":   ca.RootCert,
 			},
@@ -76,7 +76,7 @@ func TestPeeringBackend_IgnoresDefaultPartition(t *testing.T) {
 		c.CAConfig = &structs.CAConfiguration{
 			ClusterID: connect.TestClusterID,
 			Provider:  structs.ConsulCAProvider,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"PrivateKey": ca.SigningKey,
 				"RootCert":   ca.RootCert,
 			},

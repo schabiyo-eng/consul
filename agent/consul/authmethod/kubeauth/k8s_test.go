@@ -20,7 +20,7 @@ func TestStructs_ACLAuthMethod_Kubernetes_MsgpackEncodeDecode(t *testing.T) {
 		Name:        "k8s",
 		Type:        "kubernetes",
 		Description: "k00b",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"Host":              "https://kube.api.internal:8443",
 			"CACert":            "<my garbage ca cert>",
 			"ServiceAccountJWT": "my.fake.jwt",
@@ -86,7 +86,7 @@ func TestNewIdentity(t *testing.T) {
 		Name:        "test-k8s",
 		Description: "k8s test",
 		Type:        "kubernetes",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"Host":              testSrv.Addr(),
 			"CACert":            testSrv.CACert(),
 			"ServiceAccountJWT": goodJWT_A,
@@ -124,7 +124,7 @@ func TestValidateLogin(t *testing.T) {
 		Name:        "test-k8s",
 		Description: "k8s test",
 		Type:        "kubernetes",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"Host":              testSrv.Addr(),
 			"CACert":            testSrv.CACert(),
 			"ServiceAccountJWT": goodJWT_A,
@@ -188,7 +188,7 @@ func TestNewValidator(t *testing.T) {
 			Name:        "test-k8s",
 			Description: "k8s test",
 			Type:        "kubernetes",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"Host":              "https://abc:8443",
 				"CACert":            ca.RootCert,
 				"ServiceAccountJWT": goodJWT_A,

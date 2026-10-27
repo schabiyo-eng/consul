@@ -74,7 +74,7 @@ func BoolToBoolValueFunc() mapstructure.DecodeHookFunc {
 	return func(
 		f reflect.Type,
 		t reflect.Type,
-		data interface{}) (interface{}, error) {
+		data any) (any, error) {
 		if f.Kind() != reflect.Bool {
 			return data, nil
 		}
@@ -127,7 +127,7 @@ func StringToDurationValueFunc() mapstructure.DecodeHookFunc {
 	return func(
 		f reflect.Type,
 		t reflect.Type,
-		data interface{}) (interface{}, error) {
+		data any) (any, error) {
 		if f.Kind() != reflect.String {
 			return data, nil
 		}
@@ -179,7 +179,7 @@ func StringToStringValueFunc() mapstructure.DecodeHookFunc {
 	return func(
 		f reflect.Type,
 		t reflect.Type,
-		data interface{}) (interface{}, error) {
+		data any) (any, error) {
 		if f.Kind() != reflect.String {
 			return data, nil
 		}
@@ -231,7 +231,7 @@ func Float64ToUintValueFunc() mapstructure.DecodeHookFunc {
 	return func(
 		f reflect.Type,
 		t reflect.Type,
-		data interface{}) (interface{}, error) {
+		data any) (any, error) {
 		if f.Kind() != reflect.Float64 {
 			return data, nil
 		}

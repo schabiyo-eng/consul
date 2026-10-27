@@ -13,12 +13,12 @@ import (
 //
 //go:generate mockery --name Logger --inpackage
 type Logger interface {
-	Log(level hclog.Level, msg string, args ...interface{})
+	Log(level hclog.Level, msg string, args ...any)
 }
 
 type Log struct {
 	s string
-	i []interface{}
+	i []any
 	l hclog.Level
 }
 
@@ -30,7 +30,7 @@ type logDropSink struct {
 
 // Accept consume a log and push it into a channel,
 // if the channel is filled it will call dropFn
-func (r *logDropSink) Accept(_ string, level hclog.Level, msg string, args ...interface{}) {
+func (r *logDropSink) Accept(_ string, level hclog.Level, msg string, args ...any) {
 	r.pushLog(Log{l: level, s: msg, i: args})
 }
 

@@ -19,8 +19,8 @@ import (
 )
 
 func TestConstructor(t *testing.T) {
-	makeArguments := func(overrides map[string]interface{}) map[string]interface{} {
-		m := map[string]interface{}{
+	makeArguments := func(overrides map[string]any) map[string]any {
+		m := map[string]any{
 			"ProxyType": "connect-proxy",
 			"Listener":  "inbound",
 			"Script":    "function envoy_on_request(request_handle) request_handle:headers():add('test', 'test') end",
@@ -33,7 +33,7 @@ func TestConstructor(t *testing.T) {
 
 	tests := map[string]struct {
 		extensionName string
-		arguments     map[string]interface{}
+		arguments     map[string]any
 		expected      lua
 		ok            bool
 	}{
@@ -42,24 +42,24 @@ func TestConstructor(t *testing.T) {
 			ok:        false,
 		},
 		"with an invalid name": {
-			arguments:     makeArguments(map[string]interface{}{}),
+			arguments:     makeArguments(map[string]any{}),
 			extensionName: "bad",
 			ok:            false,
 		},
 		"empty script": {
-			arguments: makeArguments(map[string]interface{}{"Script": ""}),
+			arguments: makeArguments(map[string]any{"Script": ""}),
 			ok:        false,
 		},
 		"invalid proxy type": {
-			arguments: makeArguments(map[string]interface{}{"ProxyType": "terminating-gateway"}),
+			arguments: makeArguments(map[string]any{"ProxyType": "terminating-gateway"}),
 			ok:        false,
 		},
 		"invalid listener": {
-			arguments: makeArguments(map[string]interface{}{"Listener": "invalid"}),
+			arguments: makeArguments(map[string]any{"Listener": "invalid"}),
 			ok:        false,
 		},
 		"default proxy type": {
-			arguments: makeArguments(map[string]interface{}{"ProxyType": ""}),
+			arguments: makeArguments(map[string]any{"ProxyType": ""}),
 			expected: lua{
 				ProxyType: "connect-proxy",
 				Listener:  "inbound",
@@ -68,7 +68,7 @@ func TestConstructor(t *testing.T) {
 			ok: true,
 		},
 		"api gateway proxy type": {
-			arguments: makeArguments(map[string]interface{}{"ProxyType": "api-gateway"}),
+			arguments: makeArguments(map[string]any{"ProxyType": "api-gateway"}),
 			expected: lua{
 				ProxyType: "api-gateway",
 				Listener:  "inbound",
@@ -77,7 +77,7 @@ func TestConstructor(t *testing.T) {
 			ok: true,
 		},
 		"valid everything": {
-			arguments: makeArguments(map[string]interface{}{}),
+			arguments: makeArguments(map[string]any{}),
 			expected: lua{
 				ProxyType: "connect-proxy",
 				Listener:  "inbound",

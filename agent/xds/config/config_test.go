@@ -17,7 +17,7 @@ import (
 func TestParseProxyConfig(t *testing.T) {
 	tests := []struct {
 		name  string
-		input map[string]interface{}
+		input map[string]any
 		want  ProxyConfig
 	}{
 		{
@@ -30,7 +30,7 @@ func TestParseProxyConfig(t *testing.T) {
 		},
 		{
 			name:  "defaults - empty",
-			input: map[string]interface{}{},
+			input: map[string]any{},
 			want: ProxyConfig{
 				Protocol:              "tcp",
 				LocalConnectTimeoutMs: 5000,
@@ -38,7 +38,7 @@ func TestParseProxyConfig(t *testing.T) {
 		},
 		{
 			name: "defaults - other stuff",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"foo":       "bar",
 				"envoy_foo": "envoy_bar",
 			},
@@ -49,7 +49,7 @@ func TestParseProxyConfig(t *testing.T) {
 		},
 		{
 			name: "protocol override",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"protocol": "http",
 			},
 			want: ProxyConfig{
@@ -59,7 +59,7 @@ func TestParseProxyConfig(t *testing.T) {
 		},
 		{
 			name: "protocol uppercase override",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"protocol": "HTTP",
 			},
 			want: ProxyConfig{
@@ -69,7 +69,7 @@ func TestParseProxyConfig(t *testing.T) {
 		},
 		{
 			name: "bind address override, string",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"bind_address": "127.0.0.2",
 			},
 			want: ProxyConfig{
@@ -80,7 +80,7 @@ func TestParseProxyConfig(t *testing.T) {
 		},
 		{
 			name: "bind port override, string",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"bind_port": "8888",
 			},
 			want: ProxyConfig{
@@ -91,7 +91,7 @@ func TestParseProxyConfig(t *testing.T) {
 		},
 		{
 			name: "bind port override, int",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"bind_port": 8889,
 			},
 			want: ProxyConfig{
@@ -102,7 +102,7 @@ func TestParseProxyConfig(t *testing.T) {
 		},
 		{
 			name: "local connect timeout override, string",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"local_connect_timeout_ms": "1000",
 			},
 			want: ProxyConfig{
@@ -112,7 +112,7 @@ func TestParseProxyConfig(t *testing.T) {
 		},
 		{
 			name: "local connect timeout override, float ",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"local_connect_timeout_ms": float64(1000.0),
 			},
 			want: ProxyConfig{
@@ -122,7 +122,7 @@ func TestParseProxyConfig(t *testing.T) {
 		},
 		{
 			name: "local connect timeout override, int ",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"local_connect_timeout_ms": 1000,
 			},
 			want: ProxyConfig{
@@ -132,7 +132,7 @@ func TestParseProxyConfig(t *testing.T) {
 		},
 		{
 			name: "local request timeout override, string",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"local_request_timeout_ms": "1000",
 			},
 			want: ProxyConfig{
@@ -143,7 +143,7 @@ func TestParseProxyConfig(t *testing.T) {
 		},
 		{
 			name: "local request timeout override, float ",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"local_request_timeout_ms": float64(1000.0),
 			},
 			want: ProxyConfig{
@@ -154,7 +154,7 @@ func TestParseProxyConfig(t *testing.T) {
 		},
 		{
 			name: "local request timeout override, int ",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"local_request_timeout_ms": 1000,
 			},
 			want: ProxyConfig{
@@ -165,7 +165,7 @@ func TestParseProxyConfig(t *testing.T) {
 		},
 		{
 			name: "local idle timeout override, float ",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"local_idle_timeout_ms": float64(1000.0),
 			},
 			want: ProxyConfig{
@@ -176,7 +176,7 @@ func TestParseProxyConfig(t *testing.T) {
 		},
 		{
 			name: "local idle timeout override, int ",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"local_idle_timeout_ms": 1000,
 			},
 			want: ProxyConfig{
@@ -187,7 +187,7 @@ func TestParseProxyConfig(t *testing.T) {
 		},
 		{
 			name: "local idle timeout override, string",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"local_idle_timeout_ms": "1000",
 			},
 			want: ProxyConfig{
@@ -198,7 +198,7 @@ func TestParseProxyConfig(t *testing.T) {
 		},
 		{
 			name: "balance inbound connections override, string",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"balance_inbound_connections": "exact_balance",
 			},
 			want: ProxyConfig{
@@ -209,7 +209,7 @@ func TestParseProxyConfig(t *testing.T) {
 		},
 		{
 			name: "max request headers KB override, int",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"max_request_headers_kb": 96,
 			},
 			want: ProxyConfig{
@@ -220,7 +220,7 @@ func TestParseProxyConfig(t *testing.T) {
 		},
 		{
 			name: "max request headers KB override, float",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"max_request_headers_kb": float64(128.0),
 			},
 			want: ProxyConfig{
@@ -231,7 +231,7 @@ func TestParseProxyConfig(t *testing.T) {
 		},
 		{
 			name: "max request headers KB override, string",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"max_request_headers_kb": "256",
 			},
 			want: ProxyConfig{
@@ -242,7 +242,7 @@ func TestParseProxyConfig(t *testing.T) {
 		},
 		{
 			name: "max request headers KB with zero value",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"max_request_headers_kb": 0,
 			},
 			want: ProxyConfig{
@@ -253,7 +253,7 @@ func TestParseProxyConfig(t *testing.T) {
 		},
 		{
 			name: "kitchen sink with max request headers",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"protocol":                    "http",
 				"bind_address":                "127.0.0.2",
 				"bind_port":                   8888,
@@ -287,7 +287,7 @@ func TestParseProxyConfig(t *testing.T) {
 func TestParseGatewayConfig(t *testing.T) {
 	tests := []struct {
 		name  string
-		input map[string]interface{}
+		input map[string]any
 		want  GatewayConfig
 	}{
 		{
@@ -299,14 +299,14 @@ func TestParseGatewayConfig(t *testing.T) {
 		},
 		{
 			name:  "defaults - empty",
-			input: map[string]interface{}{},
+			input: map[string]any{},
 			want: GatewayConfig{
 				ConnectTimeoutMs: 5000,
 			},
 		},
 		{
 			name: "defaults - other stuff",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"foo":       "bar",
 				"envoy_foo": "envoy_bar",
 			},
@@ -316,7 +316,7 @@ func TestParseGatewayConfig(t *testing.T) {
 		},
 		{
 			name: "kitchen sink",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"envoy_gateway_bind_tagged_addresses": true,
 				"envoy_gateway_bind_addresses":        map[string]structs.ServiceAddress{"foo": {Address: "127.0.0.1", Port: 80}},
 				"envoy_gateway_no_default_bind":       true,
@@ -333,7 +333,7 @@ func TestParseGatewayConfig(t *testing.T) {
 		},
 		{
 			name: "deprecated kitchen sink",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"envoy_mesh_gateway_bind_tagged_addresses": true,
 				"envoy_mesh_gateway_bind_addresses":        map[string]structs.ServiceAddress{"foo": {Address: "127.0.0.1", Port: 80}},
 				"envoy_mesh_gateway_no_default_bind":       true,
@@ -348,7 +348,7 @@ func TestParseGatewayConfig(t *testing.T) {
 		},
 		{
 			name: "new fields override deprecated ones",
-			input: map[string]interface{}{
+			input: map[string]any{
 				// Deprecated
 				"envoy_mesh_gateway_bind_tagged_addresses": true,
 				"envoy_mesh_gateway_bind_addresses":        map[string]structs.ServiceAddress{"foo": {Address: "127.0.0.1", Port: 80}},
@@ -386,7 +386,7 @@ func uintPointer(i uint32) *uint32 {
 
 func Test_ProxyConfig_GetXDSFetchTimeout(t *testing.T) {
 	tests := map[string]struct {
-		conf      map[string]interface{}
+		conf      map[string]any
 		expect    *durationpb.Duration
 		expectErr bool
 	}{
@@ -396,35 +396,35 @@ func Test_ProxyConfig_GetXDSFetchTimeout(t *testing.T) {
 		},
 		"key_not_found": {
 			expect: nil,
-			conf:   map[string]interface{}{},
+			conf:   map[string]any{},
 		},
 		"invalid_key": {
 			expect: nil,
-			conf: map[string]interface{}{
+			conf: map[string]any{
 				"i_do_not_exist": "as_an_expected_field",
 			},
 		},
 		"nil_value_for_key": {
 			expect: nil,
-			conf: map[string]interface{}{
+			conf: map[string]any{
 				"xds_fetch_timeout_ms": nil,
 			},
 		},
 		"bad_value_for_key": {
 			expectErr: true,
-			conf: map[string]interface{}{
+			conf: map[string]any{
 				"xds_fetch_timeout_ms": "bad",
 			},
 		},
 		"negative_value_for_key": {
 			expect: nil,
-			conf: map[string]interface{}{
+			conf: map[string]any{
 				"xds_fetch_timeout_ms": -1,
 			},
 		},
 		"valid_value_for_key": {
 			expect: durationpb.New(99 * time.Millisecond),
-			conf: map[string]interface{}{
+			conf: map[string]any{
 				"xds_fetch_timeout_ms": 99,
 			},
 		},

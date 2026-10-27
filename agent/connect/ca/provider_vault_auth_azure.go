@@ -94,7 +94,7 @@ func AzureLoginDataGen(authMethod *structs.VaultAuthMethod) (map[string]any, err
 		return nil, fmt.Errorf("error parsing instance metadata response: %w", err)
 	}
 
-	data := map[string]interface{}{
+	data := map[string]any{
 		"role":                role,
 		"vm_name":             instance.Compute.Name,
 		"vmss_name":           instance.Compute.VMScaleSetName,

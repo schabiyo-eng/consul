@@ -59,26 +59,26 @@ func pkiTestPolicy(rootPath, intermediatePath string) string {
 
 func TestVaultCAProvider_ParseVaultCAConfig(t *testing.T) {
 	cases := map[string]struct {
-		rawConfig map[string]interface{}
+		rawConfig map[string]any
 		expConfig *structs.VaultCAProviderConfig
 		isPrimary bool
 		expError  string
 	}{
 		"no token and no auth method provided": {
-			rawConfig: map[string]interface{}{},
+			rawConfig: map[string]any{},
 			expError:  "must provide a Vault token or configure a Vault auth method",
 		},
 		"both token and auth method provided": {
-			rawConfig: map[string]interface{}{"Token": "test", "AuthMethod": map[string]interface{}{"Type": "test"}},
+			rawConfig: map[string]any{"Token": "test", "AuthMethod": map[string]any{"Type": "test"}},
 			expError:  "only one of Vault token or Vault auth method can be provided, but not both",
 		},
 		"primary no root PKI path": {
-			rawConfig: map[string]interface{}{"Token": "test", "IntermediatePKIPath": "test"},
+			rawConfig: map[string]any{"Token": "test", "IntermediatePKIPath": "test"},
 			isPrimary: true,
 			expError:  "must provide a valid path to a root PKI backend",
 		},
 		"secondary no root PKI path": {
-			rawConfig: map[string]interface{}{"Token": "test", "IntermediatePKIPath": "test"},
+			rawConfig: map[string]any{"Token": "test", "IntermediatePKIPath": "test"},
 			isPrimary: false,
 			expConfig: &structs.VaultCAProviderConfig{
 				CommonCAProviderConfig: defaultCommonConfig(),
@@ -87,12 +87,12 @@ func TestVaultCAProvider_ParseVaultCAConfig(t *testing.T) {
 			},
 		},
 		"no root intermediate path": {
-			rawConfig: map[string]interface{}{"Token": "test", "RootPKIPath": "test"},
+			rawConfig: map[string]any{"Token": "test", "RootPKIPath": "test"},
 			expError:  "must provide a valid path for the intermediate PKI backend",
 		},
 		"adds a slash to RootPKIPath and IntermediatePKIPath": {
 			isPrimary: true,
-			rawConfig: map[string]interface{}{"Token": "test", "RootPKIPath": "test", "IntermediatePKIPath": "test"},
+			rawConfig: map[string]any{"Token": "test", "RootPKIPath": "test", "IntermediatePKIPath": "test"},
 			expConfig: &structs.VaultCAProviderConfig{
 				CommonCAProviderConfig: defaultCommonConfig(),
 				Token:                  "test",
@@ -118,27 +118,27 @@ func TestVaultCAProvider_ParseVaultCAConfig(t *testing.T) {
 func TestVaultCAProvider_configureVaultAuthMethod(t *testing.T) {
 	cases := map[string]struct {
 		expLoginPath string
-		params       map[string]interface{}
+		params       map[string]any
 		expError     string
 		hasLDG       bool
 	}{
 		"alicloud":    {expLoginPath: "auth/alicloud/login", params: map[string]any{"role": "test-role", "region": "test-region"}, hasLDG: true},
 		"approle":     {expLoginPath: "auth/approle/login", params: map[string]any{"role_id_file_path": "test-path"}, hasLDG: true},
-		"aws":         {expLoginPath: "auth/aws/login", params: map[string]interface{}{"type": "iam"}, hasLDG: true},
-		"azure":       {expLoginPath: "auth/azure/login", params: map[string]interface{}{"role": "test-role", "resource": "test-resource"}, hasLDG: true},
+		"aws":         {expLoginPath: "auth/aws/login", params: map[string]any{"type": "iam"}, hasLDG: true},
+		"azure":       {expLoginPath: "auth/azure/login", params: map[string]any{"role": "test-role", "resource": "test-resource"}, hasLDG: true},
 		"cf":          {expLoginPath: "auth/cf/login"},
 		"github":      {expLoginPath: "auth/github/login"},
-		"gcp":         {expLoginPath: "auth/gcp/login", params: map[string]interface{}{"type": "iam", "role": "test-role"}},
+		"gcp":         {expLoginPath: "auth/gcp/login", params: map[string]any{"type": "iam", "role": "test-role"}},
 		"jwt":         {expLoginPath: "auth/jwt/login", params: map[string]any{"role": "test-role", "path": "test-path"}, hasLDG: true},
 		"kerberos":    {expLoginPath: "auth/kerberos/login"},
-		"kubernetes":  {expLoginPath: "auth/kubernetes/login", params: map[string]interface{}{"role": "test-role"}, hasLDG: true},
-		"ldap":        {expLoginPath: "auth/ldap/login/foo", params: map[string]interface{}{"username": "foo"}},
-		"oci":         {expLoginPath: "auth/oci/login/foo", params: map[string]interface{}{"role": "foo"}},
-		"okta":        {expLoginPath: "auth/okta/login/foo", params: map[string]interface{}{"username": "foo"}},
-		"radius":      {expLoginPath: "auth/radius/login/foo", params: map[string]interface{}{"username": "foo"}},
+		"kubernetes":  {expLoginPath: "auth/kubernetes/login", params: map[string]any{"role": "test-role"}, hasLDG: true},
+		"ldap":        {expLoginPath: "auth/ldap/login/foo", params: map[string]any{"username": "foo"}},
+		"oci":         {expLoginPath: "auth/oci/login/foo", params: map[string]any{"role": "foo"}},
+		"okta":        {expLoginPath: "auth/okta/login/foo", params: map[string]any{"username": "foo"}},
+		"radius":      {expLoginPath: "auth/radius/login/foo", params: map[string]any{"username": "foo"}},
 		"cert":        {expLoginPath: "auth/cert/login"},
 		"token":       {expError: "'token' auth method is not supported via auth method configuration; please provide the token with the 'token' parameter in the CA configuration"},
-		"userpass":    {expLoginPath: "auth/userpass/login/foo", params: map[string]interface{}{"username": "foo"}},
+		"userpass":    {expLoginPath: "auth/userpass/login/foo", params: map[string]any{"username": "foo"}},
 		"unsupported": {expError: "auth method \"unsupported\" is not supported"},
 	}
 
@@ -948,17 +948,17 @@ func TestVaultProvider_ConfigureWithAuthMethod(t *testing.T) {
 
 	cases := []struct {
 		authMethodType          string
-		configureAuthMethodFunc func(t *testing.T, vaultClient *vaultapi.Client) map[string]interface{}
+		configureAuthMethodFunc func(t *testing.T, vaultClient *vaultapi.Client) map[string]any
 	}{
 		{
 			authMethodType: "userpass",
-			configureAuthMethodFunc: func(t *testing.T, vaultClient *vaultapi.Client) map[string]interface{} {
+			configureAuthMethodFunc: func(t *testing.T, vaultClient *vaultapi.Client) map[string]any {
 				_, err := vaultClient.Logical().Write("/auth/userpass/users/test",
-					map[string]interface{}{"password": "foo", "policies": "pki"})
+					map[string]any{"password": "foo", "policies": "pki"})
 				require.NoError(t, err)
-				return map[string]interface{}{
+				return map[string]any{
 					"Type": "userpass",
-					"Params": map[string]interface{}{
+					"Params": map[string]any{
 						"username": "test",
 						"password": "foo",
 					},
@@ -967,9 +967,9 @@ func TestVaultProvider_ConfigureWithAuthMethod(t *testing.T) {
 		},
 		{
 			authMethodType: "approle",
-			configureAuthMethodFunc: func(t *testing.T, vaultClient *vaultapi.Client) map[string]interface{} {
+			configureAuthMethodFunc: func(t *testing.T, vaultClient *vaultapi.Client) map[string]any {
 				_, err := vaultClient.Logical().Write("auth/approle/role/my-role",
-					map[string]interface{}{"token_policies": "pki"})
+					map[string]any{"token_policies": "pki"})
 				require.NoError(t, err)
 				resp, err := vaultClient.Logical().Read("auth/approle/role/my-role/role-id")
 				require.NoError(t, err)
@@ -979,9 +979,9 @@ func TestVaultProvider_ConfigureWithAuthMethod(t *testing.T) {
 				require.NoError(t, err)
 				secretID := resp.Data["secret_id"]
 
-				return map[string]interface{}{
+				return map[string]any{
 					"Type": "approle",
-					"Params": map[string]interface{}{
+					"Params": map[string]any{
 						"role_id":   roleID,
 						"secret_id": secretID,
 					},
@@ -1039,7 +1039,7 @@ func TestVaultProvider_RotateAuthMethodToken(t *testing.T) {
 	require.NoError(t, err)
 
 	_, err = testVault.Client().Logical().Write("auth/approle/role/my-role",
-		map[string]interface{}{
+		map[string]any{
 			"token_ttl":              "2s",
 			"token_explicit_max_ttl": "2s",
 			"token_policies":         "pki",
@@ -1057,9 +1057,9 @@ func TestVaultProvider_RotateAuthMethodToken(t *testing.T) {
 		"Address":             testVault.Addr,
 		"RootPKIPath":         "pki-root/",
 		"IntermediatePKIPath": "pki-intermediate/",
-		"AuthMethod": map[string]interface{}{
+		"AuthMethod": map[string]any{
 			"Type": "approle",
-			"Params": map[string]interface{}{
+			"Params": map[string]any{
 				"role_id":   roleID,
 				"secret_id": secretID,
 			},
@@ -1416,7 +1416,7 @@ path "auth/token/lookup-self" {
 			MaxLeaseTTL: "12m",
 		},
 	}))
-	_, err := client.Logical().Write("pki-root/root/generate/internal", map[string]interface{}{
+	_, err := client.Logical().Write("pki-root/root/generate/internal", map[string]any{
 		"common_name": "testconsul",
 	})
 	require.NoError(t, err)

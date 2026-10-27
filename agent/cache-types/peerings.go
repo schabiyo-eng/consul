@@ -40,7 +40,7 @@ func (r *PeeringListRequest) CacheInfo() cache.RequestInfo {
 		MustRevalidate: r.MustRevalidate,
 	}
 
-	v, err := hashstructure.Hash([]interface{}{
+	v, err := hashstructure.Hash([]any{
 		r.Request.Partition,
 	}, nil)
 	if err == nil {

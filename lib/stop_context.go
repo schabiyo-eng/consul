@@ -35,6 +35,6 @@ func (c *StopChannelContext) Err() error {
 	}
 }
 
-func (c *StopChannelContext) Value(key interface{}) interface{} {
+func (c *StopChannelContext) Value(key any) any {
 	return nil
 }

@@ -320,7 +320,7 @@ func (c *Cache) ReloadOptions(options Options) bool {
 // index is retrieved, the last known value (maybe nil) is returned. No
 // error is returned on timeout. This matches the behavior of Consul blocking
 // queries.
-func (c *Cache) Get(ctx context.Context, t string, r Request) (interface{}, ResultMeta, error) {
+func (c *Cache) Get(ctx context.Context, t string, r Request) (any, ResultMeta, error) {
 	c.typesLock.RLock()
 	tEntry, ok := c.types[t]
 	c.typesLock.RUnlock()
@@ -403,7 +403,7 @@ func entryExceedsMaxAge(maxAge time.Duration, entry cacheEntry) bool {
 // getWithIndex implements the main Get functionality but allows internal
 // callers (Watch) to manipulate the blocking index separately from the actual
 // request object.
-func (c *Cache) getWithIndex(ctx context.Context, r getOptions) (interface{}, ResultMeta, error) {
+func (c *Cache) getWithIndex(ctx context.Context, r getOptions) (any, ResultMeta, error) {
 	if r.Info.Key == "" {
 		metrics.IncrCounter([]string{"consul", "cache", "bypass"}, 1)
 		metrics.IncrCounter([]string{"cache", "bypass"}, 1)

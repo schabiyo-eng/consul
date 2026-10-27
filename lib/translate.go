@@ -40,7 +40,7 @@ import (
 //	})
 //
 // Deprecated: Use lib/decode.HookTranslateKeys instead.
-func TranslateKeys(v map[string]interface{}, dict map[string]string) {
+func TranslateKeys(v map[string]any, dict map[string]string) {
 	// Convert all dict keys for exclusions to lower. so we can match against them
 	// unambiguously with a single lookup.
 	for k, v := range dict {
@@ -51,7 +51,7 @@ func TranslateKeys(v map[string]interface{}, dict map[string]string) {
 	ck(v, dict, "")
 }
 
-func ck(v interface{}, dict map[string]string, pathPfx string) interface{} {
+func ck(v any, dict map[string]string, pathPfx string) any {
 	// In array case we don't add a path segment for the item as they are all
 	// assumed to be same which is why we check the prefix doesn't already end in
 	// a .
@@ -59,7 +59,7 @@ func ck(v interface{}, dict map[string]string, pathPfx string) interface{} {
 		pathPfx += "."
 	}
 	switch x := v.(type) {
-	case map[string]interface{}:
+	case map[string]any:
 		for k, v := range x {
 			lowerK := strings.ToLower(k)
 
@@ -91,8 +91,8 @@ func ck(v interface{}, dict map[string]string, pathPfx string) interface{} {
 		}
 		return x
 
-	case []interface{}:
-		var a []interface{}
+	case []any:
+		var a []any
 		for _, xv := range x {
 			a = append(a, ck(xv, dict, pathPfx))
 		}

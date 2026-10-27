@@ -16,7 +16,7 @@ import (
 	"github.com/hashicorp/consul/agent/structs"
 )
 
-func indexFromConfigEntryKindName(arg interface{}) ([]byte, error) {
+func indexFromConfigEntryKindName(arg any) ([]byte, error) {
 	var b indexBuilder
 
 	switch n := arg.(type) {

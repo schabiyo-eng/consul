@@ -164,7 +164,7 @@ func TestMonitorCommand_LogJSONValidFormat(t *testing.T) {
 		outputs := ui.OutputWriter.String()
 		for count, output := range strings.Split(outputs, "\n") {
 			if output != "" && count > 0 {
-				jsonLog := new(map[string]interface{})
+				jsonLog := new(map[string]any)
 				err := json.Unmarshal([]byte(output), jsonLog)
 				if err != nil {
 					exitCode <- -1

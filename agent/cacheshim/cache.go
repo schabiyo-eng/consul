@@ -102,7 +102,7 @@ type UpdateEvent struct {
 	// identifier given the set of things they are watching. They might even
 	// choose to assign random IDs for example.
 	CorrelationID string
-	Result        interface{}
+	Result        any
 	Meta          ResultMeta
 	Err           error
 }
@@ -110,7 +110,7 @@ type UpdateEvent struct {
 type Callback func(ctx context.Context, event UpdateEvent)
 
 type Cache interface {
-	Get(ctx context.Context, t string, r Request) (interface{}, ResultMeta, error)
+	Get(ctx context.Context, t string, r Request) (any, ResultMeta, error)
 	NotifyCallback(ctx context.Context, t string, r Request, correlationID string, cb Callback) error
 	Notify(ctx context.Context, t string, r Request, correlationID string, ch chan<- UpdateEvent) error
 }

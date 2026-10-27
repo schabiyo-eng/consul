@@ -11,9 +11,9 @@ import (
 
 // uiTemplateDataFromConfig returns the base set of variables that should be
 // injected into the UI's Env based on the given runtime UI config.
-func uiTemplateDataFromConfig(cfg *config.RuntimeConfig) (map[string]interface{}, error) {
+func uiTemplateDataFromConfig(cfg *config.RuntimeConfig) (map[string]any, error) {
 
-	uiCfg := map[string]interface{}{
+	uiCfg := map[string]any{
 		"metrics_provider": cfg.UIConfig.MetricsProvider,
 		// We explicitly MUST NOT pass the metrics_proxy object since it might
 		// contain add_headers with secrets that the UI shouldn't know e.g. API
@@ -30,7 +30,7 @@ func uiTemplateDataFromConfig(cfg *config.RuntimeConfig) (map[string]interface{}
 		uiCfg["metrics_provider_options"] = json.RawMessage(cfg.UIConfig.MetricsProviderOptionsJSON)
 	}
 
-	d := map[string]interface{}{
+	d := map[string]any{
 		"ContentPath":       cfg.UIConfig.ContentPath,
 		"ACLsEnabled":       cfg.ACLsEnabled,
 		"UIConfig":          uiCfg,

@@ -66,7 +66,7 @@ func TestCAManager_Initialize_Vault_Secondary_SharedVault(t *testing.T) {
 	_, serverDC1 := testServerWithConfig(t, func(c *Config) {
 		c.CAConfig = &structs.CAConfiguration{
 			Provider: "vault",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"Address":             vault.Addr,
 				"Token":               primaryVaultToken,
 				"RootPKIPath":         "pki-root/",
@@ -94,7 +94,7 @@ func TestCAManager_Initialize_Vault_Secondary_SharedVault(t *testing.T) {
 			c.PrimaryDatacenter = "dc1"
 			c.CAConfig = &structs.CAConfiguration{
 				Provider: "vault",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"Address":             vault.Addr,
 					"Token":               secondaryVaultToken,
 					"RootPKIPath":         "pki-root/",
@@ -209,7 +209,7 @@ func (m *mockCAServerDelegate) ApplyCALeafRequest() (uint64, error) {
 
 // ApplyCARequest mirrors FSM.applyConnectCAOperation because that functionality
 // is not exported.
-func (m *mockCAServerDelegate) ApplyCARequest(req *structs.CARequest) (interface{}, error) {
+func (m *mockCAServerDelegate) ApplyCARequest(req *structs.CARequest) (any, error) {
 	idx, _, err := m.store.CAConfig(nil)
 	if err != nil {
 		return nil, err
@@ -224,7 +224,7 @@ func (m *mockCAServerDelegate) ApplyCARequest(req *structs.CARequest) (interface
 	return result, nil
 }
 
-func (m *mockCAServerDelegate) forwardDC(method, dc string, args interface{}, reply interface{}) error {
+func (m *mockCAServerDelegate) forwardDC(method, dc string, args any, reply any) error {
 	switch method {
 	case "ConnectCA.Roots":
 		roots := reply.(*structs.IndexedCARoots)
@@ -282,7 +282,7 @@ func (m *mockCAProvider) Sign(*x509.CertificateRequest) (string, error)         
 func (m *mockCAProvider) SignIntermediate(*x509.CertificateRequest) (string, error) { return "", nil }
 func (m *mockCAProvider) CrossSignCA(*x509.Certificate) (string, error)             { return "", nil }
 func (m *mockCAProvider) SupportsCrossSigning() (bool, error)                       { return false, nil }
-func (m *mockCAProvider) Cleanup(_ bool, _ map[string]interface{}) error            { return nil }
+func (m *mockCAProvider) Cleanup(_ bool, _ map[string]any) error                    { return nil }
 
 func waitForCh(t *testing.T, ch chan string, expected string) {
 	t.Helper()
@@ -308,7 +308,7 @@ func testCAConfig() *structs.CAConfiguration {
 	return &structs.CAConfiguration{
 		ClusterID: connect.TestClusterID,
 		Provider:  "mock",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"LeafCertTTL":         "72h",
 			"IntermediateCertTTL": "2160h",
 		},
@@ -598,7 +598,7 @@ func TestCAManager_UpdateConfiguration_Vault_Primary(t *testing.T) {
 		c.PrimaryDatacenter = "dc1"
 		c.CAConfig = &structs.CAConfiguration{
 			Provider: "vault",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"Address":             vault.Addr,
 				"Token":               vaultToken,
 				"RootPKIPath":         "pki-root/",
@@ -628,7 +628,7 @@ func TestCAManager_UpdateConfiguration_Vault_Primary(t *testing.T) {
 		require.NoError(t, s1.caManager.UpdateConfiguration(&structs.CARequest{
 			Config: &structs.CAConfiguration{
 				Provider: "vault",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"Address":             vault.Addr,
 					"Token":               vaultToken,
 					"RootPKIPath":         "pki-root/",
@@ -669,7 +669,7 @@ func TestCAManager_UpdateConfiguration_Vault_Primary(t *testing.T) {
 		require.NoError(t, s1.caManager.UpdateConfiguration(&structs.CARequest{
 			Config: &structs.CAConfiguration{
 				Provider: "vault",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"Address":             vault.Addr,
 					"Token":               vaultToken2,
 					"RootPKIPath":         "pki-root-2/",
@@ -717,7 +717,7 @@ func TestCAManager_UpdateConfiguration_Vault_Primary(t *testing.T) {
 		err = s1.caManager.UpdateConfiguration(&structs.CARequest{
 			Config: &structs.CAConfiguration{
 				Provider: "vault",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"Address":             vault.Addr,
 					"Token":               vaultToken3,
 					"RootPKIPath":         "pki-root-3/",
@@ -773,7 +773,7 @@ func TestCAManager_Initialize_Vault_WithIntermediateAsPrimaryCA(t *testing.T) {
 	_, s1 := testServerWithConfig(t, func(c *Config) {
 		c.CAConfig = &structs.CAConfiguration{
 			Provider: "vault",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"Address":             vault.Addr,
 				"Token":               primaryVaultToken,
 				"RootPKIPath":         meshRootPath,
@@ -811,7 +811,7 @@ func TestCAManager_Initialize_Vault_WithIntermediateAsPrimaryCA(t *testing.T) {
 			c.PrimaryDatacenter = "dc1"
 			c.CAConfig = &structs.CAConfiguration{
 				Provider: "vault",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"Address":             vault.Addr,
 					"Token":               secondaryVaultToken,
 					"RootPKIPath":         meshRootPath,
@@ -853,7 +853,7 @@ func TestCAManager_Verify_Vault_NoChangeToSecondaryConfig(t *testing.T) {
 	_, sDC1 := testServerWithConfig(t, func(c *Config) {
 		c.CAConfig = &structs.CAConfiguration{
 			Provider: "vault",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"Address":             vault.Addr,
 				"Token":               primaryVaultToken,
 				"RootPKIPath":         "pki-root/",
@@ -875,7 +875,7 @@ func TestCAManager_Verify_Vault_NoChangeToSecondaryConfig(t *testing.T) {
 		c.PrimaryDatacenter = "dc1"
 		c.CAConfig = &structs.CAConfiguration{
 			Provider: "vault",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"Address":             vault.Addr,
 				"Token":               secondaryVaultToken,
 				"RootPKIPath":         "pki-root/",
@@ -946,7 +946,7 @@ func TestCAManager_Initialize_Vault_WithExternalTrustedCA(t *testing.T) {
 	_, serverDC1 := testServerWithConfig(t, func(c *Config) {
 		c.CAConfig = &structs.CAConfiguration{
 			Provider: "vault",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"Address":             vault.Addr,
 				"Token":               primaryVaultToken,
 				"RootPKIPath":         primaryCAPath,
@@ -993,7 +993,7 @@ func TestCAManager_Initialize_Vault_WithExternalTrustedCA(t *testing.T) {
 		c.PrimaryDatacenter = "dc1"
 		c.CAConfig = &structs.CAConfiguration{
 			Provider: "vault",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"Address":             vault.Addr,
 				"Token":               secondaryVaultToken,
 				"RootPKIPath":         "should-be-ignored",
@@ -1157,7 +1157,7 @@ func TestCAManager_Initialize_Vault_WithExternalTrustedCA(t *testing.T) {
 			Op: structs.CAOpSetConfig,
 			Config: &structs.CAConfiguration{
 				Provider: "vault",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"Address":             vault.Addr,
 					"Token":               primaryVaultToken2,
 					"RootPKIPath":         "pki-primary-2/",
@@ -1204,7 +1204,7 @@ func generateExternalRootCA(t *testing.T, client *vaultapi.Client) string {
 	})
 	require.NoError(t, err, "failed to mount")
 
-	resp, err := client.Logical().Write("corp/root/generate/internal", map[string]interface{}{
+	resp, err := client.Logical().Write("corp/root/generate/internal", map[string]any{
 		"common_name": "corporate CA",
 		"ttl":         "2400h",
 	})
@@ -1224,7 +1224,7 @@ func setupPrimaryCA(t *testing.T, client *vaultapi.Client, path string, rootPEM 
 	})
 	require.NoError(t, err, "failed to mount")
 
-	out, err := client.Logical().Write(path+"/intermediate/generate/internal", map[string]interface{}{
+	out, err := client.Logical().Write(path+"/intermediate/generate/internal", map[string]any{
 		"common_name": "primary CA",
 		"ttl":         "2200h",
 		"key_type":    "ec",
@@ -1232,7 +1232,7 @@ func setupPrimaryCA(t *testing.T, client *vaultapi.Client, path string, rootPEM 
 	})
 	require.NoError(t, err, "failed to generate root")
 
-	intermediate, err := client.Logical().Write("corp/root/sign-intermediate", map[string]interface{}{
+	intermediate, err := client.Logical().Write("corp/root/sign-intermediate", map[string]any{
 		"csr":            out.Data["csr"],
 		"use_csr_values": true,
 		"format":         "pem_bundle",
@@ -1249,7 +1249,7 @@ func setupPrimaryCA(t *testing.T, client *vaultapi.Client, path string, rootPEM 
 		buf.WriteString(lib.EnsureTrailingNewline(rootPEM))
 	}
 
-	_, err = client.Logical().Write(path+"/intermediate/set-signed", map[string]interface{}{
+	_, err = client.Logical().Write(path+"/intermediate/set-signed", map[string]any{
 		"certificate": buf.String(),
 	})
 	require.NoError(t, err, "failed to set signed intermediate")

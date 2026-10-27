@@ -33,7 +33,7 @@ func newMockDirectRPC(t *testing.T) *mockDirectRPC {
 	return &m
 }
 
-func (m *mockDirectRPC) RPC(dc string, node string, addr net.Addr, method string, args interface{}, reply interface{}) error {
+func (m *mockDirectRPC) RPC(dc string, node string, addr net.Addr, method string, args any, reply any) error {
 	var retValues mock.Arguments
 	switch method {
 	case "AutoConfig.InitialConfiguration":

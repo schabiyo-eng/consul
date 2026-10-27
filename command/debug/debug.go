@@ -480,7 +480,7 @@ func isValidPort(port string) error {
 	return nil
 }
 
-func writeJSONFile(filename string, content interface{}) error {
+func writeJSONFile(filename string, content any) error {
 	marshaled, err := json.MarshalIndent(content, "", "\t")
 	if err != nil {
 		return err

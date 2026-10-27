@@ -17,11 +17,11 @@ import (
 func TestStructs_CAConfiguration_MsgpackEncodeDecode(t *testing.T) {
 	type testcase struct {
 		in           *structs.CAConfiguration
-		expectConfig interface{} // provider specific
-		parseFunc    func(*testing.T, map[string]interface{}) interface{}
+		expectConfig any // provider specific
+		parseFunc    func(*testing.T, map[string]any) any
 	}
 
-	commonBaseMap := map[string]interface{}{
+	commonBaseMap := map[string]any{
 		"LeafCertTTL":      "30h",
 		"SkipValidate":     true,
 		"CSRMaxPerSecond":  5.25,
@@ -53,7 +53,7 @@ func TestStructs_CAConfiguration_MsgpackEncodeDecode(t *testing.T) {
 					CreateIndex: 5,
 					ModifyIndex: 99,
 				},
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"PrivateKey":          "key",
 					"RootCert":            "cert",
 					"RotationPeriod":      "5m", // old unused field
@@ -67,7 +67,7 @@ func TestStructs_CAConfiguration_MsgpackEncodeDecode(t *testing.T) {
 				RootCert:               "cert",
 				DisableCrossSigning:    true,
 			},
-			parseFunc: func(t *testing.T, raw map[string]interface{}) interface{} {
+			parseFunc: func(t *testing.T, raw map[string]any) any {
 				config, err := ParseConsulCAConfig(raw)
 				require.NoError(t, err)
 				return config
@@ -85,7 +85,7 @@ func TestStructs_CAConfiguration_MsgpackEncodeDecode(t *testing.T) {
 					CreateIndex: 5,
 					ModifyIndex: 99,
 				},
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"Address":             "addr",
 					"Token":               "token",
 					"RootPKIPath":         "root-pki/",
@@ -112,7 +112,7 @@ func TestStructs_CAConfiguration_MsgpackEncodeDecode(t *testing.T) {
 				TLSServerName:          "server-name",
 				TLSSkipVerify:          true,
 			},
-			parseFunc: func(t *testing.T, raw map[string]interface{}) interface{} {
+			parseFunc: func(t *testing.T, raw map[string]any) any {
 				config, err := ParseVaultCAConfig(raw, true)
 				require.NoError(t, err)
 				return config
@@ -130,7 +130,7 @@ func TestStructs_CAConfiguration_MsgpackEncodeDecode(t *testing.T) {
 					CreateIndex: 5,
 					ModifyIndex: 99,
 				},
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"ExistingARN":         "arn://foo",
 					"DeleteOnExit":        true,
 					"IntermediateCertTTL": "90h",
@@ -141,7 +141,7 @@ func TestStructs_CAConfiguration_MsgpackEncodeDecode(t *testing.T) {
 				ExistingARN:            "arn://foo",
 				DeleteOnExit:           true,
 			},
-			parseFunc: func(t *testing.T, raw map[string]interface{}) interface{} {
+			parseFunc: func(t *testing.T, raw map[string]any) any {
 				config, err := ParseAWSCAConfig(raw)
 				require.NoError(t, err)
 				return config

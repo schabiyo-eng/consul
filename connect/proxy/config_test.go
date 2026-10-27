@@ -104,7 +104,7 @@ func TestAgentConfigWatcherSidecarProxy(t *testing.T) {
 		Connect: &api.AgentServiceConnect{
 			SidecarService: &api.AgentServiceRegistration{
 				Proxy: &api.AgentServiceConnectProxyConfig{
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"handshake_timeout_ms": 999,
 					},
 					Upstreams: []api.Upstream{
@@ -184,7 +184,7 @@ func TestAgentConfigWatcherSidecarProxy(t *testing.T) {
 
 type testingT interface {
 	Helper()
-	Fatalf(format string, args ...interface{})
+	Fatalf(format string, args ...any)
 }
 
 func testGetConfigValTimeout(t testingT, w ConfigWatcher,

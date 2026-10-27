@@ -168,10 +168,10 @@ func TestParseConfigEntry(t *testing.T) {
 					"foo": "bar",
 					"gir": "zim",
 				},
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"foo": 19,
 					"bar": "abc",
-					"moreconfig": map[string]interface{}{
+					"moreconfig": map[string]any{
 						"moar": "config",
 					},
 				},
@@ -191,10 +191,10 @@ func TestParseConfigEntry(t *testing.T) {
 					"foo": "bar",
 					"gir": "zim",
 				},
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"foo": float64(19), // json decoding gives float64 instead of int here
 					"bar": "abc",
-					"moreconfig": map[string]interface{}{
+					"moreconfig": map[string]any{
 						"moar": "config",
 					},
 				},

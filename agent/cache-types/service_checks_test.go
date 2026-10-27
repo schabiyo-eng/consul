@@ -198,7 +198,7 @@ func (m *mockAgent) LocalState() *local.State {
 }
 
 func (m *mockAgent) LocalBlockingQuery(_ bool, _ string, _ time.Duration,
-	_ func(ws memdb.WatchSet) (string, interface{}, error)) (string, interface{}, error) {
+	_ func(ws memdb.WatchSet) (string, any, error)) (string, any, error) {
 
 	hash, err := hashChecks(m.checks)
 	if err != nil {

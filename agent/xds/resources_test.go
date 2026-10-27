@@ -587,7 +587,7 @@ func getConnectProxyDiscoChainTests(enterprise bool) []goldenTestCase {
 							continue // only tweak the db upstream
 						}
 						if ns.Proxy.Upstreams[i].Config == nil {
-							ns.Proxy.Upstreams[i].Config = map[string]interface{}{}
+							ns.Proxy.Upstreams[i].Config = map[string]any{}
 						}
 
 						uid := proxycfg.NewUpstreamID(&ns.Proxy.Upstreams[i])
@@ -613,7 +613,7 @@ func getConnectProxyDiscoChainTests(enterprise bool) []goldenTestCase {
 						Kind:     structs.ProxyDefaults,
 						Name:     structs.ProxyConfigGlobal,
 						Protocol: "http",
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"protocol": "http",
 						},
 					},
@@ -628,7 +628,7 @@ func getConnectProxyDiscoChainTests(enterprise bool) []goldenTestCase {
 						Kind:     structs.ProxyDefaults,
 						Name:     structs.ProxyConfigGlobal,
 						Protocol: "http2",
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"protocol": "http2",
 						},
 					},
@@ -643,7 +643,7 @@ func getConnectProxyDiscoChainTests(enterprise bool) []goldenTestCase {
 						Kind:     structs.ProxyDefaults,
 						Name:     structs.ProxyConfigGlobal,
 						Protocol: "grpc",
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"protocol": "grpc",
 						},
 					},
@@ -773,7 +773,7 @@ func getMeshGatewayGoldenTestCases() []goldenTestCase {
 			name: "mesh-gateway-tagged-addresses",
 			create: func(t testinf.T) *proxycfg.ConfigSnapshot {
 				return proxycfg.TestConfigSnapshotMeshGateway(t, "default", func(ns *structs.NodeService) {
-					ns.Proxy.Config = map[string]interface{}{
+					ns.Proxy.Config = map[string]any{
 						"envoy_mesh_gateway_no_default_bind":       true,
 						"envoy_mesh_gateway_bind_tagged_addresses": true,
 					}
@@ -784,7 +784,7 @@ func getMeshGatewayGoldenTestCases() []goldenTestCase {
 			name: "mesh-gateway-custom-addresses",
 			create: func(t testinf.T) *proxycfg.ConfigSnapshot {
 				return proxycfg.TestConfigSnapshotMeshGateway(t, "default", func(ns *structs.NodeService) {
-					ns.Proxy.Config = map[string]interface{}{
+					ns.Proxy.Config = map[string]any{
 						"envoy_mesh_gateway_bind_addresses": map[string]structs.ServiceAddress{
 							"foo": {
 								Address: "198.17.2.3",
@@ -836,7 +836,7 @@ func getMeshGatewayPeeringGoldenTestCases() []goldenTestCase {
 			name: "mesh-gateway-with-imported-peered-services",
 			create: func(t testinf.T) *proxycfg.ConfigSnapshot {
 				return proxycfg.TestConfigSnapshotPeeredMeshGateway(t, "imported-services", func(ns *structs.NodeService) {
-					ns.Proxy.Config = map[string]interface{}{
+					ns.Proxy.Config = map[string]any{
 						"envoy_dns_discovery_type": "STRICT_DNS",
 					}
 				}, nil)
@@ -854,7 +854,7 @@ func getMeshGatewayPeeringGoldenTestCases() []goldenTestCase {
 				// Start with the standard HTTP snapshot
 				snap := proxycfg.TestConfigSnapshotPeeredMeshGateway(t, "default-services-http", func(ns *structs.NodeService) {
 					// Set mesh gateway proxy config for default max_request_headers_kb
-					ns.Proxy.Config = map[string]interface{}{
+					ns.Proxy.Config = map[string]any{
 						"max_request_headers_kb": int64(128),
 					}
 				}, nil)
@@ -864,7 +864,7 @@ func getMeshGatewayPeeringGoldenTestCases() []goldenTestCase {
 				if serviceGroup, exists := snap.MeshGateway.ServiceGroups[fooSN]; exists && len(serviceGroup) > 0 {
 					// Create a new service node with proxy config containing max_request_headers_kb
 					modifiedService := *serviceGroup[0].Service // Copy the service
-					modifiedService.Proxy.Config = map[string]interface{}{
+					modifiedService.Proxy.Config = map[string]any{
 						"max_request_headers_kb": int64(256), // Service-specific override
 						"protocol":               "http",
 					}
@@ -2167,7 +2167,7 @@ func getAPIGatewayPeeringGoldenTestCases(t *testing.T) []goldenTestCase {
 		&structs.ProxyConfigEntry{
 			Kind:   structs.ProxyDefaults,
 			Name:   structs.ProxyConfigGlobal,
-			Config: map[string]interface{}{"protocol": "http"},
+			Config: map[string]any{"protocol": "http"},
 		},
 		&structs.ServiceResolverConfigEntry{
 			Kind: structs.ServiceResolver,
@@ -2520,7 +2520,7 @@ func getCustomConfigurationGoldenTestCases(enterprise bool) []goldenTestCase {
 						switch ns.Proxy.Upstreams[i].DestinationName {
 						case "db":
 							if ns.Proxy.Upstreams[i].Config == nil {
-								ns.Proxy.Upstreams[i].Config = map[string]interface{}{}
+								ns.Proxy.Upstreams[i].Config = map[string]any{}
 							}
 
 							uid := proxycfg.NewUpstreamID(&ns.Proxy.Upstreams[i])
@@ -2536,7 +2536,7 @@ func getCustomConfigurationGoldenTestCases(enterprise bool) []goldenTestCase {
 						// A separate upstream without an override is required to test
 						case "geo-cache":
 							if ns.Proxy.Upstreams[i].Config == nil {
-								ns.Proxy.Upstreams[i].Config = map[string]interface{}{}
+								ns.Proxy.Upstreams[i].Config = map[string]any{}
 							}
 							ns.Proxy.Upstreams[i].Config["protocol"] = "http2"
 						default:
@@ -2559,7 +2559,7 @@ func getCustomConfigurationGoldenTestCases(enterprise bool) []goldenTestCase {
 			name: "custom-passive-healthcheck",
 			create: func(t testinf.T) *proxycfg.ConfigSnapshot {
 				return proxycfg.TestConfigSnapshot(t, func(ns *structs.NodeService) {
-					ns.Proxy.Upstreams[0].Config["passive_health_check"] = map[string]interface{}{
+					ns.Proxy.Upstreams[0].Config["passive_health_check"] = map[string]any{
 						"enforcing_consecutive_5xx": float64(80),
 						"max_failures":              float64(5),
 						"interval":                  float64(10 * time.Second),
@@ -2573,7 +2573,7 @@ func getCustomConfigurationGoldenTestCases(enterprise bool) []goldenTestCase {
 			name: "custom-passive-healthcheck-zero-consecutive_5xx",
 			create: func(t testinf.T) *proxycfg.ConfigSnapshot {
 				return proxycfg.TestConfigSnapshot(t, func(ns *structs.NodeService) {
-					ns.Proxy.Upstreams[0].Config["passive_health_check"] = map[string]interface{}{
+					ns.Proxy.Upstreams[0].Config["passive_health_check"] = map[string]any{
 						"enforcing_consecutive_5xx": float64(0),
 						"max_failures":              float64(5),
 						"interval":                  float64(10 * time.Second),
@@ -2601,10 +2601,10 @@ func getCustomConfigurationGoldenTestCases(enterprise bool) []goldenTestCase {
 						// modify the actual ConfigSnapshot instead of copying the Upstream
 						// in the range.
 						if ns.Proxy.Upstreams[i].Config == nil {
-							ns.Proxy.Upstreams[i].Config = map[string]interface{}{}
+							ns.Proxy.Upstreams[i].Config = map[string]any{}
 						}
 
-						ns.Proxy.Upstreams[i].Config["limits"] = map[string]interface{}{
+						ns.Proxy.Upstreams[i].Config["limits"] = map[string]any{
 							"max_connections": 500,
 						}
 					}
@@ -2617,10 +2617,10 @@ func getCustomConfigurationGoldenTestCases(enterprise bool) []goldenTestCase {
 				return proxycfg.TestConfigSnapshot(t, func(ns *structs.NodeService) {
 					for i := range ns.Proxy.Upstreams {
 						if ns.Proxy.Upstreams[i].Config == nil {
-							ns.Proxy.Upstreams[i].Config = map[string]interface{}{}
+							ns.Proxy.Upstreams[i].Config = map[string]any{}
 						}
 
-						ns.Proxy.Upstreams[i].Config["limits"] = map[string]interface{}{
+						ns.Proxy.Upstreams[i].Config["limits"] = map[string]any{
 							"max_connections":         0,
 							"max_pending_requests":    0,
 							"max_concurrent_requests": 0,
@@ -2635,10 +2635,10 @@ func getCustomConfigurationGoldenTestCases(enterprise bool) []goldenTestCase {
 				return proxycfg.TestConfigSnapshot(t, func(ns *structs.NodeService) {
 					for i := range ns.Proxy.Upstreams {
 						if ns.Proxy.Upstreams[i].Config == nil {
-							ns.Proxy.Upstreams[i].Config = map[string]interface{}{}
+							ns.Proxy.Upstreams[i].Config = map[string]any{}
 						}
 
-						ns.Proxy.Upstreams[i].Config["limits"] = map[string]interface{}{
+						ns.Proxy.Upstreams[i].Config["limits"] = map[string]any{
 							"max_connections":         500,
 							"max_pending_requests":    600,
 							"max_concurrent_requests": 700,
@@ -2893,7 +2893,7 @@ func getTerminatingGatewayPeeringGoldenTestCases() []goldenTestCase {
 			create: func(t testinf.T) *proxycfg.ConfigSnapshot {
 				return proxycfg.TestConfigSnapshotTerminatingGateway(t, true, func(ns *structs.NodeService) {
 					if ns.Proxy.Config == nil {
-						ns.Proxy.Config = map[string]interface{}{}
+						ns.Proxy.Config = map[string]any{}
 					}
 					ns.Proxy.Config["envoy_gateway_remote_tcp_enable_keepalive"] = true
 					ns.Proxy.Config["envoy_gateway_remote_tcp_keepalive_time"] = 133
@@ -2906,7 +2906,7 @@ func getTerminatingGatewayPeeringGoldenTestCases() []goldenTestCase {
 			name: "terminating-gateway-custom-trace-listener",
 			create: func(t testinf.T) *proxycfg.ConfigSnapshot {
 				return proxycfg.TestConfigSnapshotTerminatingGateway(t, true, func(ns *structs.NodeService) {
-					ns.Proxy.Config = map[string]interface{}{}
+					ns.Proxy.Config = map[string]any{}
 					ns.Proxy.Config["protocol"] = "http"
 					ns.Proxy.Config["envoy_listener_tracing_json"] = customTraceJSON(t)
 				}, nil)
@@ -2976,7 +2976,7 @@ func getTerminatingGatewayPeeringGoldenTestCases() []goldenTestCase {
 			name: "terminating-gateway-custom-and-tagged-addresses",
 			create: func(t testinf.T) *proxycfg.ConfigSnapshot {
 				return proxycfg.TestConfigSnapshotTerminatingGateway(t, true, func(ns *structs.NodeService) {
-					ns.Proxy.Config = map[string]interface{}{
+					ns.Proxy.Config = map[string]any{
 						"envoy_gateway_no_default_bind":       true,
 						"envoy_gateway_bind_tagged_addresses": true,
 						"envoy_gateway_bind_addresses": map[string]structs.ServiceAddress{
@@ -3053,7 +3053,7 @@ func getTerminatingGatewayPeeringGoldenTestCases() []goldenTestCase {
 					snap.TerminatingGateway.ServiceConfigs = make(map[structs.ServiceName]*structs.ServiceConfigResponse)
 				}
 				snap.TerminatingGateway.ServiceConfigs[webService] = &structs.ServiceConfigResponse{
-					ProxyConfig: map[string]interface{}{
+					ProxyConfig: map[string]any{
 						"max_request_headers_kb": uint32(96),
 						"protocol":               "http",
 					},
@@ -3540,7 +3540,7 @@ func getIngressGatewayGoldenTestCases() []goldenTestCase {
 						"lan": {Address: "10.0.0.1"},
 						"wan": {Address: "172.16.0.1"},
 					}
-					ns.Proxy.Config = map[string]interface{}{
+					ns.Proxy.Config = map[string]any{
 						"envoy_gateway_no_default_bind":       true,
 						"envoy_gateway_bind_tagged_addresses": true,
 						"envoy_gateway_bind_addresses": map[string]structs.ServiceAddress{
@@ -3823,7 +3823,7 @@ func getXDSFetchTimeoutTestCases() []goldenTestCase {
 				// - clusters.go:makePassthrough
 				// - listeners.go:listenersFromSnapshotConnectProxy (partially)
 				return proxycfg.TestConfigSnapshotTransparentProxyDestinationHTTP(t, func(ns *structs.NodeService) {
-					ns.Proxy.Config = map[string]interface{}{
+					ns.Proxy.Config = map[string]any{
 						"xds_fetch_timeout_ms": 9999,
 					}
 				})
@@ -3836,7 +3836,7 @@ func getXDSFetchTimeoutTestCases() []goldenTestCase {
 				// - listeners.go:makeFilterChainTerminatingGateway
 				// - clusters.go:makeGatewayCluster
 				return proxycfg.TestConfigSnapshotTerminatingGatewayServiceSubsetsWebAndCache(t, func(ns *structs.NodeService) {
-					ns.Proxy.Config = map[string]interface{}{
+					ns.Proxy.Config = map[string]any{
 						"xds_fetch_timeout_ms": 9999,
 					}
 				})
@@ -3859,7 +3859,7 @@ func getXDSFetchTimeoutTestCases() []goldenTestCase {
 				// Covers cases in:
 				// - listeners.go:makeIngressGatewayListeners (partially)
 				return proxycfg.TestConfigSnapshotIngressGateway(t, true, "http", "chain-and-router", func(ns *structs.NodeService) {
-					ns.Proxy.Config = map[string]interface{}{
+					ns.Proxy.Config = map[string]any{
 						"xds_fetch_timeout_ms": 9999,
 					}
 				}, nil, nil)

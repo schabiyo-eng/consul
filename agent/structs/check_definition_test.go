@@ -40,7 +40,7 @@ func (w *walker) StructField(f reflect.StructField, v reflect.Value) error {
 	return reflectwalk.SkipEntry
 }
 
-func mapFields(t *testing.T, obj interface{}) map[string]reflect.Value {
+func mapFields(t *testing.T, obj any) map[string]reflect.Value {
 	w := &walker{make(map[string]reflect.Value)}
 	if err := reflectwalk.Walk(obj, w); err != nil {
 		t.Fatalf("failed to generate map fields for %+v - %v", obj, err)

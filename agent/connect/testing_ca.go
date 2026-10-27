@@ -370,7 +370,7 @@ func TestCSR(t Fatalfer, uri CertURI) (string, string) {
 
 // testKeyID returns a KeyID from the given public key. This just calls
 // KeyId but handles errors for tests.
-func testKeyID(t testing.T, raw interface{}) []byte {
+func testKeyID(t testing.T, raw any) []byte {
 	result, err := KeyId(raw)
 	if err != nil {
 		t.Fatalf("KeyId error: %s", err)
@@ -433,7 +433,7 @@ func testUUID(t testing.T) string {
 // helper interface that is implemented by the agent delegate so that test
 // helpers can make RPCs without introducing an import cycle on `agent`.
 type TestAgentRPC interface {
-	RPC(ctx context.Context, method string, args interface{}, reply interface{}) error
+	RPC(ctx context.Context, method string, args any, reply any) error
 }
 
 func testCAConfigSet(t testing.T, a TestAgentRPC,
@@ -445,7 +445,7 @@ func testCAConfigSet(t testing.T, a TestAgentRPC,
 	}
 	newConfig := &structs.CAConfiguration{
 		Provider: "consul",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"PrivateKey":          ca.SigningKey,
 			"RootCert":            ca.RootCert,
 			"IntermediateCertTTL": 288 * time.Hour,
@@ -455,7 +455,7 @@ func testCAConfigSet(t testing.T, a TestAgentRPC,
 		Datacenter: "dc1",
 		Config:     newConfig,
 	}
-	var reply interface{}
+	var reply any
 
 	err := a.RPC(context.Background(), "ConnectCA.ConfigurationSet", args, &reply)
 	if err != nil {

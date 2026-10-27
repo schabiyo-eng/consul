@@ -20,7 +20,7 @@ const (
 	ingressHealth = "ingress"
 )
 
-func (s *HTTPHandlers) HealthChecksInState(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) HealthChecksInState(resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Set default DC
 	args := structs.ChecksInStateRequest{}
 	if err := s.parseEntMeta(req, &args.EnterpriseMeta); err != nil {
@@ -66,7 +66,7 @@ RETRY_ONCE:
 	return out.HealthChecks, nil
 }
 
-func (s *HTTPHandlers) HealthNodeChecks(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) HealthNodeChecks(resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Set default DC
 	args := structs.NodeSpecificRequest{}
 	if err := s.parseEntMeta(req, &args.EnterpriseMeta); err != nil {
@@ -110,7 +110,7 @@ RETRY_ONCE:
 	return out.HealthChecks, nil
 }
 
-func (s *HTTPHandlers) HealthServiceChecks(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) HealthServiceChecks(resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Set default DC
 	args := structs.ServiceSpecificRequest{}
 	if err := s.parseEntMetaNoWildcard(req, &args.EnterpriseMeta); err != nil {
@@ -158,24 +158,24 @@ RETRY_ONCE:
 
 // HealthIngressServiceNodes should return "all the healthy ingress gateway instances
 // that I can use to access this connect-enabled service without mTLS".
-func (s *HTTPHandlers) HealthIngressServiceNodes(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) HealthIngressServiceNodes(resp http.ResponseWriter, req *http.Request) (any, error) {
 	return s.healthServiceNodes(resp, req, ingressHealth)
 }
 
 // HealthConnectServiceNodes should return "all healthy connect-enabled
 // endpoints (e.g. could be side car proxies or native instances) for this
 // service so I can connect with mTLS".
-func (s *HTTPHandlers) HealthConnectServiceNodes(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) HealthConnectServiceNodes(resp http.ResponseWriter, req *http.Request) (any, error) {
 	return s.healthServiceNodes(resp, req, connectHealth)
 }
 
 // HealthServiceNodes should return "all the healthy instances of this service
 // registered so I can connect directly to them".
-func (s *HTTPHandlers) HealthServiceNodes(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) HealthServiceNodes(resp http.ResponseWriter, req *http.Request) (any, error) {
 	return s.healthServiceNodes(resp, req, serviceHealth)
 }
 
-func (s *HTTPHandlers) healthServiceNodes(resp http.ResponseWriter, req *http.Request, healthType string) (interface{}, error) {
+func (s *HTTPHandlers) healthServiceNodes(resp http.ResponseWriter, req *http.Request, healthType string) (any, error) {
 	// Set default DC
 	args := structs.ServiceSpecificRequest{}
 	if err := s.parseEntMetaNoWildcard(req, &args.EnterpriseMeta); err != nil {

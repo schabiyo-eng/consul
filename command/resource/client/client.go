@@ -739,7 +739,7 @@ type request struct {
 	params url.Values
 	body   io.Reader
 	header http.Header
-	Obj    interface{}
+	Obj    any
 	ctx    context.Context
 }
 
@@ -941,13 +941,13 @@ func (c *Client) DoRequest(r *request) (time.Duration, *http.Response, error) {
 }
 
 // DecodeBody is used to JSON decode a body
-func DecodeBody(resp *http.Response, out interface{}) error {
+func DecodeBody(resp *http.Response, out any) error {
 	dec := json.NewDecoder(resp.Body)
 	return dec.Decode(out)
 }
 
 // encodeBody is used to encode a request body
-func encodeBody(obj interface{}) (io.Reader, error) {
+func encodeBody(obj any) (io.Reader, error) {
 	buf := bytes.NewBuffer(nil)
 	enc := json.NewEncoder(buf)
 	if err := enc.Encode(obj); err != nil {

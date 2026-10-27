@@ -63,25 +63,25 @@ func (t *CheckDefinition) UnmarshalJSON(data []byte) (err error) {
 	type Alias CheckDefinition
 	aux := &struct {
 		// Parse special values
-		Interval                       interface{}
-		Timeout                        interface{}
-		TTL                            interface{}
-		DeregisterCriticalServiceAfter interface{}
+		Interval                       any
+		Timeout                        any
+		TTL                            any
+		DeregisterCriticalServiceAfter any
 
 		// Translate fields
 
 		// "args" -> ScriptArgs
-		Args                                []string    `json:"args"`
-		ScriptArgsSnake                     []string    `json:"script_args"`
-		DeregisterCriticalServiceAfterSnake interface{} `json:"deregister_critical_service_after"`
-		DockerContainerIDSnake              string      `json:"docker_container_id"`
-		TLSServerNameSnake                  string      `json:"tls_server_name"`
-		TLSSkipVerifySnake                  bool        `json:"tls_skip_verify"`
-		TCPUseTLSSnake                      bool        `json:"tcp_use_tls"`
-		GRPCUseTLSSnake                     bool        `json:"grpc_use_tls"`
-		ServiceIDSnake                      string      `json:"service_id"`
-		H2PingUseTLSSnake                   bool        `json:"h2ping_use_tls"`
-		DisableRedirectsSnake               bool        `json:"disable_redirects"`
+		Args                                []string `json:"args"`
+		ScriptArgsSnake                     []string `json:"script_args"`
+		DeregisterCriticalServiceAfterSnake any      `json:"deregister_critical_service_after"`
+		DockerContainerIDSnake              string   `json:"docker_container_id"`
+		TLSServerNameSnake                  string   `json:"tls_server_name"`
+		TLSSkipVerifySnake                  bool     `json:"tls_skip_verify"`
+		TCPUseTLSSnake                      bool     `json:"tcp_use_tls"`
+		GRPCUseTLSSnake                     bool     `json:"grpc_use_tls"`
+		ServiceIDSnake                      string   `json:"service_id"`
+		H2PingUseTLSSnake                   bool     `json:"h2ping_use_tls"`
+		DisableRedirectsSnake               bool     `json:"disable_redirects"`
 
 		*Alias
 	}{

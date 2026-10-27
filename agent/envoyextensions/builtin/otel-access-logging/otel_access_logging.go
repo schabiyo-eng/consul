@@ -214,7 +214,7 @@ func toEnvoyKeyValueList(attributes map[string]any) (*v1.KeyValueList, error) {
 	return keyValueList, nil
 }
 
-func toEnvoyAnyValue(value interface{}) (*v1.AnyValue, error) {
+func toEnvoyAnyValue(value any) (*v1.AnyValue, error) {
 	if value == nil {
 		return nil, nil
 	}

@@ -33,18 +33,18 @@ func TestGatewayServiceCredentialClone(t *testing.T) {
 }
 
 func TestDecodeTerminatingGatewayCredential(t *testing.T) {
-	entry, err := DecodeConfigEntry(map[string]interface{}{
+	entry, err := DecodeConfigEntry(map[string]any{
 		"Kind": TerminatingGateway,
 		"Name": "camp-egress",
-		"CredentialInjection": map[string]interface{}{
+		"CredentialInjection": map[string]any{
 			"UDSPath":        "/run/camp-auth/processor.sock",
 			"MessageTimeout": "250ms",
 		},
-		"Services": []interface{}{map[string]interface{}{
+		"Services": []any{map[string]any{
 			"Name":   "openai-a",
 			"CAFile": "/etc/ssl/certs/ca-certificates.crt",
 			"SNI":    "api.openai.com",
-			"Credential": map[string]interface{}{
+			"Credential": map[string]any{
 				"Mode":      "inject",
 				"BindingID": "openai-a",
 			},
@@ -60,18 +60,18 @@ func TestDecodeTerminatingGatewayCredential(t *testing.T) {
 }
 
 func TestDecodeTerminatingGatewayCredential_SnakeCase(t *testing.T) {
-	entry, err := DecodeConfigEntry(map[string]interface{}{
+	entry, err := DecodeConfigEntry(map[string]any{
 		"kind": TerminatingGateway,
 		"name": "camp-egress",
-		"credential_injection": map[string]interface{}{
+		"credential_injection": map[string]any{
 			"uds_path":        "/run/camp-auth/processor.sock",
 			"message_timeout": "500ms",
 		},
-		"services": []interface{}{map[string]interface{}{
+		"services": []any{map[string]any{
 			"name":    "openai-a",
 			"ca_file": "/etc/ssl/certs/ca-certificates.crt",
 			"sni":     "api.openai.com",
-			"credential": map[string]interface{}{
+			"credential": map[string]any{
 				"mode":       "inject",
 				"binding_id": "openai-a",
 			},

@@ -11,8 +11,8 @@ import (
 )
 
 func TestTranslateKeys(t *testing.T) {
-	fromJSON := func(s string) map[string]interface{} {
-		var m map[string]interface{}
+	fromJSON := func(s string) map[string]any {
+		var m map[string]any
 		if err := json.Unmarshal([]byte(s), &m); err != nil {
 			t.Fatal(err)
 		}
@@ -21,26 +21,26 @@ func TestTranslateKeys(t *testing.T) {
 
 	tests := []struct {
 		desc string
-		in   map[string]interface{}
-		out  map[string]interface{}
+		in   map[string]any
+		out  map[string]any
 		dict map[string]string
 	}{
 		{
 			desc: "x->y",
-			in:   map[string]interface{}{"a": "aa", "x": "xx"},
-			out:  map[string]interface{}{"a": "aa", "y": "xx"},
+			in:   map[string]any{"a": "aa", "x": "xx"},
+			out:  map[string]any{"a": "aa", "y": "xx"},
 			dict: map[string]string{"x": "y"},
 		},
 		{
 			desc: "discard x",
-			in:   map[string]interface{}{"a": "aa", "x": "xx", "y": "yy"},
-			out:  map[string]interface{}{"a": "aa", "y": "yy"},
+			in:   map[string]any{"a": "aa", "x": "xx", "y": "yy"},
+			out:  map[string]any{"a": "aa", "y": "yy"},
 			dict: map[string]string{"x": "y"},
 		},
 		{
 			desc: "b.x->b.y",
-			in:   map[string]interface{}{"a": "aa", "b": map[string]interface{}{"x": "xx"}},
-			out:  map[string]interface{}{"a": "aa", "b": map[string]interface{}{"y": "xx"}},
+			in:   map[string]any{"a": "aa", "b": map[string]any{"x": "xx"}},
+			out:  map[string]any{"a": "aa", "b": map[string]any{"y": "xx"}},
 			dict: map[string]string{"x": "y"},
 		},
 		{

@@ -2129,7 +2129,7 @@ func TestStateStore_ExportedServicesForPeer(t *testing.T) {
 		ensureConfigEntry(t, &structs.ProxyConfigEntry{
 			Kind: structs.ProxyDefaults,
 			Name: structs.ProxyConfigGlobal,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"protocol": "http",
 			},
 			EnterpriseMeta: *defaultEntMeta,

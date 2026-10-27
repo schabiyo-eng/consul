@@ -13,7 +13,7 @@ import (
 	"github.com/hashicorp/consul/sdk/testutil/retry"
 )
 
-type rpcFn func(context.Context, string, interface{}, interface{}) error
+type rpcFn func(context.Context, string, any, any) error
 
 // WaitForLeader ensures we have a leader and a node registration. It
 // does not wait for the Consul (node) service to be ready. Use `WaitForTestAgent`

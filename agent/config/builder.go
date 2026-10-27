@@ -1329,7 +1329,7 @@ func (b *builder) validate(rt RuntimeConfig) error {
 	if rt.UIConfig.MetricsProviderOptionsJSON != "" {
 		// Attempt to parse the JSON to ensure it's valid, parsing into a map
 		// ensures we get an object.
-		var dummyMap map[string]interface{}
+		var dummyMap map[string]any
 		err := json.Unmarshal([]byte(rt.UIConfig.MetricsProviderOptionsJSON), &dummyMap)
 		if err != nil {
 			return fmt.Errorf("ui_config.metrics_provider_options_json must be empty "+
@@ -1724,7 +1724,7 @@ func splitSlicesAndValues(c Config) (slices, values Config) {
 	return rs.Elem().Interface().(Config), rv.Elem().Interface().(Config)
 }
 
-func (b *builder) warn(msg string, args ...interface{}) {
+func (b *builder) warn(msg string, args ...any) {
 	b.Warnings = append(b.Warnings, fmt.Sprintf(msg, args...))
 }
 
@@ -2697,7 +2697,7 @@ func (b *builder) autoConfigAuthorizerVal(raw AutoConfigAuthorizationRaw, agentP
 		Name:           "Auto Config Authorizer",
 		Type:           "jwt",
 		EnterpriseMeta: *entMeta,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"JWTSupportedAlgs":     raw.Static.JWTSupportedAlgs,
 			"BoundAudiences":       raw.Static.BoundAudiences,
 			"ClaimMappings":        raw.Static.ClaimMappings,

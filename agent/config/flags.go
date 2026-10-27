@@ -12,7 +12,7 @@ import (
 // AddFlags adds the command line flags to the FlagSet, and sets the appropriate field in
 // LoadOpts.FlagValues as the value receiver.
 func AddFlags(fs *flag.FlagSet, f *LoadOpts) {
-	add := func(p interface{}, name, help string) {
+	add := func(p any, name, help string) {
 		switch x := p.(type) {
 		case **bool:
 			fs.Var(newBoolPtrValue(x), name, help)

@@ -23,7 +23,7 @@ func TestStore_CAConfig(t *testing.T) {
 
 	expected := &structs.CAConfiguration{
 		Provider: "consul",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"PrivateKey": "asdf",
 			"RootCert":   "qwer",
 		},
@@ -107,7 +107,7 @@ func TestStore_CAConfig_Snapshot_Restore(t *testing.T) {
 	s := testStateStore(t)
 	before := &structs.CAConfiguration{
 		Provider: "consul",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"PrivateKey": "asdf",
 			"RootCert":   "qwer",
 		},
@@ -121,7 +121,7 @@ func TestStore_CAConfig_Snapshot_Restore(t *testing.T) {
 
 	after := &structs.CAConfiguration{
 		Provider: "static",
-		Config:   map[string]interface{}{},
+		Config:   map[string]any{},
 	}
 	if err := s.CASetConfig(100, after); err != nil {
 		t.Fatal(err)

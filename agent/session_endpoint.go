@@ -20,7 +20,7 @@ type sessionCreateResponse struct {
 }
 
 // SessionCreate is used to create a new session
-func (s *HTTPHandlers) SessionCreate(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) SessionCreate(resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Default the session to our node + serf check + release session
 	// invalidate behavior.
 	args := structs.SessionRequest{
@@ -65,7 +65,7 @@ func (s *HTTPHandlers) SessionCreate(resp http.ResponseWriter, req *http.Request
 }
 
 // SessionDestroy is used to destroy an existing session
-func (s *HTTPHandlers) SessionDestroy(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) SessionDestroy(resp http.ResponseWriter, req *http.Request) (any, error) {
 	args := structs.SessionRequest{
 		Op: structs.SessionDestroy,
 	}
@@ -90,7 +90,7 @@ func (s *HTTPHandlers) SessionDestroy(resp http.ResponseWriter, req *http.Reques
 }
 
 // SessionRenew is used to renew the TTL on an existing TTL session
-func (s *HTTPHandlers) SessionRenew(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) SessionRenew(resp http.ResponseWriter, req *http.Request) (any, error) {
 	args := structs.SessionSpecificRequest{}
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
 		return nil, nil
@@ -117,7 +117,7 @@ func (s *HTTPHandlers) SessionRenew(resp http.ResponseWriter, req *http.Request)
 }
 
 // SessionGet is used to get info for a particular session
-func (s *HTTPHandlers) SessionGet(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) SessionGet(resp http.ResponseWriter, req *http.Request) (any, error) {
 	args := structs.SessionSpecificRequest{}
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
 		return nil, nil
@@ -147,7 +147,7 @@ func (s *HTTPHandlers) SessionGet(resp http.ResponseWriter, req *http.Request) (
 }
 
 // SessionList is used to list all the sessions
-func (s *HTTPHandlers) SessionList(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) SessionList(resp http.ResponseWriter, req *http.Request) (any, error) {
 	args := structs.SessionSpecificRequest{}
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
 		return nil, nil
@@ -170,7 +170,7 @@ func (s *HTTPHandlers) SessionList(resp http.ResponseWriter, req *http.Request) 
 }
 
 // SessionsForNode returns all the nodes belonging to a node
-func (s *HTTPHandlers) SessionsForNode(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) SessionsForNode(resp http.ResponseWriter, req *http.Request) (any, error) {
 	args := structs.NodeSpecificRequest{}
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
 		return nil, nil

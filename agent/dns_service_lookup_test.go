@@ -611,7 +611,7 @@ func TestDNS_IngressServiceLookup(t *testing.T) {
 			Entry: &structs.ProxyConfigEntry{
 				Kind: structs.ProxyDefaults,
 				Name: structs.ProxyConfigGlobal,
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"protocol": "http",
 				},
 			},
@@ -721,7 +721,7 @@ func TestDNS_APIGatewayServiceLookup(t *testing.T) {
 	require.NoError(t, store.EnsureConfigEntry(next(), &structs.ProxyConfigEntry{
 		Kind:   structs.ProxyDefaults,
 		Name:   structs.ProxyConfigGlobal,
-		Config: map[string]interface{}{"protocol": "http"},
+		Config: map[string]any{"protocol": "http"},
 	}))
 
 	// api-gateway config entry: listeners only (no inline service list).

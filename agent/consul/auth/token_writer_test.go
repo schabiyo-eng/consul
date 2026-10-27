@@ -646,7 +646,7 @@ func TestTokenWriter_Delete(t *testing.T) {
 			LocalTokensEnabled: true,
 			ACLCache:           aclCache,
 			Store:              store,
-			RaftApply: func(msgType structs.MessageType, msg interface{}) (interface{}, error) {
+			RaftApply: func(msgType structs.MessageType, msg any) (any, error) {
 				if msgType != structs.ACLTokenDeleteRequestType {
 					return nil, fmt.Errorf("unexpected message type: %v", msgType)
 				}
@@ -740,7 +740,7 @@ func TestTokenWriter_Delete(t *testing.T) {
 }
 
 func raftApplyACLTokenSet(store *state.Store) RaftApplyFn {
-	return func(msgType structs.MessageType, msg interface{}) (interface{}, error) {
+	return func(msgType structs.MessageType, msg any) (any, error) {
 		if msgType != structs.ACLTokenSetRequestType {
 			return nil, fmt.Errorf("unexpected message type: %v", msgType)
 		}

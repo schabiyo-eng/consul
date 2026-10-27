@@ -275,7 +275,7 @@ func (f *fakeView) Update(events []*pbsubscribe.Event) error {
 	return nil
 }
 
-func (f *fakeView) Result(index uint64) interface{} {
+func (f *fakeView) Result(index uint64) any {
 	srvs := make([]*pbservice.CheckServiceNode, 0, len(f.srvs))
 	for _, srv := range f.srvs {
 		srvs = append(srvs, srv)
@@ -455,7 +455,7 @@ func TestStore_Notify_ManyRequests(t *testing.T) {
 
 type testingT interface {
 	Helper()
-	Fatalf(string, ...interface{})
+	Fatalf(string, ...any)
 }
 
 func assertRequestCount(t testingT, s *Store, req Request, expected int) {

@@ -529,7 +529,7 @@ type ServiceNameIndex struct {
 	Field string
 }
 
-func (index *ServiceNameIndex) FromObject(obj interface{}) (bool, []byte, error) {
+func (index *ServiceNameIndex) FromObject(obj any) (bool, []byte, error) {
 	v := reflect.ValueOf(obj)
 	v = reflect.Indirect(v) // Dereference the pointer if any
 
@@ -552,7 +552,7 @@ func (index *ServiceNameIndex) FromObject(obj interface{}) (bool, []byte, error)
 	return true, []byte(id), nil
 }
 
-func (index *ServiceNameIndex) FromArgs(args ...interface{}) ([]byte, error) {
+func (index *ServiceNameIndex) FromArgs(args ...any) ([]byte, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("must provide only a single argument")
 	}
@@ -567,7 +567,7 @@ func (index *ServiceNameIndex) FromArgs(args ...interface{}) ([]byte, error) {
 	return []byte(strings.ToLower(id)), nil
 }
 
-func (index *ServiceNameIndex) PrefixFromArgs(args ...interface{}) ([]byte, error) {
+func (index *ServiceNameIndex) PrefixFromArgs(args ...any) ([]byte, error) {
 	val, err := index.FromArgs(args...)
 	if err != nil {
 		return nil, err
@@ -649,7 +649,7 @@ type FreeVirtualIP struct {
 	IsCounter bool
 }
 
-func counterIndex(obj interface{}) (bool, error) {
+func counterIndex(obj any) (bool, error) {
 	if vip, ok := obj.(FreeVirtualIP); ok {
 		return vip.IsCounter, nil
 	}
@@ -658,7 +658,7 @@ func counterIndex(obj interface{}) (bool, error) {
 
 type ServiceManualVIPIndex struct{}
 
-func (index *ServiceManualVIPIndex) FromObject(obj interface{}) (bool, []byte, error) {
+func (index *ServiceManualVIPIndex) FromObject(obj any) (bool, []byte, error) {
 	entry, ok := obj.(ServiceVirtualIP)
 	if !ok {
 		return false, nil, fmt.Errorf("object is not a ServiceVirtualIP")
@@ -670,7 +670,7 @@ func (index *ServiceManualVIPIndex) FromObject(obj interface{}) (bool, []byte, e
 	return true, []byte(id), nil
 }
 
-func (index *ServiceManualVIPIndex) FromArgs(args ...interface{}) ([]byte, error) {
+func (index *ServiceManualVIPIndex) FromArgs(args ...any) ([]byte, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("must provide only a single argument")
 	}

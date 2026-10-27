@@ -209,7 +209,7 @@ func (h deferHeap[T]) Swap(i, j int) {
 }
 
 // Push pushes an entry onto the heap.
-func (h *deferHeap[T]) Push(x interface{}) {
+func (h *deferHeap[T]) Push(x any) {
 	n := len(*h)
 	item := x.(*deferredRequest[T])
 	item.index = n
@@ -217,7 +217,7 @@ func (h *deferHeap[T]) Push(x interface{}) {
 }
 
 // Pop pops an entry off the heap.
-func (h *deferHeap[T]) Pop() interface{} {
+func (h *deferHeap[T]) Pop() any {
 	n := len(*h)
 	item := (*h)[n-1]
 	item.index = -1
@@ -226,6 +226,6 @@ func (h *deferHeap[T]) Pop() interface{} {
 }
 
 // Peek returns the next item on the heap.
-func (h deferHeap[T]) Peek() interface{} {
+func (h deferHeap[T]) Peek() any {
 	return h[0]
 }

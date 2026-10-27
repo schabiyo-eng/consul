@@ -31,12 +31,12 @@ func TestLogDroppedWhenChannelFilled(t *testing.T) {
 	mockLogger := NewMockLogger(t)
 	ctx, cancelFunc := context.WithCancel(context.Background())
 	defer cancelFunc()
-	block := make(chan interface{})
+	block := make(chan any)
 	mockLogger.On("Log", hclog.Debug, "hello").Run(func(args mock.Arguments) {
 		<-block
 	})
 
-	var called = make(chan interface{})
+	var called = make(chan any)
 	ld := NewLogDropSink(ctx, 1, mockLogger, func(l Log) {
 		close(called)
 	})

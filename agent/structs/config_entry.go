@@ -509,7 +509,7 @@ type InstanceLevelRouteRateLimits struct {
 type ProxyConfigEntry struct {
 	Kind                 string
 	Name                 string
-	Config               map[string]interface{}
+	Config               map[string]any
 	Protocol             string                               `json:"-"`
 	Mode                 ProxyMode                            `json:",omitempty"`
 	TransparentProxy     TransparentProxyConfig               `json:",omitempty" alias:"transparent_proxy"`
@@ -724,7 +724,7 @@ func (e *ProxyConfigEntry) UnmarshalBinary(data []byte) error {
 //
 // There is an 'api' variation of this in
 // command/helpers/helpers.go:newDecodeConfigEntry
-func DecodeConfigEntry(raw map[string]interface{}) (ConfigEntry, error) {
+func DecodeConfigEntry(raw map[string]any) (ConfigEntry, error) {
 	var entry ConfigEntry
 
 	kindVal, ok := raw["Kind"]
@@ -920,7 +920,7 @@ func (r *ConfigEntryQuery) CacheInfo() cache.RequestInfo {
 		MustRevalidate: r.MustRevalidate,
 	}
 
-	v, err := hashstructure.Hash([]interface{}{
+	v, err := hashstructure.Hash([]any{
 		r.Kind,
 		r.Name,
 		r.Filter,
@@ -1087,7 +1087,7 @@ func (cfg *UpstreamConfig) PeeredServiceName() PeeredServiceName {
 	}
 }
 
-func (cfg UpstreamConfig) MergeInto(dst map[string]interface{}) {
+func (cfg UpstreamConfig) MergeInto(dst map[string]any) {
 	// Avoid storing empty values in the map, since these can act as overrides
 	if cfg.EnvoyListenerJSON != "" {
 		dst["envoy_listener_json"] = cfg.EnvoyListenerJSON
@@ -1189,7 +1189,7 @@ func (cfg UpstreamConfig) validate(named bool) error {
 	return validationErr
 }
 
-func ParseUpstreamConfigNoDefaults(m map[string]interface{}) (UpstreamConfig, error) {
+func ParseUpstreamConfigNoDefaults(m map[string]any) (UpstreamConfig, error) {
 	var cfg UpstreamConfig
 	config := &mapstructure.DecoderConfig{
 		DecodeHook: mapstructure.ComposeDecodeHookFunc(
@@ -1218,7 +1218,7 @@ func ParseUpstreamConfigNoDefaults(m map[string]interface{}) (UpstreamConfig, er
 // ParseUpstreamConfig returns the UpstreamConfig parsed from an opaque map.
 // If an error occurs during parsing it is returned along with the default
 // config this allows caller to choose whether and how to report the error.
-func ParseUpstreamConfig(m map[string]interface{}) (UpstreamConfig, error) {
+func ParseUpstreamConfig(m map[string]any) (UpstreamConfig, error) {
 	cfg, err := ParseUpstreamConfigNoDefaults(m)
 
 	// Set default (even if error is returned)
@@ -1378,12 +1378,12 @@ func (ul UpstreamLimits) Validate() error {
 
 type OpaqueUpstreamConfig struct {
 	Upstream PeeredServiceName
-	Config   map[string]interface{}
+	Config   map[string]any
 }
 type OpaqueUpstreamConfigs []OpaqueUpstreamConfig
 
 type ServiceConfigResponse struct {
-	ProxyConfig      map[string]interface{}
+	ProxyConfig      map[string]any
 	UpstreamConfigs  OpaqueUpstreamConfigs
 	MeshGateway      MeshGatewayConfig      `json:",omitempty"`
 	Expose           ExposeConfig           `json:",omitempty"`
@@ -1508,7 +1508,7 @@ func (c *ConfigEntryResponse) UnmarshalBinary(data []byte) error {
 	return nil
 }
 
-func validateOpaqueProxyConfig(config map[string]interface{}) error {
+func validateOpaqueProxyConfig(config map[string]any) error {
 	// This max is chosen to stay under the 104 character limit on OpenBSD, FreeBSD, MacOS.
 	// It assumes the socket's filename is fixed at 32 characters.
 	const maxSocketDirLen = 70

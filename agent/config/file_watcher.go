@@ -33,7 +33,7 @@ type fileWatcher struct {
 	logger           hclog.Logger
 	reconcileTimeout time.Duration
 	cancel           context.CancelFunc
-	done             chan interface{}
+	done             chan any
 	stopOnce         sync.Once
 
 	//eventsCh Channel where an event will be emitted when a file change is detected
@@ -64,7 +64,7 @@ func NewFileWatcher(configFiles []string, logger hclog.Logger) (Watcher, error) 
 		configFiles:      make(map[string]*watchedFile),
 		eventsCh:         make(chan *FileWatcherEvent),
 		reconcileTimeout: timeoutDuration,
-		done:             make(chan interface{}),
+		done:             make(chan any),
 	}
 	for _, f := range configFiles {
 		err = w.Add(f)

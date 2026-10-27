@@ -528,7 +528,7 @@ mesh = "write"
 					Port:    20000,
 					Proxy: structs.ConnectProxyConfig{
 						DestinationServiceName: "web",
-						Config:                 map[string]interface{}{key: `{}`},
+						Config:                 map[string]any{key: `{}`},
 					},
 				},
 			}
@@ -612,7 +612,7 @@ mesh = "write"
 							{
 								DestinationName: "db",
 								LocalBindPort:   9191,
-								Config:          map[string]interface{}{key: `{}`},
+								Config:          map[string]any{key: `{}`},
 							},
 						},
 					},

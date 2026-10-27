@@ -58,7 +58,7 @@ func TestEnvoyExtenderWithSnapshot(t *testing.T) {
 			EnvoyExtensions: []structs.EnvoyExtension{
 				{
 					Name: api.BuiltinAWSLambdaExtension,
-					Arguments: map[string]interface{}{
+					Arguments: map[string]any{
 						"ARN":                "arn:aws:lambda:us-east-1:111111111111:function:lambda-1234",
 						"PayloadPassthrough": payloadPassthrough,
 						"InvocationMode":     invocationMode,
@@ -82,7 +82,7 @@ func TestEnvoyExtenderWithSnapshot(t *testing.T) {
 					Name:          api.BuiltinLuaExtension,
 					EnvoyVersion:  envoyVersion,
 					ConsulVersion: consulVersion,
-					Arguments: map[string]interface{}{
+					Arguments: map[string]any{
 						"ProxyType": "connect-proxy",
 						"Listener":  listener,
 						"Script": `
@@ -96,7 +96,7 @@ end`,
 	}
 
 	// Apply Prop Override extension to the local service and ensure http is used so the extension can be applied.
-	makePropOverrideNsFunc := func(args map[string]interface{}) func(ns *structs.NodeService) {
+	makePropOverrideNsFunc := func(args map[string]any) func(ns *structs.NodeService) {
 		return func(ns *structs.NodeService) {
 			ns.Proxy.Config["protocol"] = "http"
 			if _, ok := args["ProxyType"]; !ok {
@@ -112,10 +112,10 @@ end`,
 	}
 
 	propertyOverrideServiceDefaultsAddOutlierDetectionSingle := makePropOverrideNsFunc(
-		map[string]interface{}{
-			"Patches": []map[string]interface{}{
+		map[string]any{
+			"Patches": []map[string]any{
 				{
-					"ResourceFilter": map[string]interface{}{
+					"ResourceFilter": map[string]any{
 						"ResourceType":     propertyoverride.ResourceTypeCluster,
 						"TrafficDirection": extensioncommon.TrafficDirectionOutbound,
 					},
@@ -127,16 +127,16 @@ end`,
 		})
 
 	propertyOverrideServiceDefaultsAddOutlierDetectionMultiple := makePropOverrideNsFunc(
-		map[string]interface{}{
-			"Patches": []map[string]interface{}{
+		map[string]any{
+			"Patches": []map[string]any{
 				{
-					"ResourceFilter": map[string]interface{}{
+					"ResourceFilter": map[string]any{
 						"ResourceType":     propertyoverride.ResourceTypeCluster,
 						"TrafficDirection": extensioncommon.TrafficDirectionOutbound,
 					},
 					"Op":   "add",
 					"Path": "/outlier_detection",
-					"Value": map[string]interface{}{
+					"Value": map[string]any{
 						"success_rate_minimum_hosts":        1234,
 						"failure_percentage_request_volume": 2345,
 					},
@@ -145,10 +145,10 @@ end`,
 		})
 
 	propertyOverrideServiceDefaultsRemoveOutlierDetection := makePropOverrideNsFunc(
-		map[string]interface{}{
-			"Patches": []map[string]interface{}{
+		map[string]any{
+			"Patches": []map[string]any{
 				{
-					"ResourceFilter": map[string]interface{}{
+					"ResourceFilter": map[string]any{
 						"ResourceType":     propertyoverride.ResourceTypeCluster,
 						"TrafficDirection": extensioncommon.TrafficDirectionOutbound,
 					},
@@ -159,10 +159,10 @@ end`,
 		})
 
 	propertyOverrideServiceDefaultsAddKeepalive := makePropOverrideNsFunc(
-		map[string]interface{}{
-			"Patches": []map[string]interface{}{
+		map[string]any{
+			"Patches": []map[string]any{
 				{
-					"ResourceFilter": map[string]interface{}{
+					"ResourceFilter": map[string]any{
 						"ResourceType":     propertyoverride.ResourceTypeCluster,
 						"TrafficDirection": extensioncommon.TrafficDirectionOutbound,
 					},
@@ -174,25 +174,25 @@ end`,
 		})
 
 	propertyOverrideServiceDefaultsAddRoundRobinLbConfig := makePropOverrideNsFunc(
-		map[string]interface{}{
-			"Patches": []map[string]interface{}{
+		map[string]any{
+			"Patches": []map[string]any{
 				{
-					"ResourceFilter": map[string]interface{}{
+					"ResourceFilter": map[string]any{
 						"ResourceType":     propertyoverride.ResourceTypeCluster,
 						"TrafficDirection": extensioncommon.TrafficDirectionOutbound,
 					},
 					"Op":    "add",
 					"Path":  "/round_robin_lb_config",
-					"Value": map[string]interface{}{},
+					"Value": map[string]any{},
 				},
 			},
 		})
 
 	propertyOverrideServiceDefaultsClusterLoadAssignmentOutboundAdd := makePropOverrideNsFunc(
-		map[string]interface{}{
-			"Patches": []map[string]interface{}{
+		map[string]any{
+			"Patches": []map[string]any{
 				{
-					"ResourceFilter": map[string]interface{}{
+					"ResourceFilter": map[string]any{
 						"ResourceType":     propertyoverride.ResourceTypeClusterLoadAssignment,
 						"TrafficDirection": extensioncommon.TrafficDirectionOutbound,
 					},
@@ -204,10 +204,10 @@ end`,
 		})
 
 	propertyOverrideServiceDefaultsClusterLoadAssignmentInboundAdd := makePropOverrideNsFunc(
-		map[string]interface{}{
-			"Patches": []map[string]interface{}{
+		map[string]any{
+			"Patches": []map[string]any{
 				{
-					"ResourceFilter": map[string]interface{}{
+					"ResourceFilter": map[string]any{
 						"ResourceType":     propertyoverride.ResourceTypeClusterLoadAssignment,
 						"TrafficDirection": extensioncommon.TrafficDirectionInbound,
 					},
@@ -219,10 +219,10 @@ end`,
 		})
 
 	propertyOverrideServiceDefaultsListenerInboundAdd := makePropOverrideNsFunc(
-		map[string]interface{}{
-			"Patches": []map[string]interface{}{
+		map[string]any{
+			"Patches": []map[string]any{
 				{
-					"ResourceFilter": map[string]interface{}{
+					"ResourceFilter": map[string]any{
 						"ResourceType":     propertyoverride.ResourceTypeListener,
 						"TrafficDirection": extensioncommon.TrafficDirectionInbound,
 					},
@@ -234,10 +234,10 @@ end`,
 		})
 
 	propertyOverrideServiceDefaultsListenerOutboundAdd := makePropOverrideNsFunc(
-		map[string]interface{}{
-			"Patches": []map[string]interface{}{
+		map[string]any{
+			"Patches": []map[string]any{
 				{
-					"ResourceFilter": map[string]interface{}{
+					"ResourceFilter": map[string]any{
 						"ResourceType":     propertyoverride.ResourceTypeListener,
 						"TrafficDirection": extensioncommon.TrafficDirectionOutbound,
 					},
@@ -249,10 +249,10 @@ end`,
 		})
 
 	propertyOverrideServiceDefaultsListenerOutboundDoesntApplyToInbound := makePropOverrideNsFunc(
-		map[string]interface{}{
-			"Patches": []map[string]interface{}{
+		map[string]any{
+			"Patches": []map[string]any{
 				{
-					"ResourceFilter": map[string]interface{}{
+					"ResourceFilter": map[string]any{
 						"ResourceType":     propertyoverride.ResourceTypeListener,
 						"TrafficDirection": extensioncommon.TrafficDirectionInbound,
 					},
@@ -261,7 +261,7 @@ end`,
 					"Value": "custom.stats.inbound.only",
 				},
 				{
-					"ResourceFilter": map[string]interface{}{
+					"ResourceFilter": map[string]any{
 						"ResourceType":     propertyoverride.ResourceTypeListener,
 						"TrafficDirection": extensioncommon.TrafficDirectionOutbound,
 					},
@@ -274,10 +274,10 @@ end`,
 
 	// Reverse order of above patches, to prove order is inconsequential
 	propertyOverrideServiceDefaultsListenerInboundDoesntApplyToOutbound := makePropOverrideNsFunc(
-		map[string]interface{}{
-			"Patches": []map[string]interface{}{
+		map[string]any{
+			"Patches": []map[string]any{
 				{
-					"ResourceFilter": map[string]interface{}{
+					"ResourceFilter": map[string]any{
 						"ResourceType":     propertyoverride.ResourceTypeListener,
 						"TrafficDirection": extensioncommon.TrafficDirectionOutbound,
 					},
@@ -286,7 +286,7 @@ end`,
 					"Value": "custom.stats.outbound.only",
 				},
 				{
-					"ResourceFilter": map[string]interface{}{
+					"ResourceFilter": map[string]any{
 						"ResourceType":     propertyoverride.ResourceTypeListener,
 						"TrafficDirection": extensioncommon.TrafficDirectionInbound,
 					},
@@ -298,10 +298,10 @@ end`,
 		})
 
 	propertyOverridePatchSpecificUpstreamService := makePropOverrideNsFunc(
-		map[string]interface{}{
-			"Patches": []map[string]interface{}{
+		map[string]any{
+			"Patches": []map[string]any{
 				{
-					"ResourceFilter": map[string]interface{}{
+					"ResourceFilter": map[string]any{
 						"ResourceType":     propertyoverride.ResourceTypeListener,
 						"TrafficDirection": extensioncommon.TrafficDirectionOutbound,
 						"Services": []propertyoverride.ServiceName{
@@ -313,7 +313,7 @@ end`,
 					"Value": "custom.stats.outbound.only",
 				},
 				{
-					"ResourceFilter": map[string]interface{}{
+					"ResourceFilter": map[string]any{
 						"ResourceType":     propertyoverride.ResourceTypeRoute,
 						"TrafficDirection": extensioncommon.TrafficDirectionOutbound,
 						"Services": []propertyoverride.ServiceName{
@@ -325,7 +325,7 @@ end`,
 					"Value": true,
 				},
 				{
-					"ResourceFilter": map[string]interface{}{
+					"ResourceFilter": map[string]any{
 						"ResourceType":     propertyoverride.ResourceTypeCluster,
 						"TrafficDirection": extensioncommon.TrafficDirectionOutbound,
 						"Services": []propertyoverride.ServiceName{
@@ -337,7 +337,7 @@ end`,
 					"Value": 1234,
 				},
 				{
-					"ResourceFilter": map[string]interface{}{
+					"ResourceFilter": map[string]any{
 						"ResourceType":     propertyoverride.ResourceTypeClusterLoadAssignment,
 						"TrafficDirection": extensioncommon.TrafficDirectionOutbound,
 						"Services": []propertyoverride.ServiceName{
@@ -565,7 +565,7 @@ end`,
 					ns.Proxy.EnvoyExtensions = []structs.EnvoyExtension{
 						{
 							Name: api.BuiltinLuaExtension,
-							Arguments: map[string]interface{}{
+							Arguments: map[string]any{
 								"ProxyType": "connect-proxy",
 								"Listener":  "inbound",
 								"Script": `

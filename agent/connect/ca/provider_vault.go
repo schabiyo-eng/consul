@@ -195,7 +195,7 @@ func (v *VaultProvider) Configure(cfg ProviderConfig) error {
 	return nil
 }
 
-func (v *VaultProvider) ValidateConfigUpdate(prevRaw, nextRaw map[string]interface{}) error {
+func (v *VaultProvider) ValidateConfigUpdate(prevRaw, nextRaw map[string]any) error {
 	prev, err := ParseVaultCAConfig(prevRaw, v.isPrimary)
 	if err != nil {
 		return fmt.Errorf("failed to parse existing CA config: %w", err)
@@ -336,7 +336,7 @@ func (v *VaultProvider) GenerateCAChain() (string, error) {
 		if err != nil {
 			return "", err
 		}
-		resp, err := v.writeNamespaced(v.config.RootPKINamespace, v.config.RootPKIPath+"root/generate/internal", map[string]interface{}{
+		resp, err := v.writeNamespaced(v.config.RootPKINamespace, v.config.RootPKIPath+"root/generate/internal", map[string]any{
 			"common_name": connect.CACN("vault", uid, v.clusterID, v.isPrimary),
 			"uri_sans":    v.spiffeID.URI().String(),
 			"key_type":    v.config.PrivateKeyType,
@@ -443,7 +443,7 @@ func (v *VaultProvider) setupIntermediatePKIPath() error {
 
 	// Create the role for issuing leaf certs
 	rolePath := v.config.IntermediatePKIPath + "roles/" + VaultCALeafCertRole
-	_, err = v.writeNamespaced(v.config.IntermediatePKINamespace, rolePath, map[string]interface{}{
+	_, err = v.writeNamespaced(v.config.IntermediatePKINamespace, rolePath, map[string]any{
 		"allow_any_name":   true,
 		"allowed_uri_sans": "spiffe://*",
 		"key_type":         "any",
@@ -466,7 +466,7 @@ func (v *VaultProvider) generateIntermediateCSR() (string, string, error) {
 	if err != nil {
 		return "", "", err
 	}
-	data, err := v.writeNamespaced(v.config.IntermediatePKINamespace, v.config.IntermediatePKIPath+"intermediate/generate/internal", map[string]interface{}{
+	data, err := v.writeNamespaced(v.config.IntermediatePKINamespace, v.config.IntermediatePKIPath+"intermediate/generate/internal", map[string]any{
 		"common_name": connect.CACN("vault", uid, v.clusterID, v.isPrimary),
 		"key_type":    v.config.PrivateKeyType,
 		"key_bits":    v.config.PrivateKeyBits,
@@ -507,7 +507,7 @@ func (v *VaultProvider) SetIntermediate(intermediatePEM, rootPEM, keyId string) 
 		return err
 	}
 
-	importResp, err := v.writeNamespaced(v.config.IntermediatePKINamespace, v.config.IntermediatePKIPath+"intermediate/set-signed", map[string]interface{}{
+	importResp, err := v.writeNamespaced(v.config.IntermediatePKINamespace, v.config.IntermediatePKIPath+"intermediate/set-signed", map[string]any{
 		"certificate": intermediatePEM,
 	})
 	if err != nil {
@@ -602,7 +602,7 @@ func (v *VaultProvider) GenerateLeafSigningCert() (string, error) {
 	}
 
 	// Sign the CSR with the root backend.
-	intermediate, err := v.writeNamespaced(v.config.RootPKINamespace, v.config.RootPKIPath+"root/sign-intermediate", map[string]interface{}{
+	intermediate, err := v.writeNamespaced(v.config.RootPKINamespace, v.config.RootPKIPath+"root/sign-intermediate", map[string]any{
 		"csr":            csr,
 		"use_csr_values": false,
 		"uri_sans":       v.spiffeID.URI().String(),
@@ -617,7 +617,7 @@ func (v *VaultProvider) GenerateLeafSigningCert() (string, error) {
 	}
 
 	// Set the intermediate backend to use the new certificate.
-	importResp, err := v.writeNamespaced(v.config.IntermediatePKINamespace, v.config.IntermediatePKIPath+"intermediate/set-signed", map[string]interface{}{
+	importResp, err := v.writeNamespaced(v.config.IntermediatePKINamespace, v.config.IntermediatePKIPath+"intermediate/set-signed", map[string]any{
 		"certificate": intermediate.Data["certificate"],
 	})
 	if err != nil {
@@ -743,7 +743,7 @@ func (v *VaultProvider) Sign(csr *x509.CertificateRequest) (string, error) {
 	}
 
 	// Use the leaf cert role to sign a new cert for this CSR.
-	response, err := v.writeNamespaced(v.config.IntermediatePKINamespace, v.config.IntermediatePKIPath+"sign/"+VaultCALeafCertRole, map[string]interface{}{
+	response, err := v.writeNamespaced(v.config.IntermediatePKINamespace, v.config.IntermediatePKIPath+"sign/"+VaultCALeafCertRole, map[string]any{
 		"csr": pemBuf.String(),
 		"ttl": v.config.LeafCertTTL.String(),
 	})
@@ -776,7 +776,7 @@ func (v *VaultProvider) SignIntermediate(csr *x509.CertificateRequest) (string, 
 	}
 
 	// Sign the CSR with the root backend.
-	data, err := v.writeNamespaced(v.config.RootPKINamespace, v.config.RootPKIPath+"root/sign-intermediate", map[string]interface{}{
+	data, err := v.writeNamespaced(v.config.RootPKINamespace, v.config.RootPKIPath+"root/sign-intermediate", map[string]any{
 		"csr":             pemBuf.String(),
 		"use_csr_values":  false,
 		"uri_sans":        v.spiffeID.URI().String(),
@@ -821,7 +821,7 @@ func (v *VaultProvider) CrossSignCA(cert *x509.Certificate) (string, error) {
 	}
 
 	// Have the root PKI backend sign this cert.
-	response, err := v.writeNamespaced(v.config.RootPKINamespace, v.config.RootPKIPath+"root/sign-self-issued", map[string]interface{}{
+	response, err := v.writeNamespaced(v.config.RootPKINamespace, v.config.RootPKIPath+"root/sign-self-issued", map[string]any{
 		"certificate": pemBuf.String(),
 	})
 	if err != nil {
@@ -847,7 +847,7 @@ func (v *VaultProvider) SupportsCrossSigning() (bool, error) {
 // Cleanup unmounts the configured intermediate PKI backend. It's fine to tear
 // this down and recreate it on small config changes because the intermediate
 // certs get bundled with the leaf certs, so there's no cost to the CA changing.
-func (v *VaultProvider) Cleanup(providerTypeChange bool, otherConfig map[string]interface{}) error {
+func (v *VaultProvider) Cleanup(providerTypeChange bool, otherConfig map[string]any) error {
 	v.Stop()
 
 	if !providerTypeChange {
@@ -896,7 +896,7 @@ func (v *VaultProvider) readNamespaced(namespace string, resource string) (*vaul
 	return v.client.WithNamespace(v.getNamespace(namespace)).Logical().Read(resource)
 }
 
-func (v *VaultProvider) writeNamespaced(namespace string, resource string, data map[string]interface{}) (*vaultapi.Secret, error) {
+func (v *VaultProvider) writeNamespaced(namespace string, resource string, data map[string]any) (*vaultapi.Secret, error) {
 	return v.client.WithNamespace(v.getNamespace(namespace)).Logical().Write(resource, data)
 }
 
@@ -917,7 +917,7 @@ func (v *VaultProvider) getNamespace(namespace string) string {
 // returning the log message for test purposes as well.
 func (v *VaultProvider) autotidyIssuers(path string) (bool, string) {
 	s, err := v.client.Logical().Write(path+"/config/auto-tidy",
-		map[string]interface{}{
+		map[string]any{
 			"enabled":              true,
 			"tidy_expired_issuers": true,
 		})
@@ -944,7 +944,7 @@ func (v *VaultProvider) autotidyIssuers(path string) (bool, string) {
 	return tidySet, errStr
 }
 
-func ParseVaultCAConfig(raw map[string]interface{}, isPrimary bool) (*structs.VaultCAProviderConfig, error) {
+func ParseVaultCAConfig(raw map[string]any, isPrimary bool) (*structs.VaultCAProviderConfig, error) {
 	config := structs.VaultCAProviderConfig{
 		CommonCAProviderConfig: defaultCommonConfig(),
 	}
@@ -998,7 +998,7 @@ func ParseVaultCAConfig(raw map[string]interface{}, isPrimary bool) (*structs.Va
 	// server startup configuration rather than anything an API caller supplied.
 	if config.AuthMethod != nil {
 		if config.AuthMethod.Params == nil {
-			config.AuthMethod.Params = make(map[string]interface{})
+			config.AuthMethod.Params = make(map[string]any)
 		}
 		if v, ok := raw["TokenDirs"]; ok && v != nil {
 			config.AuthMethod.Params["TokenDirs"] = v

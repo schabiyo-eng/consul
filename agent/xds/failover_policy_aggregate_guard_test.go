@@ -26,7 +26,7 @@ func failoverChainForTest(t *testing.T) (*structs.CompiledDiscoveryChain, *struc
 		&structs.ProxyConfigEntry{
 			Kind:   structs.ProxyDefaults,
 			Name:   structs.ProxyConfigGlobal,
-			Config: map[string]interface{}{"protocol": "http"},
+			Config: map[string]any{"protocol": "http"},
 		},
 		&structs.ServiceResolverConfigEntry{
 			Kind: structs.ServiceResolver,

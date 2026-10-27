@@ -5267,7 +5267,7 @@ func linkedFromRegistrationTxn(tx ReadTxn, ws memdb.WatchSet, service structs.Se
 }
 
 // updateMeshTopology creates associations between the input service and its upstreams in the topology table
-func updateMeshTopology(tx WriteTxn, idx uint64, node string, svc *structs.NodeService, existing interface{}) error {
+func updateMeshTopology(tx WriteTxn, idx uint64, node string, svc *structs.NodeService, existing any) error {
 	// TODO(peering): make this peering aware
 	oldUpstreams := make(map[structs.ServiceName]bool)
 	if e, ok := existing.(*structs.ServiceNode); ok {

@@ -26,7 +26,7 @@ func (c *consulCAMockDelegate) ProviderState(id string) (*structs.CAConsulProvid
 	return s, err
 }
 
-func (c *consulCAMockDelegate) ApplyCARequest(req *structs.CARequest) (interface{}, error) {
+func (c *consulCAMockDelegate) ApplyCARequest(req *structs.CARequest) (any, error) {
 	idx, _, err := c.state.CAConfig(nil)
 	if err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func testConsulCAConfig() *structs.CAConfiguration {
 	return &structs.CAConfiguration{
 		ClusterID: connect.TestClusterID,
 		Provider:  "consul",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			// Tests duration parsing after msgpack type mangling during raft apply.
 			"LeafCertTTL":         []byte("72h"),
 			"IntermediateCertTTL": []byte("288h"),
@@ -117,7 +117,7 @@ func TestConsulCAProvider_Bootstrap_WithCert(t *testing.T) {
 	// Make sure setting a custom private key/root cert works.
 	rootCA := connect.TestCAWithTTL(t, nil, 5*time.Hour)
 	conf := testConsulCAConfig()
-	conf.Config = map[string]interface{}{
+	conf.Config = map[string]any{
 		"PrivateKey": rootCA.SigningKey,
 		"RootCert":   rootCA.RootCert,
 	}

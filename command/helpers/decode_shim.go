@@ -78,7 +78,7 @@ import (
 // Given that HCLv1 is basically frozen and the HCL part of it is fine instead
 // of trying to track down a weird bug we'll bypass the weird JSON decoder and just use
 // the stdlib one.
-func hclDecode(out interface{}, in string) error {
+func hclDecode(out any, in string) error {
 	data := []byte(in)
 	if isHCL(data) {
 		return hcl.Decode(out, in)

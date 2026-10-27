@@ -111,7 +111,7 @@ func (c *cmd) Run(args []string) int {
 	}
 
 	// Compile the watch parameters
-	params := make(map[string]interface{})
+	params := make(map[string]any)
 	if c.watchType != "" {
 		params["type"] = c.watchType
 	}
@@ -191,7 +191,7 @@ func (c *cmd) Run(args []string) int {
 	//	1: true
 	errExit := 0
 	if len(c.flags.Args()) == 0 {
-		wp.Handler = func(idx uint64, data interface{}) {
+		wp.Handler = func(idx uint64, data any) {
 			defer wp.Stop()
 			buf, err := json.MarshalIndent(data, "", "    ")
 			if err != nil {
@@ -201,7 +201,7 @@ func (c *cmd) Run(args []string) int {
 			c.UI.Output(string(buf))
 		}
 	} else {
-		wp.Handler = func(idx uint64, data interface{}) {
+		wp.Handler = func(idx uint64, data any) {
 			doneCh := make(chan struct{})
 			defer close(doneCh)
 			logFn := func(err error) {

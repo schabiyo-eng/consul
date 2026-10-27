@@ -127,7 +127,7 @@ func CreateCAExtension() (pkix.Extension, error) {
 // indicating certificate signing failed because the user supplied an invalid CSR.
 //
 // See: IsInvalidCSRError.
-func InvalidCSRError(format string, args ...interface{}) error {
+func InvalidCSRError(format string, args ...any) error {
 	return invalidCSRError{fmt.Sprintf(format, args...)}
 }
 

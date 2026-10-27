@@ -6,4 +6,4 @@
 package agent
 
 // enterpriseDelegate has no functions in CE
-type enterpriseDelegate interface{}
+type enterpriseDelegate any

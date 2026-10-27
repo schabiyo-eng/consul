@@ -73,6 +73,6 @@ func handleClient(serverAddr string, clientConn net.Conn) error {
 	return <-errCh
 }
 
-func log(message string, args ...interface{}) {
+func log(message string, args ...any) {
 	fmt.Fprintf(os.Stderr, message+"\n", args...)
 }

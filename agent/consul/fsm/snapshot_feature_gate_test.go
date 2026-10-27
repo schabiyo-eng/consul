@@ -102,7 +102,7 @@ func TestFSM_FeatureGateSnapshotRestorableByOlderServer(t *testing.T) {
 			}
 			return nil
 		}
-		var ignored interface{}
+		var ignored any
 		return dec.Decode(&ignored)
 	})
 	require.NoError(t, err)

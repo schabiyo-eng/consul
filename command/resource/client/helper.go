@@ -59,13 +59,13 @@ func (t *TValue[T]) Set(v string) error {
 	}
 	var err error
 	// have to use interface{}(t.v) to do type assertion
-	switch interface{}(t.v).(type) {
+	switch any(t.v).(type) {
 	case *string:
 		// have to use interface{}(t.v).(*string) to assert t.v as *string
-		*(interface{}(t.v).(*string)) = v
+		*(any(t.v).(*string)) = v
 	case *bool:
 		// have to use interface{}(t.v).(*bool) to assert t.v as *bool
-		*(interface{}(t.v).(*bool)), err = strconv.ParseBool(v)
+		*(any(t.v).(*bool)), err = strconv.ParseBool(v)
 	default:
 		err = fmt.Errorf("unsupported type %T", t.v)
 	}

@@ -29,8 +29,8 @@ func TestFetchCh(
 	typ cache.Type,
 	opts cache.FetchOptions,
 	req cache.Request,
-) <-chan interface{} {
-	resultCh := make(chan interface{})
+) <-chan any {
+	resultCh := make(chan any)
 	go func() {
 		result, err := typ.Fetch(context.Background(), opts, req)
 		if err != nil {
@@ -47,7 +47,7 @@ func TestFetchCh(
 // TestFetchChResult tests that the result from TestFetchCh matches
 // within a reasonable period of time (it expects it to be "immediate" but
 // waits some milliseconds).
-func TestFetchChResult(t testinf.T, ch <-chan interface{}, expected interface{}) {
+func TestFetchChResult(t testinf.T, ch <-chan any, expected any) {
 	t.Helper()
 
 	select {

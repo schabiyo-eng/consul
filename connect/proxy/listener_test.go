@@ -88,7 +88,7 @@ func TestUpstreamListener(t *testing.T) {
 		DestinationType:      "service",
 		DestinationNamespace: "default",
 		DestinationName:      "db",
-		Config:               map[string]interface{}{"connect_timeout_ms": 100},
+		Config:               map[string]any{"connect_timeout_ms": 100},
 		LocalBindAddress:     "localhost",
 		LocalBindPort:        freeport.GetOne(t),
 	}

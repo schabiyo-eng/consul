@@ -1029,7 +1029,7 @@ func TestStructs_NodeService_ValidateConnectProxy(t *testing.T) {
 		{
 			"connect-proxy: invalid opaque config",
 			func(x *NodeService) {
-				x.Proxy.Config = map[string]interface{}{
+				x.Proxy.Config = map[string]any{
 					"envoy_hcp_metrics_bind_socket_dir": "/Consul/is/a/networking/platform/that/enables/securing/your/networking/",
 				}
 			},
@@ -1583,7 +1583,7 @@ func TestStructs_NodeService_IsSame(t *testing.T) {
 		EnableTagOverride: true,
 		Proxy: ConnectProxyConfig{
 			DestinationServiceName: "db",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": "bar",
 			},
 		},
@@ -1627,7 +1627,7 @@ func TestStructs_NodeService_IsSame(t *testing.T) {
 		},
 		Proxy: ConnectProxyConfig{
 			DestinationServiceName: "db",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": "bar",
 			},
 		},
@@ -2561,7 +2561,7 @@ func TestNodeService_JSON_OmitTaggedAdddresses(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			data, err := json.Marshal(ns)
 			require.NoError(t, err)
-			var raw map[string]interface{}
+			var raw map[string]any
 			err = json.Unmarshal(data, &raw)
 			require.NoError(t, err)
 			require.NotContains(t, raw, "TaggedAddresses")
@@ -2595,7 +2595,7 @@ func TestServiceNode_JSON_OmitServiceTaggedAdddresses(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			data, err := json.Marshal(sn)
 			require.NoError(t, err)
-			var raw map[string]interface{}
+			var raw map[string]any
 			err = json.Unmarshal(data, &raw)
 			require.NoError(t, err)
 			require.NotContains(t, raw, "ServiceTaggedAddresses")
@@ -2977,9 +2977,9 @@ func TestNodeService_JSON_Marshal(t *testing.T) {
 	ns := &NodeService{
 		Service: "foo",
 		Proxy: ConnectProxyConfig{
-			Config: map[string]interface{}{
-				"bind_addresses": map[string]interface{}{
-					"default": map[string]interface{}{
+			Config: map[string]any{
+				"bind_addresses": map[string]any{
+					"default": map[string]any{
 						"Address": "0.0.0.0",
 						"Port":    "443",
 					},
@@ -3000,9 +3000,9 @@ func TestServiceNode_JSON_Marshal(t *testing.T) {
 		Node:        "foo",
 		ServiceName: "foo",
 		ServiceProxy: ConnectProxyConfig{
-			Config: map[string]interface{}{
-				"bind_addresses": map[string]interface{}{
-					"default": map[string]interface{}{
+			Config: map[string]any{
+				"bind_addresses": map[string]any{
+					"default": map[string]any{
 						"Address": "0.0.0.0",
 						"Port":    "443",
 					},

@@ -17,14 +17,14 @@ import (
 // a lot of improvements that can be made here in the long term.
 type cacheEntry struct {
 	// Fields pertaining to the actual value
-	Value interface{}
+	Value any
 	// State can be used to store info needed by the cache type but that should
 	// not be part of the result the client gets. For example the Connect Leaf
 	// type needs to store additional data about when it last attempted a renewal
 	// that is not part of the actual IssuedCert struct it returns. It's opaque to
 	// the Cache but allows types to store additional data that is coupled to the
 	// cache entry's lifetime and will be aged out by TTL etc.
-	State interface{}
+	State any
 	Error error
 	Index uint64
 

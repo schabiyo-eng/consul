@@ -95,8 +95,8 @@ type NoOpHandler struct {
 }
 
 type Logger interface {
-	Error(string, ...interface{})
-	Warn(string, ...interface{})
+	Error(string, ...any)
+	Warn(string, ...any)
 }
 
 func (h NoOpHandler) Handle(conn net.Conn) {

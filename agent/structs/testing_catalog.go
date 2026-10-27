@@ -225,7 +225,7 @@ func TestNodeServiceMeshGatewayWithAddrs(address string, port int, lanAddr, wanA
 		Address: address,
 		Port:    port,
 		Proxy: ConnectProxyConfig{
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": "bar",
 			},
 		},

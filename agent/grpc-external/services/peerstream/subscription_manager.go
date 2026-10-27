@@ -819,7 +819,7 @@ func (m *subscriptionManager) notifyMeshConfigUpdates(ctx context.Context) <-cha
 	const meshConfigWatch = "mesh-config-entry"
 
 	notifyCh := make(chan cache.UpdateEvent, 1)
-	go m.syncViaBlockingQuery(ctx, meshConfigWatch, func(_ context.Context, store StateStore, ws memdb.WatchSet) (interface{}, error) {
+	go m.syncViaBlockingQuery(ctx, meshConfigWatch, func(_ context.Context, store StateStore, ws memdb.WatchSet) (any, error) {
 		_, rawEntry, err := store.ConfigEntry(ws, structs.MeshConfig, structs.MeshConfigMesh, acl.DefaultEnterpriseMeta())
 		if err != nil {
 			return nil, fmt.Errorf("failed to get mesh config entry: %w", err)
@@ -832,7 +832,7 @@ func (m *subscriptionManager) notifyMeshConfigUpdates(ctx context.Context) <-cha
 }
 
 func (m *subscriptionManager) notifyServerMeshGatewayAddresses(ctx context.Context, updateCh chan<- cache.UpdateEvent) {
-	m.syncViaBlockingQuery(ctx, "mesh-gateways", func(ctx context.Context, store StateStore, ws memdb.WatchSet) (interface{}, error) {
+	m.syncViaBlockingQuery(ctx, "mesh-gateways", func(ctx context.Context, store StateStore, ws memdb.WatchSet) (any, error) {
 		_, nodes, err := store.ServiceDump(ws, structs.ServiceKindMeshGateway, true, acl.DefaultEnterpriseMeta(), structs.DefaultPeerKeyword)
 		if err != nil {
 			return nil, fmt.Errorf("failed to watch mesh gateways services for servers: %w", err)

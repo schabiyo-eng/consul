@@ -1803,7 +1803,7 @@ var cmpCertPool = cmp.Options{
 	cmp.AllowUnexported(x509.CertPool{}),
 }
 
-func assertDeepEqual(t *testing.T, x, y interface{}, opts ...cmp.Option) {
+func assertDeepEqual(t *testing.T, x, y any, opts ...cmp.Option) {
 	t.Helper()
 	if diff := cmp.Diff(x, y, opts...); diff != "" {
 		t.Fatalf("assertion failed: values are not equal\n--- expected\n+++ actual\n%v", diff)

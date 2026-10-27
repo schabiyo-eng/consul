@@ -241,7 +241,7 @@ func (c *cmd) Run(args []string) int {
 				return 1
 			}
 
-			method.Config = map[string]interface{}{
+			method.Config = map[string]any{
 				"Host":              c.k8sHost,
 				"CACert":            c.k8sCACert,
 				"ServiceAccountJWT": c.k8sServiceAccountJWT,
@@ -280,14 +280,14 @@ func (c *cmd) Run(args []string) int {
 				return 1
 			}
 			// Don't attempt a deep merge.
-			method.Config = make(map[string]interface{})
+			method.Config = make(map[string]any)
 			if err := json.Unmarshal([]byte(data), &method.Config); err != nil {
 				c.UI.Error(fmt.Sprintf("Error parsing JSON for auth method config: %v", err))
 				return 1
 			}
 		}
 		if method.Config == nil {
-			method.Config = make(map[string]interface{})
+			method.Config = make(map[string]any)
 		}
 		if currentAuthMethod.Type == "kubernetes" {
 			if c.k8sHost != "" {

@@ -225,7 +225,7 @@ func (m CertExpirationMonitor) Monitor(ctx context.Context) error {
 		}
 
 		// Build log fields
-		logFields := []interface{}{
+		logFields := []any{
 			"cert_type", certType,
 			"days_remaining", daysRemaining,
 			"time_to_expiry", untilAfter,

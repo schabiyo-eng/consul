@@ -40,7 +40,7 @@ func (r *TrustBundleListRequest) CacheInfo() cache.RequestInfo {
 		MustRevalidate: r.MustRevalidate,
 	}
 
-	v, err := hashstructure.Hash([]interface{}{
+	v, err := hashstructure.Hash([]any{
 		r.Request.Partition,
 		r.Request.Namespace,
 		r.Request.ServiceName,

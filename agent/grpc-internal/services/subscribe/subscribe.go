@@ -30,8 +30,8 @@ func NewServer(backend Backend, logger Logger) *Server {
 }
 
 type Logger interface {
-	Trace(msg string, args ...interface{})
-	With(args ...interface{}) hclog.Logger
+	Trace(msg string, args ...any)
+	With(args ...any) hclog.Logger
 }
 
 var _ pbsubscribe.StateChangeSubscriptionServer = (*Server)(nil)

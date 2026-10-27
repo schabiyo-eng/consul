@@ -489,7 +489,7 @@ func TestGlobalRateLimitConfigEntry_DecodeAndValidate(t *testing.T) {
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			var raw map[string]interface{}
+			var raw map[string]any
 			require.NoError(t, json.Unmarshal([]byte(tc.jsonBody), &raw))
 
 			entry, err := DecodeConfigEntry(raw)

@@ -151,7 +151,7 @@ func validIndexJSON(raw []byte) fs.CompareResult {
 }
 
 func validJSON(raw []byte) fs.CompareResult {
-	var target interface{}
+	var target any
 	decoder := json.NewDecoder(bytes.NewReader(raw))
 	if err := decoder.Decode(&target); err != nil {
 		return cmp.ResultFailure(err.Error())

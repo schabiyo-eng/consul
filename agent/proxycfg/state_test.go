@@ -1253,7 +1253,7 @@ func TestState_WatchesAndUpdates(t *testing.T) {
 	}
 
 	dbConfig := &structs.ServiceConfigResponse{
-		ProxyConfig: map[string]interface{}{
+		ProxyConfig: map[string]any{
 			"protocol": "grpc",
 		},
 	}
@@ -1876,7 +1876,7 @@ func TestState_WatchesAndUpdates(t *testing.T) {
 								DestinationPartition: "default",
 								DestinationName:      "api",
 								LocalBindPort:        9999,
-								Config: map[string]interface{}{
+								Config: map[string]any{
 									"protocol": "http",
 								},
 							},
@@ -2668,7 +2668,7 @@ func TestState_WatchesAndUpdates(t *testing.T) {
 							CentrallyConfigured:  true,
 							DestinationName:      structs.WildcardSpecifier,
 							DestinationNamespace: structs.WildcardSpecifier,
-							Config: map[string]interface{}{
+							Config: map[string]any{
 								"connect_timeout_ms": 6000,
 							},
 							MeshGateway: structs.MeshGatewayConfig{Mode: structs.MeshGatewayModeRemote},
@@ -3235,7 +3235,7 @@ func TestState_WatchesAndUpdates(t *testing.T) {
 							CentrallyConfigured:  true,
 							DestinationName:      structs.WildcardSpecifier,
 							DestinationNamespace: structs.WildcardSpecifier,
-							Config: map[string]interface{}{
+							Config: map[string]any{
 								"connect_timeout_ms": 6000,
 							},
 							MeshGateway: structs.MeshGatewayConfig{Mode: structs.MeshGatewayModeRemote},
@@ -3399,7 +3399,7 @@ func TestState_WatchesAndUpdates(t *testing.T) {
 							CentrallyConfigured:  true,
 							DestinationName:      structs.WildcardSpecifier,
 							DestinationNamespace: structs.WildcardSpecifier,
-							Config: map[string]interface{}{
+							Config: map[string]any{
 								"connect_timeout_ms": 6000,
 							},
 							MeshGateway: structs.MeshGatewayConfig{Mode: structs.MeshGatewayModeRemote},
@@ -4050,7 +4050,7 @@ func TestState_WatchesAndUpdates(t *testing.T) {
 				Port:    443,
 				Proxy: structs.ConnectProxyConfig{
 					DestinationServiceName: "web",
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"envoy_telemetry_collector_bind_socket_dir": "/tmp/consul/telemetry-collector/",
 					},
 				},
@@ -4126,7 +4126,7 @@ func TestState_WatchesAndUpdates(t *testing.T) {
 							DestinationPartition: "default",
 							DestinationName:      apimod.TelemetryCollectorName,
 							LocalBindSocketPath:  "/tmp/consul/telemetry-collector/gqmuzdHCUPAEY5mbF8vgkZCNI14.sock",
-							Config: map[string]interface{}{
+							Config: map[string]any{
 								"protocol": "grpc",
 							},
 						}

@@ -13,8 +13,8 @@ import (
 )
 
 func TestConstructor(t *testing.T) {
-	makeArguments := func(overrides map[string]interface{}) map[string]interface{} {
-		m := map[string]interface{}{
+	makeArguments := func(overrides map[string]any) map[string]any {
+		m := map[string]any{
 			"ProxyType":    "connect-proxy",
 			"ListenerType": "inbound",
 			"Config": AccessLog{
@@ -40,7 +40,7 @@ func TestConstructor(t *testing.T) {
 
 	cases := map[string]struct {
 		extensionName string
-		arguments     map[string]interface{}
+		arguments     map[string]any
 		expected      otelAccessLogging
 		ok            bool
 	}{
@@ -49,20 +49,20 @@ func TestConstructor(t *testing.T) {
 			ok:        false,
 		},
 		"with an invalid name": {
-			arguments:     makeArguments(map[string]interface{}{}),
+			arguments:     makeArguments(map[string]any{}),
 			extensionName: "bad",
 			ok:            false,
 		},
 		"invalid proxy type": {
-			arguments: makeArguments(map[string]interface{}{"ProxyType": "terminating-gateway"}),
+			arguments: makeArguments(map[string]any{"ProxyType": "terminating-gateway"}),
 			ok:        false,
 		},
 		"invalid listener": {
-			arguments: makeArguments(map[string]interface{}{"ListenerType": "invalid"}),
+			arguments: makeArguments(map[string]any{"ListenerType": "invalid"}),
 			ok:        false,
 		},
 		"default proxy type": {
-			arguments: makeArguments(map[string]interface{}{"ProxyType": ""}),
+			arguments: makeArguments(map[string]any{"ProxyType": ""}),
 			expected: otelAccessLogging{
 				ProxyType:    "connect-proxy",
 				ListenerType: "inbound",

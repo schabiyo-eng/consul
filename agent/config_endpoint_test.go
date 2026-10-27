@@ -49,7 +49,7 @@ func TestConfig_Get(t *testing.T) {
 			Datacenter: "dc1",
 			Entry: &structs.ProxyConfigEntry{
 				Name: structs.ProxyConfigGlobal,
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"foo": "bar",
 					"bar": 1,
 				},

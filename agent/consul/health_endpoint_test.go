@@ -1420,7 +1420,7 @@ func TestHealth_ServiceNodes_Ingress_ACL(t *testing.T) {
 			Entry: &structs.ProxyConfigEntry{
 				Kind: structs.ProxyDefaults,
 				Name: structs.ProxyConfigGlobal,
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"protocol": "http",
 				},
 			},
@@ -1512,7 +1512,7 @@ func setupAPIGatewayDNSMapping(t *testing.T, s *Server, serviceName string) {
 	require.NoError(t, store.EnsureConfigEntry(next(), &structs.ProxyConfigEntry{
 		Kind:   structs.ProxyDefaults,
 		Name:   structs.ProxyConfigGlobal,
-		Config: map[string]interface{}{"protocol": "http"},
+		Config: map[string]any{"protocol": "http"},
 	}))
 	require.NoError(t, store.EnsureConfigEntry(next(), &structs.APIGatewayConfigEntry{
 		Kind: structs.APIGateway,

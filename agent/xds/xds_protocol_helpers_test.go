@@ -383,7 +383,7 @@ func mustHashResource(t *testing.T, res proto.Message) string {
 	return v
 }
 
-func makeTestResources(t *testing.T, resources ...interface{}) []*envoy_discovery_v3.Resource {
+func makeTestResources(t *testing.T, resources ...any) []*envoy_discovery_v3.Resource {
 	var ret []*envoy_discovery_v3.Resource
 	for _, res := range resources {
 		ret = append(ret, makeTestResource(t, res))
@@ -391,7 +391,7 @@ func makeTestResources(t *testing.T, resources ...interface{}) []*envoy_discover
 	return ret
 }
 
-func makeTestResource(t *testing.T, raw interface{}) *envoy_discovery_v3.Resource {
+func makeTestResource(t *testing.T, raw any) *envoy_discovery_v3.Resource {
 	switch res := raw.(type) {
 	case string:
 		return &envoy_discovery_v3.Resource{

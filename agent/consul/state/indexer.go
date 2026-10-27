@@ -63,7 +63,7 @@ type indexerSingleWithPrefix[R, W, P any] struct {
 // generate an index from multiple values, use a struct type with multiple fields.
 type readIndex[R any] func(arg R) ([]byte, error)
 
-func (f readIndex[R]) FromArgs(args ...interface{}) ([]byte, error) {
+func (f readIndex[R]) FromArgs(args ...any) ([]byte, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("index supports only a single arg")
 	}
@@ -85,7 +85,7 @@ var errMissingValueForIndex = fmt.Errorf("object is missing a value for this ind
 // this error into a false value to satisfy the memdb.SingleIndexer interface.
 type writeIndex[W any] func(raw W) ([]byte, error)
 
-func (f writeIndex[W]) FromObject(raw interface{}) (bool, []byte, error) {
+func (f writeIndex[W]) FromObject(raw any) (bool, []byte, error) {
 	obj, ok := raw.(W)
 	if !ok {
 		var typ W
@@ -106,7 +106,7 @@ func (f writeIndex[W]) FromObject(raw interface{}) (bool, []byte, error) {
 // this error into a false value to satisfy the memdb.MultiIndexer interface.
 type writeIndexMulti[W any] func(raw W) ([][]byte, error)
 
-func (f writeIndexMulti[W]) FromObject(raw interface{}) (bool, [][]byte, error) {
+func (f writeIndexMulti[W]) FromObject(raw any) (bool, [][]byte, error) {
 	obj, ok := raw.(W)
 	if !ok {
 		var typ W
@@ -123,7 +123,7 @@ func (f writeIndexMulti[W]) FromObject(raw interface{}) (bool, [][]byte, error) 
 // can be used to provide this interface.
 type prefixIndex[P any] func(args P) ([]byte, error)
 
-func (f prefixIndex[P]) PrefixFromArgs(args ...interface{}) ([]byte, error) {
+func (f prefixIndex[P]) PrefixFromArgs(args ...any) ([]byte, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("index supports only a single arg")
 	}
