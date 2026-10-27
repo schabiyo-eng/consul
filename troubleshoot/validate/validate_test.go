@@ -270,7 +270,7 @@ func TestMakeValidate(t *testing.T) {
 
 	cases := map[string]struct {
 		extensionName string
-		arguments     map[string]interface{}
+		arguments     map[string]any
 		expected      *Validate
 		snis          map[string]struct{}
 		ok            bool
@@ -280,7 +280,7 @@ func TestMakeValidate(t *testing.T) {
 			ok:        false,
 		},
 		"with an invalid name": {
-			arguments: map[string]interface{}{
+			arguments: map[string]any{
 				"envoyID": "id",
 			},
 			snis: map[string]struct{}{
@@ -291,7 +291,7 @@ func TestMakeValidate(t *testing.T) {
 			ok:            false,
 		},
 		"empty envoy ID": {
-			arguments: map[string]interface{}{"envoyID": ""},
+			arguments: map[string]any{"envoyID": ""},
 			snis: map[string]struct{}{
 				"sni1": {},
 				"sni2": {},
@@ -299,7 +299,7 @@ func TestMakeValidate(t *testing.T) {
 			ok: false,
 		},
 		"missing snis": {
-			arguments: map[string]interface{}{
+			arguments: map[string]any{
 				"envoyID": "id",
 			},
 			expected: &Validate{
@@ -313,7 +313,7 @@ func TestMakeValidate(t *testing.T) {
 			ok: false,
 		},
 		"valid everything": {
-			arguments: map[string]interface{}{
+			arguments: map[string]any{
 				"envoyID": "id",
 			},
 			snis: map[string]struct{}{
