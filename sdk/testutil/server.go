@@ -123,7 +123,7 @@ type TestServerConfig struct {
 	VerifyIncomingHTTPS bool                   `json:"verify_incoming_https,omitempty"`
 	VerifyOutgoing      bool                   `json:"verify_outgoing,omitempty"`
 	EnableScriptChecks  bool                   `json:"enable_script_checks,omitempty"`
-	Connect             map[string]interface{} `json:"connect,omitempty"`
+	Connect             map[string]any         `json:"connect,omitempty"`
 	EnableDebug         bool                   `json:"enable_debug,omitempty"`
 	SkipLeaveOnInt      bool                   `json:"skip_leave_on_interrupt"`
 	Peering             *TestPeeringConfig     `json:"peering,omitempty"`
@@ -216,9 +216,9 @@ func defaultServerConfig(t TestingTB, consulVersion *version.Version) *TestServe
 		ReadyTimeout:   10 * time.Second,
 		StopTimeout:    10 * time.Second,
 		SkipLeaveOnInt: true,
-		Connect: map[string]interface{}{
+		Connect: map[string]any{
 			"enabled": true,
-			"ca_config": map[string]interface{}{
+			"ca_config": map[string]any{
 				// const TestClusterID causes import cycle so hard code it here.
 				"cluster_id": "11111111-2222-3333-4444-555555555555",
 			},
@@ -570,7 +570,7 @@ func (s *TestServer) WaitForActiveCARoot(t testing.TB) {
 	type rootsResponse struct {
 		ActiveRootID string
 		TrustDomain  string
-		Roots        []interface{}
+		Roots        []any
 	}
 
 	retry.Run(t, func(r *retry.R) {
@@ -639,7 +639,7 @@ func (s *TestServer) WaitForSerfCheck(t testing.TB) {
 		}
 
 		// Watch for the anti-entropy sync to finish.
-		var payload []map[string]interface{}
+		var payload []map[string]any
 		dec := json.NewDecoder(resp.Body)
 		if err := dec.Decode(&payload); err != nil {
 			r.Fatal(err)

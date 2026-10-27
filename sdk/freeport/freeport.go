@@ -404,7 +404,7 @@ func intervalOverlap(min1, max1, min2, max2 int) bool {
 	return min1 <= max2 && min2 <= max1
 }
 
-func logf(severity string, format string, a ...interface{}) {
+func logf(severity string, format string, a ...any) {
 	fmt.Fprintf(os.Stderr, "["+severity+"] freeport: "+format+"\n", a...)
 }
 
@@ -416,7 +416,7 @@ func logf(severity string, format string, a ...interface{}) {
 type TestingT interface {
 	Cleanup(func())
 	Helper()
-	Fatalf(format string, args ...interface{})
+	Fatalf(format string, args ...any)
 	Name() string
 }
 

@@ -219,7 +219,7 @@ func (s *TestServer) get(t testing.TB, path string) *http.Response {
 
 // encodePayload returns a new io.Reader wrapping the encoded contents
 // of the payload, suitable for passing directly to a new request.
-func (s *TestServer) encodePayload(payload interface{}) (io.Reader, error) {
+func (s *TestServer) encodePayload(payload any) (io.Reader, error) {
 	var encoded bytes.Buffer
 	enc := json.NewEncoder(&encoded)
 	if err := enc.Encode(payload); err != nil {
