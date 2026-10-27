@@ -534,7 +534,7 @@ func workloadToCatalogRegistration(
 	if wrk.IsMeshGateway {
 		reg.Service.Kind = api.ServiceKindMeshGateway
 		reg.Service.Proxy = &api.AgentServiceConnectProxyConfig{
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"envoy_gateway_no_default_bind":       true,
 				"envoy_gateway_bind_tagged_addresses": true,
 			},
