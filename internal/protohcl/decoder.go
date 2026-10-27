@@ -5,7 +5,7 @@ package protohcl
 
 import (
 	"fmt"
-	"sort"
+	"slices"
 
 	"github.com/hashicorp/hcl/v2"
 	"github.com/zclconf/go-cty/cty"
@@ -133,14 +133,7 @@ func (bd bodyDecoder) EachField(iter FieldIterator) error {
 		})
 	}
 
-	// Always handle Any fields last, as decoding them may require type information
-	// gathered from other fields (e.g. as in the case of Resource GVKs).
-	sort.Slice(fields, func(a, b int) bool {
-		if isAnyField(fields[b].Desc) && !isAnyField(fields[a].Desc) {
-			return true
-		}
-		return a < b
-	})
+	sortAnyFieldsLast(fields)
 
 	for _, field := range fields {
 		if err := iter.Func(field); err != nil {
@@ -284,4 +277,22 @@ func (od objectDecoder) SkipFields(fields ...string) MessageDecoder {
 	// Note: we rely on the fact od isn't a pointer to copy the struct here.
 	od.skipFields = skip
 	return od
+}
+
+// sortAnyFieldsLast moves Any fields to the end, keeping the relative order
+// of the other fields, because decoding Any fields may require type
+// information gathered from other fields (e.g. as in the case of Resource
+// GVKs).
+func sortAnyFieldsLast(fields []*IterField) {
+	slices.SortStableFunc(fields, func(a, b *IterField) int {
+		aAny, bAny := isAnyField(a.Desc), isAnyField(b.Desc)
+		switch {
+		case aAny == bAny:
+			return 0
+		case aAny:
+			return 1
+		default:
+			return -1
+		}
+	})
 }
