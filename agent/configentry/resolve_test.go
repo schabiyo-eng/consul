@@ -62,7 +62,7 @@ func Test_ComputeResolvedServiceConfig(t *testing.T) {
 				},
 			},
 			want: &structs.ServiceConfigResponse{
-				ProxyConfig: map[string]interface{}{
+				ProxyConfig: map[string]any{
 					"balance_inbound_connections": "exact_balance",
 				},
 			},
@@ -82,7 +82,7 @@ func Test_ComputeResolvedServiceConfig(t *testing.T) {
 				},
 			},
 			want: &structs.ServiceConfigResponse{
-				ProxyConfig: map[string]interface{}{
+				ProxyConfig: map[string]any{
 					"max_inbound_connections": 20,
 				},
 			},
@@ -104,7 +104,7 @@ func Test_ComputeResolvedServiceConfig(t *testing.T) {
 				},
 			},
 			want: &structs.ServiceConfigResponse{
-				ProxyConfig: map[string]interface{}{
+				ProxyConfig: map[string]any{
 					"max_inbound_connections":  20,
 					"local_connect_timeout_ms": 20000,
 					"local_request_timeout_ms": 30000,
@@ -126,7 +126,7 @@ func Test_ComputeResolvedServiceConfig(t *testing.T) {
 				},
 			},
 			want: &structs.ServiceConfigResponse{
-				ProxyConfig: map[string]interface{}{
+				ProxyConfig: map[string]any{
 					"max_request_headers_kb": uint32(96),
 				},
 			},
@@ -151,7 +151,7 @@ func Test_ComputeResolvedServiceConfig(t *testing.T) {
 				UpstreamConfigs: structs.OpaqueUpstreamConfigs{
 					{
 						Upstream: wildcard,
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"mesh_gateway": structs.MeshGatewayConfig{
 								Mode: structs.MeshGatewayModeRemote,
 							},
@@ -159,7 +159,7 @@ func Test_ComputeResolvedServiceConfig(t *testing.T) {
 					},
 					{
 						Upstream: uid,
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"mesh_gateway": remoteMeshGW,
 						},
 					},
@@ -176,7 +176,7 @@ func Test_ComputeResolvedServiceConfig(t *testing.T) {
 				entries: &ResolvedServiceConfigSet{
 					ProxyDefaults: map[string]*structs.ProxyConfigEntry{
 						acl.DefaultEnterpriseMeta().PartitionOrDefault(): {
-							Config: map[string]interface{}{
+							Config: map[string]any{
 								"foo": "bar",
 							},
 							Expose: structs.ExposeConfig{
@@ -201,7 +201,7 @@ func Test_ComputeResolvedServiceConfig(t *testing.T) {
 				},
 			},
 			want: &structs.ServiceConfigResponse{
-				ProxyConfig: map[string]interface{}{
+				ProxyConfig: map[string]any{
 					"foo": "bar",
 				},
 				Expose: structs.ExposeConfig{
@@ -224,13 +224,13 @@ func Test_ComputeResolvedServiceConfig(t *testing.T) {
 				UpstreamConfigs: structs.OpaqueUpstreamConfigs{
 					{
 						Upstream: wildcard,
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"mesh_gateway": remoteMeshGW,
 						},
 					},
 					{
 						Upstream: uid,
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"mesh_gateway": remoteMeshGW,
 						},
 					},
@@ -262,13 +262,13 @@ func Test_ComputeResolvedServiceConfig(t *testing.T) {
 				UpstreamConfigs: structs.OpaqueUpstreamConfigs{
 					{
 						Upstream: wildcard,
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"mesh_gateway": noneMeshGW,
 						},
 					},
 					{
 						Upstream: uid,
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"mesh_gateway": noneMeshGW,
 						},
 					},
@@ -304,7 +304,7 @@ func Test_ComputeResolvedServiceConfig(t *testing.T) {
 				UpstreamConfigs: structs.OpaqueUpstreamConfigs{
 					{
 						Upstream: wildcard,
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"mesh_gateway": localMeshGW, // From proxy-defaults
 							"protocol":     "http",
 						},
@@ -342,14 +342,14 @@ func Test_ComputeResolvedServiceConfig(t *testing.T) {
 				UpstreamConfigs: structs.OpaqueUpstreamConfigs{
 					{
 						Upstream: wildcard,
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							// Wildcard stores the values from UpstreamConfig.Defaults directly
 							"mesh_gateway": remoteMeshGW,
 						},
 					},
 					{
 						Upstream: uid,
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							// Upstream-specific config comes from UpstreamConfig.Defaults
 							"mesh_gateway": remoteMeshGW,
 						},
@@ -383,7 +383,7 @@ func Test_ComputeResolvedServiceConfig(t *testing.T) {
 				UpstreamConfigs: structs.OpaqueUpstreamConfigs{
 					{
 						Upstream: wildcard,
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							// NodeService.Proxy.MeshGateway has a higher precedence than centralized
 							// UpstreamConfig.Defaults, since it's specific to a service instance.
 							"mesh_gateway": remoteMeshGW,
@@ -391,7 +391,7 @@ func Test_ComputeResolvedServiceConfig(t *testing.T) {
 					},
 					{
 						Upstream: uid,
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"mesh_gateway": remoteMeshGW,
 						},
 					},
@@ -428,14 +428,14 @@ func Test_ComputeResolvedServiceConfig(t *testing.T) {
 				UpstreamConfigs: structs.OpaqueUpstreamConfigs{
 					{
 						Upstream: wildcard,
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							// Wildcard stores the values from UpstreamConfig.Defaults directly
 							"mesh_gateway": localMeshGW,
 						},
 					},
 					{
 						Upstream: uid,
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							// UpstreamConfig.Overrides has a higher precedence than UpstreamConfig.Defaults
 							"mesh_gateway": remoteMeshGW,
 						},
@@ -456,7 +456,7 @@ func Test_ComputeResolvedServiceConfig(t *testing.T) {
 								{
 									Name:      "sd-ext",
 									Required:  false,
-									Arguments: map[string]interface{}{"arg": "val"},
+									Arguments: map[string]any{"arg": "val"},
 								},
 							},
 						},
@@ -468,7 +468,7 @@ func Test_ComputeResolvedServiceConfig(t *testing.T) {
 					{
 						Name:      "sd-ext",
 						Required:  false,
-						Arguments: map[string]interface{}{"arg": "val"},
+						Arguments: map[string]any{"arg": "val"},
 					},
 				},
 			},
@@ -486,7 +486,7 @@ func Test_ComputeResolvedServiceConfig(t *testing.T) {
 								{
 									Name:      "pd-ext",
 									Required:  false,
-									Arguments: map[string]interface{}{"arg": "val"},
+									Arguments: map[string]any{"arg": "val"},
 								},
 							},
 						},
@@ -497,7 +497,7 @@ func Test_ComputeResolvedServiceConfig(t *testing.T) {
 								{
 									Name:      "sd-ext",
 									Required:  false,
-									Arguments: map[string]interface{}{"arg": "val"},
+									Arguments: map[string]any{"arg": "val"},
 								},
 							},
 						},
@@ -509,12 +509,12 @@ func Test_ComputeResolvedServiceConfig(t *testing.T) {
 					{
 						Name:      "pd-ext",
 						Required:  false,
-						Arguments: map[string]interface{}{"arg": "val"},
+						Arguments: map[string]any{"arg": "val"},
 					},
 					{
 						Name:      "sd-ext",
 						Required:  false,
-						Arguments: map[string]interface{}{"arg": "val"},
+						Arguments: map[string]any{"arg": "val"},
 					},
 				},
 			},

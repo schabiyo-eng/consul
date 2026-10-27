@@ -27,9 +27,9 @@ func ComputeResolvedServiceConfig(
 	wildcard := structs.PeeredServiceName{
 		ServiceName: structs.NewServiceName(structs.WildcardSpecifier, args.WithWildcardNamespace()),
 	}
-	wildcardUpstreamDefaults := make(map[string]interface{})
+	wildcardUpstreamDefaults := make(map[string]any)
 	// resolvedConfigs stores the opaque config map for each upstream and is keyed on the upstream's ID.
-	resolvedConfigs := make(map[structs.PeeredServiceName]map[string]interface{})
+	resolvedConfigs := make(map[structs.PeeredServiceName]map[string]any)
 
 	// TODO(freddy) Refactor this into smaller set of state store functions
 	// Pass the WatchSet to both the service and proxy config lookups. If either is updated during the
@@ -45,7 +45,7 @@ func ComputeResolvedServiceConfig(
 			return nil, fmt.Errorf("failed to copy global proxy-defaults: %v", err)
 		}
 
-		thisReply.ProxyConfig = mapCopy.(map[string]interface{})
+		thisReply.ProxyConfig = mapCopy.(map[string]any)
 		thisReply.Mode = proxyConf.Mode
 		thisReply.TransparentProxy = proxyConf.TransparentProxy
 		thisReply.MutualTLSMode = proxyConf.MutualTLSMode
@@ -83,7 +83,7 @@ func ComputeResolvedServiceConfig(
 		//   4. For tproxy peering services, they do not honor the proxy-defaults, since they reside in a different cluster.
 		//      The data will come from a separate peerMeta field.
 		// In all of these cases, it is not necessary for the proxy-defaults to exist in the wildcard upstream.
-		parsed, err := structs.ParseUpstreamConfigNoDefaults(mapCopy.(map[string]interface{}))
+		parsed, err := structs.ParseUpstreamConfigNoDefaults(mapCopy.(map[string]any))
 		if err != nil {
 			return nil, fmt.Errorf("failed to parse upstream config map for proxy-defaults: %v", err)
 		}
@@ -124,7 +124,7 @@ func ComputeResolvedServiceConfig(
 		// Populate values for the proxy config map
 		proxyConf := thisReply.ProxyConfig
 		if proxyConf == nil {
-			proxyConf = make(map[string]interface{})
+			proxyConf = make(map[string]any)
 		}
 		if serviceConf.Protocol != "" {
 			proxyConf["protocol"] = serviceConf.Protocol
@@ -234,7 +234,7 @@ func ComputeResolvedServiceConfig(
 	}
 
 	for upstream := range seenUpstreams {
-		resolvedCfg := make(map[string]interface{})
+		resolvedCfg := make(map[string]any)
 
 		// The protocol of an upstream is resolved in this order:
 		// 1. Default protocol from proxy-defaults (how all services should be addressed)
