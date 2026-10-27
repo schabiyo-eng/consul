@@ -33,7 +33,7 @@ func Test_MergeServiceConfig_TransparentProxy(t *testing.T) {
 						OutboundListenerPort: 10101,
 						DialedDirectly:       true,
 					},
-					ProxyConfig: map[string]interface{}{
+					ProxyConfig: map[string]any{
 						"foo": "bar",
 					},
 					MutualTLSMode: structs.MutualTLSModePermissive,
@@ -79,7 +79,7 @@ func Test_MergeServiceConfig_TransparentProxy(t *testing.T) {
 						DialedDirectly:       true,
 					},
 					MutualTLSMode: structs.MutualTLSModePermissive,
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"foo": "bar",
 					},
 					Expose: structs.ExposeConfig{
@@ -176,7 +176,7 @@ func Test_MergeServiceConfig_Extensions(t *testing.T) {
 						{
 							Name:     "ext1",
 							Required: true,
-							Arguments: map[string]interface{}{
+							Arguments: map[string]any{
 								"arg1": "val1",
 							},
 						},
@@ -201,7 +201,7 @@ func Test_MergeServiceConfig_Extensions(t *testing.T) {
 						{
 							Name:     "ext1",
 							Required: true,
-							Arguments: map[string]interface{}{
+							Arguments: map[string]any{
 								"arg1": "val1",
 							},
 						},
@@ -217,7 +217,7 @@ func Test_MergeServiceConfig_Extensions(t *testing.T) {
 						{
 							Name:     "ext1",
 							Required: true,
-							Arguments: map[string]interface{}{
+							Arguments: map[string]any{
 								"arg1": "val1",
 							},
 						},
@@ -233,7 +233,7 @@ func Test_MergeServiceConfig_Extensions(t *testing.T) {
 							{
 								Name:     "existing-ext",
 								Required: true,
-								Arguments: map[string]interface{}{
+								Arguments: map[string]any{
 									"arg1": "val1",
 								},
 							},
@@ -251,7 +251,7 @@ func Test_MergeServiceConfig_Extensions(t *testing.T) {
 						{
 							Name:     "ext1",
 							Required: true,
-							Arguments: map[string]interface{}{
+							Arguments: map[string]any{
 								"arg1": "val1",
 							},
 						},
@@ -508,12 +508,12 @@ func Test_MergeServiceConfig_UpstreamOverrides(t *testing.T) {
 					UpstreamConfigs: structs.OpaqueUpstreamConfigs{
 						{
 							Upstream: zapUpstreamId,
-							Config: map[string]interface{}{
-								"passive_health_check": map[string]interface{}{
+							Config: map[string]any{
+								"passive_health_check": map[string]any{
 									"Interval":    int64(10),
 									"MaxFailures": int64(2),
 								},
-								"mesh_gateway": map[string]interface{}{
+								"mesh_gateway": map[string]any{
 									"Mode": "local",
 								},
 								"protocol": "grpc",
@@ -532,8 +532,8 @@ func Test_MergeServiceConfig_UpstreamOverrides(t *testing.T) {
 								DestinationNamespace: "default",
 								DestinationPartition: "default",
 								DestinationName:      "zap",
-								Config: map[string]interface{}{
-									"passive_health_check": map[string]interface{}{
+								Config: map[string]any{
+									"passive_health_check": map[string]any{
 										"Interval":    int64(20),
 										"MaxFailures": int64(4),
 									},
@@ -554,8 +554,8 @@ func Test_MergeServiceConfig_UpstreamOverrides(t *testing.T) {
 							DestinationNamespace: "default",
 							DestinationPartition: "default",
 							DestinationName:      "zap",
-							Config: map[string]interface{}{
-								"passive_health_check": map[string]interface{}{
+							Config: map[string]any{
+								"passive_health_check": map[string]any{
 									"Interval":    int64(20),
 									"MaxFailures": int64(4),
 								},
@@ -576,7 +576,7 @@ func Test_MergeServiceConfig_UpstreamOverrides(t *testing.T) {
 					UpstreamConfigs: structs.OpaqueUpstreamConfigs{
 						{
 							Upstream: zapUpstreamId,
-							Config: map[string]interface{}{
+							Config: map[string]any{
 								"protocol": "grpc",
 							},
 						},
@@ -599,7 +599,7 @@ func Test_MergeServiceConfig_UpstreamOverrides(t *testing.T) {
 								DestinationPartition: "default",
 								DestinationName:      "zip",
 								LocalBindPort:        8080,
-								Config: map[string]interface{}{
+								Config: map[string]any{
 									"protocol": "http",
 								},
 							},
@@ -624,7 +624,7 @@ func Test_MergeServiceConfig_UpstreamOverrides(t *testing.T) {
 							DestinationPartition: "default",
 							DestinationName:      "zip",
 							LocalBindPort:        8080,
-							Config: map[string]interface{}{
+							Config: map[string]any{
 								"protocol": "http",
 							},
 						},
@@ -632,7 +632,7 @@ func Test_MergeServiceConfig_UpstreamOverrides(t *testing.T) {
 							DestinationNamespace: "default",
 							DestinationPartition: "default",
 							DestinationName:      "zap",
-							Config: map[string]interface{}{
+							Config: map[string]any{
 								"protocol": "grpc",
 							},
 							CentrallyConfigured: true,
@@ -648,7 +648,7 @@ func Test_MergeServiceConfig_UpstreamOverrides(t *testing.T) {
 					UpstreamConfigs: structs.OpaqueUpstreamConfigs{
 						{
 							Upstream: zapUpstreamId,
-							Config: map[string]interface{}{
+							Config: map[string]any{
 								"protocol": "grpc",
 							},
 						},
@@ -667,7 +667,7 @@ func Test_MergeServiceConfig_UpstreamOverrides(t *testing.T) {
 								DestinationPartition: "default",
 								DestinationName:      "zip",
 								LocalBindPort:        8080,
-								Config: map[string]interface{}{
+								Config: map[string]any{
 									"protocol": "http",
 								},
 							},
@@ -688,7 +688,7 @@ func Test_MergeServiceConfig_UpstreamOverrides(t *testing.T) {
 							DestinationPartition: "default",
 							DestinationName:      "zip",
 							LocalBindPort:        8080,
-							Config: map[string]interface{}{
+							Config: map[string]any{
 								"protocol": "http",
 							},
 						},
@@ -703,8 +703,8 @@ func Test_MergeServiceConfig_UpstreamOverrides(t *testing.T) {
 					UpstreamConfigs: structs.OpaqueUpstreamConfigs{
 						{
 							Upstream: zapUpstreamId,
-							Config: map[string]interface{}{
-								"mesh_gateway": map[string]interface{}{
+							Config: map[string]any{
+								"mesh_gateway": map[string]any{
 									"Mode": "local",
 								},
 							},
@@ -744,7 +744,7 @@ func Test_MergeServiceConfig_UpstreamOverrides(t *testing.T) {
 							DestinationNamespace: "default",
 							DestinationPartition: "default",
 							DestinationName:      "zap",
-							Config:               map[string]interface{}{},
+							Config:               map[string]any{},
 							MeshGateway: structs.MeshGatewayConfig{
 								Mode: structs.MeshGatewayModeLocal,
 							},
@@ -760,8 +760,8 @@ func Test_MergeServiceConfig_UpstreamOverrides(t *testing.T) {
 					UpstreamConfigs: structs.OpaqueUpstreamConfigs{
 						{
 							Upstream: zapUpstreamId,
-							Config: map[string]interface{}{
-								"mesh_gateway": map[string]interface{}{
+							Config: map[string]any{
+								"mesh_gateway": map[string]any{
 									"Mode": "local",
 								},
 							},
@@ -804,7 +804,7 @@ func Test_MergeServiceConfig_UpstreamOverrides(t *testing.T) {
 							DestinationNamespace: "default",
 							DestinationPartition: "default",
 							DestinationName:      "zap",
-							Config:               map[string]interface{}{},
+							Config:               map[string]any{},
 							MeshGateway: structs.MeshGatewayConfig{
 								Mode: structs.MeshGatewayModeNone,
 							},
@@ -820,13 +820,13 @@ func Test_MergeServiceConfig_UpstreamOverrides(t *testing.T) {
 					UpstreamConfigs: structs.OpaqueUpstreamConfigs{
 						{
 							Upstream: zapUpstreamId,
-							Config: map[string]interface{}{
+							Config: map[string]any{
 								"connect_timeout_ms": 2222,
 							},
 						},
 						{
 							Upstream: zapPeeredUpstreamId,
-							Config: map[string]interface{}{
+							Config: map[string]any{
 								"connect_timeout_ms": 3333,
 							},
 						},
@@ -855,14 +855,14 @@ func Test_MergeServiceConfig_UpstreamOverrides(t *testing.T) {
 					Upstreams: structs.Upstreams{
 						structs.Upstream{
 							DestinationName: "zap",
-							Config: map[string]interface{}{
+							Config: map[string]any{
 								"connect_timeout_ms": 2222,
 							},
 						},
 						structs.Upstream{
 							DestinationPeer: "some-peer",
 							DestinationName: "zap",
-							Config: map[string]interface{}{
+							Config: map[string]any{
 								"connect_timeout_ms": 3333,
 							},
 						},
@@ -877,7 +877,7 @@ func Test_MergeServiceConfig_UpstreamOverrides(t *testing.T) {
 					UpstreamConfigs: structs.OpaqueUpstreamConfigs{
 						{
 							Upstream: zapPeeredUpstreamId,
-							Config: map[string]interface{}{
+							Config: map[string]any{
 								"protocol": "http",
 							},
 						},
@@ -891,7 +891,7 @@ func Test_MergeServiceConfig_UpstreamOverrides(t *testing.T) {
 							structs.Upstream{
 								DestinationPeer: "some-peer",
 								DestinationName: "zap",
-								Config: map[string]interface{}{
+								Config: map[string]any{
 									"protocol": "tcp",
 								},
 							},
@@ -907,7 +907,7 @@ func Test_MergeServiceConfig_UpstreamOverrides(t *testing.T) {
 						structs.Upstream{
 							DestinationPeer: "some-peer",
 							DestinationName: "zap",
-							Config: map[string]interface{}{
+							Config: map[string]any{
 								"protocol": "tcp",
 							},
 						},
@@ -922,7 +922,7 @@ func Test_MergeServiceConfig_UpstreamOverrides(t *testing.T) {
 					UpstreamConfigs: structs.OpaqueUpstreamConfigs{
 						{
 							Upstream: zapPeeredUpstreamId,
-							Config: map[string]interface{}{
+							Config: map[string]any{
 								"protocol": "http",
 							},
 						},
@@ -936,7 +936,7 @@ func Test_MergeServiceConfig_UpstreamOverrides(t *testing.T) {
 							structs.Upstream{
 								DestinationPeer: "some-peer",
 								DestinationName: "zap",
-								Config:          map[string]interface{}{},
+								Config:          map[string]any{},
 							},
 						},
 					},
@@ -950,7 +950,7 @@ func Test_MergeServiceConfig_UpstreamOverrides(t *testing.T) {
 						structs.Upstream{
 							DestinationPeer: "some-peer",
 							DestinationName: "zap",
-							Config:          map[string]interface{}{},
+							Config:          map[string]any{},
 						},
 					},
 				},
@@ -1032,7 +1032,7 @@ func Test_MergeServiceConfig_RateLimit(t *testing.T) {
 					{
 						Name:     "existing-ext",
 						Required: true,
-						Arguments: map[string]interface{}{
+						Arguments: map[string]any{
 							"arg1": "val1",
 						},
 					},
@@ -1058,7 +1058,7 @@ func Test_MergeServiceConfig_RateLimit(t *testing.T) {
 							{
 								Name:     "existing-ext",
 								Required: true,
-								Arguments: map[string]interface{}{
+								Arguments: map[string]any{
 									"arg1": "val1",
 								},
 							},

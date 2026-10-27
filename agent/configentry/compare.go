@@ -4,33 +4,33 @@
 package configentry
 
 import (
-	"sort"
+	"cmp"
+	"slices"
 
 	"github.com/hashicorp/consul/agent/structs"
 )
 
 func SortSlice(configs []structs.ConfigEntry) {
-	sort.SliceStable(configs, func(i, j int) bool {
-		return Less(configs[i], configs[j])
-	})
+	slices.SortStableFunc(configs, Compare)
 }
 
 func Less(first structs.ConfigEntry, second structs.ConfigEntry) bool {
-	if first.GetKind() < second.GetKind() {
-		return true
-	}
-	if first.GetKind() > second.GetKind() {
-		return false
+	return Compare(first, second) < 0
+}
+
+func Compare(first structs.ConfigEntry, second structs.ConfigEntry) int {
+	if c := cmp.Compare(first.GetKind(), second.GetKind()); c != 0 {
+		return c
 	}
 
 	if first.GetEnterpriseMeta().LessThan(second.GetEnterpriseMeta()) {
-		return true
+		return -1
 	}
 	if second.GetEnterpriseMeta().LessThan(first.GetEnterpriseMeta()) {
-		return false
+		return 1
 	}
 
-	return first.GetName() < second.GetName()
+	return cmp.Compare(first.GetName(), second.GetName())
 }
 
 func EqualID(e1, e2 structs.ConfigEntry) bool {
