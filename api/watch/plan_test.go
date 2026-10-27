@@ -12,8 +12,8 @@ func init() {
 	watchFuncFactory["noop"] = noopWatch
 }
 
-func noopWatch(params map[string]interface{}) (WatcherFunc, error) {
-	fn := func(p *Plan) (BlockingParamVal, interface{}, error) {
+func noopWatch(params map[string]any) (WatcherFunc, error) {
+	fn := func(p *Plan) (BlockingParamVal, any, error) {
 		idx := WaitIndexVal(0)
 		if i, ok := p.lastParamVal.(WaitIndexVal); ok {
 			idx = i
@@ -38,7 +38,7 @@ func TestRun_Stop(t *testing.T) {
 
 	var expect uint64 = 1
 	doneCh := make(chan struct{})
-	plan.Handler = func(idx uint64, val interface{}) {
+	plan.Handler = func(idx uint64, val any) {
 		if idx != expect {
 			t.Fatalf("Bad: %d %d", expect, idx)
 		}
@@ -85,7 +85,7 @@ func TestRun_Stop_Hybrid(t *testing.T) {
 
 	var expect uint64 = 1
 	doneCh := make(chan struct{})
-	plan.HybridHandler = func(blockParamVal BlockingParamVal, val interface{}) {
+	plan.HybridHandler = func(blockParamVal BlockingParamVal, val any) {
 		idxVal, ok := blockParamVal.(WaitIndexVal)
 		if !ok {
 			t.Fatalf("expected index-based watch")

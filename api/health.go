@@ -120,9 +120,9 @@ func (d *HealthCheckDefinition) MarshalJSON() ([]byte, error) {
 func (t *HealthCheckDefinition) UnmarshalJSON(data []byte) (err error) {
 	type Alias HealthCheckDefinition
 	aux := &struct {
-		IntervalDuration                       interface{}
-		TimeoutDuration                        interface{}
-		DeregisterCriticalServiceAfterDuration interface{}
+		IntervalDuration                       any
+		TimeoutDuration                        any
+		DeregisterCriticalServiceAfterDuration any
 		*Alias
 	}{
 		Alias: (*Alias)(t),

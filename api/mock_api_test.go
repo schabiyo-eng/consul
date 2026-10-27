@@ -38,14 +38,14 @@ func setupMockAPI(t *testing.T) (*mockAPI, *Client) {
 }
 
 func (m *mockAPI) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	var body interface{}
+	var body any
 
 	if r.Body != nil {
 		bodyBytes, err := io.ReadAll(r.Body)
 		if err == nil && len(bodyBytes) > 0 {
 			body = bodyBytes
 
-			var bodyMap map[string]interface{}
+			var bodyMap map[string]any
 			if err := json.Unmarshal(bodyBytes, &bodyMap); err != nil {
 				body = bodyMap
 			}
@@ -60,11 +60,11 @@ func (m *mockAPI) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (m *mockAPI) static(method string, path string, body interface{}) *mock.Call {
+func (m *mockAPI) static(method string, path string, body any) *mock.Call {
 	return m.On("ServeHTTP", method, path, body)
 }
 
-func (m *mockAPI) withReply(method, path string, body interface{}, status int, reply interface{}) *mock.Call {
+func (m *mockAPI) withReply(method, path string, body any, status int, reply any) *mock.Call {
 	return m.static(method, path, body).Return(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(status)
 

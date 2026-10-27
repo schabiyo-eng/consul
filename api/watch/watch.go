@@ -27,7 +27,7 @@ type Plan struct {
 	Token       string
 	Type        string
 	HandlerType string
-	Exempt      map[string]interface{}
+	Exempt      map[string]any
 
 	Watcher WatcherFunc
 	// Handler is kept for backward compatibility but only supports watches based
@@ -42,7 +42,7 @@ type Plan struct {
 	address      string
 	client       *consulapi.Client
 	lastParamVal BlockingParamVal
-	lastResult   interface{}
+	lastResult   any
 
 	stop       bool
 	stopCh     chan struct{}
@@ -121,28 +121,28 @@ func (h WaitHashVal) Next(previous BlockingParamVal) BlockingParamVal {
 }
 
 // WatcherFunc is used to watch for a diff.
-type WatcherFunc func(*Plan) (BlockingParamVal, interface{}, error)
+type WatcherFunc func(*Plan) (BlockingParamVal, any, error)
 
 // HandlerFunc is used to handle new data. It only works for index-based watches
 // (which is almost all end points currently) and is kept for backwards
 // compatibility until more places can make use of hash-based watches too.
-type HandlerFunc func(uint64, interface{})
+type HandlerFunc func(uint64, any)
 
 // HybridHandlerFunc is used to handle new data. It can support either
 // index-based or hash-based watches via the BlockingParamVal.
-type HybridHandlerFunc func(BlockingParamVal, interface{})
+type HybridHandlerFunc func(BlockingParamVal, any)
 
 // Parse takes a watch query and compiles it into a WatchPlan or an error
-func Parse(params map[string]interface{}) (*Plan, error) {
+func Parse(params map[string]any) (*Plan, error) {
 	return ParseExempt(params, nil)
 }
 
 // ParseExempt takes a watch query and compiles it into a WatchPlan or an error
 // Any exempt parameters are stored in the Exempt map
-func ParseExempt(params map[string]interface{}, exempt []string) (*Plan, error) {
+func ParseExempt(params map[string]any, exempt []string) (*Plan, error) {
 	plan := &Plan{
 		stopCh: make(chan struct{}),
-		Exempt: make(map[string]interface{}),
+		Exempt: make(map[string]any),
 	}
 
 	// Parse the generic parameters
@@ -216,7 +216,7 @@ func ParseExempt(params map[string]interface{}, exempt []string) (*Plan, error) 
 }
 
 // assignValue is used to extract a value ensuring it is a string
-func assignValue(params map[string]interface{}, name string, out *string) error {
+func assignValue(params map[string]any, name string, out *string) error {
 	if raw, ok := params[name]; ok {
 		val, ok := raw.(string)
 		if !ok {
@@ -229,7 +229,7 @@ func assignValue(params map[string]interface{}, name string, out *string) error 
 }
 
 // assignValueBool is used to extract a value ensuring it is a bool
-func assignValueBool(params map[string]interface{}, name string, out *bool) error {
+func assignValueBool(params map[string]any, name string, out *bool) error {
 	if raw, ok := params[name]; ok {
 		val, ok := raw.(bool)
 		if !ok {
@@ -242,7 +242,7 @@ func assignValueBool(params map[string]interface{}, name string, out *bool) erro
 }
 
 // assignValueStringSlice is used to extract a value ensuring it is either a string or a slice of strings
-func assignValueStringSlice(params map[string]interface{}, name string, out *[]string) error {
+func assignValueStringSlice(params map[string]any, name string, out *[]string) error {
 	if raw, ok := params[name]; ok {
 		var tmp []string
 		switch raw := raw.(type) {
@@ -253,7 +253,7 @@ func assignValueStringSlice(params map[string]interface{}, name string, out *[]s
 			l := len(raw)
 			tmp = make([]string, l)
 			copy(tmp, raw)
-		case []interface{}:
+		case []any:
 			l := len(raw)
 			tmp = make([]string, l)
 			for i, v := range raw {
@@ -273,7 +273,7 @@ func assignValueStringSlice(params map[string]interface{}, name string, out *[]s
 }
 
 // Parse the 'http_handler_config' parameters
-func parseHttpHandlerConfig(configParams interface{}) (*HttpHandlerConfig, error) {
+func parseHttpHandlerConfig(configParams any) (*HttpHandlerConfig, error) {
 	var config HttpHandlerConfig
 	if err := mapstructure.Decode(configParams, &config); err != nil {
 		return nil, err

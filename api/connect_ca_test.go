@@ -18,7 +18,7 @@ func TestAPI_ConnectCARoots_empty(t *testing.T) {
 
 	c, s := makeClientWithConfig(t, nil, func(c *testutil.TestServerConfig) {
 		// Explicitly disable Connect to prevent CA being bootstrapped
-		c.Connect = map[string]interface{}{
+		c.Connect = map[string]any{
 			"enabled": false,
 		}
 	})

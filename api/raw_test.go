@@ -51,7 +51,7 @@ func TestAPI_RawV2ExportedServices(t *testing.T) {
 
 	qOpts := &QueryOptions{Datacenter: "dc1"}
 
-	var out map[string]interface{}
+	var out map[string]any
 	_, err = c.Raw().Query(endpoint, &out, qOpts)
 	require.NoError(t, err)
 
@@ -65,7 +65,7 @@ func TestAPI_RawV2ExportedServices(t *testing.T) {
 	_, err = c.Raw().Delete(endpoint, qOpts)
 	require.NoError(t, err)
 
-	out = make(map[string]interface{})
+	out = make(map[string]any)
 	_, err = c.Raw().Query(endpoint, &out, qOpts)
 	require.ErrorContains(t, err, "404")
 }

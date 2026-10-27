@@ -1550,7 +1550,7 @@ func TestAPI_AgentMonitorJSON(t *testing.T) {
 		// Wait for the first log message and validate it is valid JSON
 		select {
 		case log := <-logCh:
-			var output map[string]interface{}
+			var output map[string]any
 			if err := json.Unmarshal([]byte(log), &output); err != nil {
 				r.Fatalf("log output was not JSON: %q", log)
 			}
@@ -1825,7 +1825,7 @@ func TestAPI_AgentConnectCARoots_empty(t *testing.T) {
 
 	c, s := makeClientWithConfig(t, nil, func(c *testutil.TestServerConfig) {
 		// Explicitly disable Connect to prevent CA being bootstrapped
-		c.Connect = map[string]interface{}{
+		c.Connect = map[string]any{
 			"enabled": false,
 		}
 	})
@@ -2034,7 +2034,7 @@ func TestAgentService_JSON_OmitTaggedAdddresses(t *testing.T) {
 			t.Parallel()
 			data, err := json.Marshal(as)
 			require.NoError(t, err)
-			var raw map[string]interface{}
+			var raw map[string]any
 			err = json.Unmarshal(data, &raw)
 			require.NoError(t, err)
 			require.NotContains(t, raw, "TaggedAddresses")
@@ -2056,7 +2056,7 @@ func TestAgentService_Register_MeshGateway(t *testing.T) {
 		Address: "10.1.2.3",
 		Port:    8443,
 		Proxy: &AgentServiceConnectProxyConfig{
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": "bar",
 			},
 		},
@@ -2087,7 +2087,7 @@ func TestAgentService_Register_TerminatingGateway(t *testing.T) {
 		Address: "10.1.2.3",
 		Port:    8443,
 		Proxy: &AgentServiceConnectProxyConfig{
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": "bar",
 			},
 		},

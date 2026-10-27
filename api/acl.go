@@ -308,7 +308,7 @@ type ACLAuthMethod struct {
 	// Configuration is arbitrary configuration for the auth method. This
 	// should only contain primitive values and containers (such as lists and
 	// maps).
-	Config map[string]interface{}
+	Config map[string]any
 
 	CreateIndex uint64
 	ModifyIndex uint64
@@ -449,7 +449,7 @@ func (m *ACLAuthMethodListEntry) UnmarshalJSON(data []byte) error {
 
 // ParseKubernetesAuthMethodConfig takes a raw config map and returns a parsed
 // KubernetesAuthMethodConfig.
-func ParseKubernetesAuthMethodConfig(raw map[string]interface{}) (*KubernetesAuthMethodConfig, error) {
+func ParseKubernetesAuthMethodConfig(raw map[string]any) (*KubernetesAuthMethodConfig, error) {
 	var config KubernetesAuthMethodConfig
 	decodeConf := &mapstructure.DecoderConfig{
 		Result:           &config,
@@ -478,8 +478,8 @@ type KubernetesAuthMethodConfig struct {
 
 // RenderToConfig converts this into a map[string]interface{} suitable for use
 // in the ACLAuthMethod.Config field.
-func (c *KubernetesAuthMethodConfig) RenderToConfig() map[string]interface{} {
-	return map[string]interface{}{
+func (c *KubernetesAuthMethodConfig) RenderToConfig() map[string]any {
+	return map[string]any{
 		"Host":              c.Host,
 		"CACert":            c.CACert,
 		"ServiceAccountJWT": c.ServiceAccountJWT,
@@ -520,8 +520,8 @@ type OIDCAuthMethodConfig struct {
 
 // RenderToConfig converts this into a map[string]interface{} suitable for use
 // in the ACLAuthMethod.Config field.
-func (c *OIDCAuthMethodConfig) RenderToConfig() map[string]interface{} {
-	return map[string]interface{}{
+func (c *OIDCAuthMethodConfig) RenderToConfig() map[string]any {
+	return map[string]any{
 		// common for type=oidc and type=jwt
 		"JWTSupportedAlgs":    c.JWTSupportedAlgs,
 		"BoundAudiences":      c.BoundAudiences,

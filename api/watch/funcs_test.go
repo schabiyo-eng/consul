@@ -116,7 +116,7 @@ func TestKeyWatch(t *testing.T) {
 	)
 
 	plan := mustParse(t, `{"type":"key", "key":"foo/bar/baz"}`)
-	plan.Handler = func(idx uint64, raw interface{}) {
+	plan.Handler = func(idx uint64, raw any) {
 		var v *api.KVPair
 		if raw == nil { // nil is a valid return value
 			v = nil
@@ -183,7 +183,7 @@ func TestKeyWatch_With_PrefixDelete(t *testing.T) {
 	)
 
 	plan := mustParse(t, `{"type":"key", "key":"foo/bar/baz"}`)
-	plan.Handler = func(idx uint64, raw interface{}) {
+	plan.Handler = func(idx uint64, raw any) {
 		var v *api.KVPair
 		if raw == nil { // nil is a valid return value
 			v = nil
@@ -251,7 +251,7 @@ func TestKeyPrefixWatch(t *testing.T) {
 	)
 
 	plan := mustParse(t, `{"type":"keyprefix", "prefix":"foo/"}`)
-	plan.Handler = func(idx uint64, raw interface{}) {
+	plan.Handler = func(idx uint64, raw any) {
 		if raw == nil {
 			return // ignore
 		}
@@ -317,7 +317,7 @@ func TestServicesWatch(t *testing.T) {
 	)
 
 	plan := mustParse(t, `{"type":"services"}`)
-	plan.Handler = func(idx uint64, raw interface{}) {
+	plan.Handler = func(idx uint64, raw any) {
 		if raw == nil {
 			return // ignore
 		}
@@ -391,7 +391,7 @@ func TestServicesWatch_Filter(t *testing.T) {
 	)
 
 	plan := mustParse(t, `{"type":"services", "filter":"b in ServiceTags and a in ServiceTags"}`)
-	plan.Handler = func(idx uint64, raw interface{}) {
+	plan.Handler = func(idx uint64, raw any) {
 		if raw == nil {
 			return // ignore
 		}
@@ -467,7 +467,7 @@ func TestNodesWatch(t *testing.T) {
 	)
 
 	plan := mustParse(t, `{"type":"nodes"}`)
-	plan.Handler = func(idx uint64, raw interface{}) {
+	plan.Handler = func(idx uint64, raw any) {
 		if raw == nil {
 			return // ignore
 		}
@@ -542,7 +542,7 @@ func TestNodesWatch_Filter(t *testing.T) {
 	)
 
 	plan := mustParse(t, `{"type":"nodes", "filter":"Node == foo"}`)
-	plan.Handler = func(idx uint64, raw interface{}) {
+	plan.Handler = func(idx uint64, raw any) {
 		if raw == nil {
 			return // ignore
 		}
@@ -618,7 +618,7 @@ func TestServiceWatch(t *testing.T) {
 	)
 
 	plan := mustParse(t, `{"type":"service", "service":"foo", "tag":"bar", "passingonly":true}`)
-	plan.Handler = func(idx uint64, raw interface{}) {
+	plan.Handler = func(idx uint64, raw any) {
 		if raw == nil {
 			return // ignore
 		}
@@ -688,7 +688,7 @@ func TestServiceMultipleTagsWatch(t *testing.T) {
 	)
 
 	plan := mustParse(t, `{"type":"service", "service":"foo", "tag":["bar","buzz"], "passingonly":true}`)
-	plan.Handler = func(idx uint64, raw interface{}) {
+	plan.Handler = func(idx uint64, raw any) {
 		if raw == nil {
 			return // ignore
 		}
@@ -781,7 +781,7 @@ func TestServiceWatch_Filter(t *testing.T) {
 	)
 
 	plan := mustParse(t, `{"type":"service", "service":"foo", "filter":"bar in Service.Tags and buzz in Service.Tags"}`)
-	plan.Handler = func(idx uint64, raw interface{}) {
+	plan.Handler = func(idx uint64, raw any) {
 		if raw == nil {
 			return // ignore
 		}
@@ -869,7 +869,7 @@ func TestChecksWatch_State(t *testing.T) {
 	)
 
 	plan := mustParse(t, `{"type":"checks", "state":"warning"}`)
-	plan.Handler = func(idx uint64, raw interface{}) {
+	plan.Handler = func(idx uint64, raw any) {
 		if raw == nil {
 			return // ignore
 		}
@@ -945,7 +945,7 @@ func TestChecksWatch_Service(t *testing.T) {
 	)
 
 	plan := mustParse(t, `{"type":"checks", "service":"foobar"}`)
-	plan.Handler = func(idx uint64, raw interface{}) {
+	plan.Handler = func(idx uint64, raw any) {
 		if raw == nil {
 			return // ignore
 		}
@@ -1025,7 +1025,7 @@ func TestChecksWatch_Service_Filter(t *testing.T) {
 	)
 
 	plan := mustParse(t, `{"type":"checks", "filter":"b in ServiceTags and a in ServiceTags"}`)
-	plan.Handler = func(idx uint64, raw interface{}) {
+	plan.Handler = func(idx uint64, raw any) {
 		if raw == nil {
 			return // ignore
 		}
@@ -1105,7 +1105,7 @@ func TestChecksWatch_Filter(t *testing.T) {
 	)
 
 	plan := mustParse(t, `{"type":"checks", "filter":"b in ServiceTags and a in ServiceTags"}`)
-	plan.Handler = func(idx uint64, raw interface{}) {
+	plan.Handler = func(idx uint64, raw any) {
 		if raw == nil {
 			return // ignore
 		}
@@ -1209,7 +1209,7 @@ func TestChecksWatch_Filter_by_ServiceNameStatus(t *testing.T) {
 	)
 
 	plan := mustParse(t, `{"type":"checks", "filter":"ServiceName == bar and Status == critical"}`)
-	plan.Handler = func(idx uint64, raw interface{}) {
+	plan.Handler = func(idx uint64, raw any) {
 		if raw == nil {
 			return // ignore
 		}
@@ -1311,7 +1311,7 @@ func TestEventWatch(t *testing.T) {
 	)
 
 	plan := mustParse(t, `{"type":"event", "name": "foo"}`)
-	plan.Handler = func(idx uint64, raw interface{}) {
+	plan.Handler = func(idx uint64, raw any) {
 		if raw == nil {
 			return
 		}
@@ -1375,7 +1375,7 @@ func TestConnectRootsWatch(t *testing.T) {
 	)
 
 	plan := mustParse(t, `{"type":"connect_roots"}`)
-	plan.Handler = func(idx uint64, raw interface{}) {
+	plan.Handler = func(idx uint64, raw any) {
 		if raw == nil {
 			return // ignore
 		}
@@ -1451,7 +1451,7 @@ func TestConnectLeafWatch(t *testing.T) {
 	)
 
 	plan := mustParse(t, `{"type":"connect_leaf", "service":"web"}`)
-	plan.Handler = func(idx uint64, raw interface{}) {
+	plan.Handler = func(idx uint64, raw any) {
 		if raw == nil {
 			return // ignore
 		}
@@ -1533,7 +1533,7 @@ func TestAgentServiceWatch(t *testing.T) {
 	require.NoError(t, err)
 
 	plan := mustParse(t, `{"type":"agent_service", "service_id":"web"}`)
-	plan.HybridHandler = func(blockParamVal watch.BlockingParamVal, raw interface{}) {
+	plan.HybridHandler = func(blockParamVal watch.BlockingParamVal, raw any) {
 		if raw == nil {
 			return // ignore
 		}
@@ -1584,7 +1584,7 @@ func TestAgentServiceWatch(t *testing.T) {
 
 func mustParse(t *testing.T, q string) *watch.Plan {
 	t.Helper()
-	var params map[string]interface{}
+	var params map[string]any
 	if err := json.Unmarshal([]byte(q), &params); err != nil {
 		t.Fatal(err)
 	}

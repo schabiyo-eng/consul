@@ -281,9 +281,9 @@ type GlobalRegistryKindServiceNameRecord struct {
 }
 
 type GlobalRegistryDeltaExport struct {
-	Action string      `json:"action"`
-	Table  string      `json:"table"`
-	Record interface{} `json:"record"`
+	Action string `json:"action"`
+	Table  string `json:"table"`
+	Record any    `json:"record"`
 }
 
 // GlobalRegistryAggregates holds the computed aggregate fields that are
