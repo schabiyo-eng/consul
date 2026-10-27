@@ -65,7 +65,7 @@ func RotateConnectCARoot(t *testing.T, client *api.Client) {
 	require.NoError(t, err, "could not read connect CA config")
 
 	if cfg.Config == nil {
-		cfg.Config = map[string]interface{}{}
+		cfg.Config = map[string]any{}
 	}
 
 	// Toggle the key type so the CA is guaranteed to produce a new root.

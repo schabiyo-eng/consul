@@ -66,7 +66,7 @@ func GenerateKey() (pub, priv string, err error) {
 //
 // If no private key is provided, it will generate a private key. These can
 // be retrieved via the SigningKeys() method.
-func SignJWT(privKey string, claims jwt.Claims, privateClaims interface{}) (string, error) {
+func SignJWT(privKey string, claims jwt.Claims, privateClaims any) (string, error) {
 	var err error
 	if privKey == "" {
 		_, privKey, err = GenerateKey()

@@ -122,7 +122,7 @@ func TestPeering_RotateServerAndCAThenFail_(t *testing.T) {
 
 		req := &api.CAConfig{
 			Provider: "consul",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"PrivateKeyType": "ec",
 				"PrivateKeyBits": 384,
 			},

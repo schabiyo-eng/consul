@@ -359,7 +359,7 @@ func setup(t *testing.T) (*libcluster.Cluster, libservice.Service, libservice.Se
 	err = cluster.ConfigEntryWrite(&api.ProxyConfigEntry{
 		Kind: api.ProxyDefaults,
 		Name: "global",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "http",
 		},
 	})

@@ -168,7 +168,7 @@ func configureProxyDefaults(t *testing.T, cluster *libcluster.Cluster) {
 	require.NoError(t, cluster.ConfigEntryWrite(&api.ProxyConfigEntry{
 		Kind: api.ProxyDefaults,
 		Name: api.ProxyConfigGlobal,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "http",
 		},
 	}))

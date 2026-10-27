@@ -103,10 +103,10 @@ func testSnapShotRestoreForLogStore(t *testing.T, logStore libcluster.LogStore) 
 	retry.Run(t, func(r *retry.R) {
 		self, err := lc.Agent().Self()
 		require.NoError(r, err)
-		LeaderLogIndex := self["Stats"]["raft"].(map[string]interface{})["last_log_index"].(string)
+		LeaderLogIndex := self["Stats"]["raft"].(map[string]any)["last_log_index"].(string)
 		self, err = fc.Agent().Self()
 		require.NoError(r, err)
-		followerLogIndex := self["Stats"]["raft"].(map[string]interface{})["last_log_index"].(string)
+		followerLogIndex := self["Stats"]["raft"].(map[string]any)["last_log_index"].(string)
 		require.Equal(r, LeaderLogIndex, followerLogIndex)
 	})
 

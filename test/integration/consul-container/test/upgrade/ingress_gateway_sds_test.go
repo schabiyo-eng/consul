@@ -143,7 +143,7 @@ func TestIngressGateway_SDS_UpgradeToTarget_fromLatest(t *testing.T) {
 			Kind: api.ServiceKindIngressGateway,
 			Name: nameIG,
 			Proxy: &api.AgentServiceConnectProxyConfig{
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					// LOGICAL_DNS because we need to use a hostname
 					// WARNING: this JSON is *very* sensitive and not well-checked.
 					// bad values can lead to envoy not bootstrapping properly
