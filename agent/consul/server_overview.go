@@ -4,9 +4,10 @@
 package consul
 
 import (
+	"cmp"
 	"context"
 	"fmt"
-	"sort"
+	"slices"
 	"sync"
 	"time"
 
@@ -173,20 +174,18 @@ func getCatalogOverview(catalog *structs.CatalogContents) *structs.CatalogSummar
 		summary.Checks = append(summary.Checks, healthSummary)
 	}
 
-	summarySort := func(slice []structs.HealthSummary) func(int, int) bool {
-		return func(i, j int) bool {
-			if slice[i].PartitionOrEmpty() < slice[j].PartitionOrEmpty() {
-				return true
-			}
-			if slice[i].NamespaceOrEmpty() < slice[j].NamespaceOrEmpty() {
-				return true
-			}
-			return slice[i].Name < slice[j].Name
+	summarySort := func(a, b structs.HealthSummary) int {
+		if c := cmp.Compare(a.PartitionOrEmpty(), b.PartitionOrEmpty()); c != 0 {
+			return c
 		}
+		if c := cmp.Compare(a.NamespaceOrEmpty(), b.NamespaceOrEmpty()); c != 0 {
+			return c
+		}
+		return cmp.Compare(a.Name, b.Name)
 	}
-	sort.Slice(summary.Nodes, summarySort(summary.Nodes))
-	sort.Slice(summary.Services, summarySort(summary.Services))
-	sort.Slice(summary.Checks, summarySort(summary.Checks))
+	slices.SortFunc(summary.Nodes, summarySort)
+	slices.SortFunc(summary.Services, summarySort)
+	slices.SortFunc(summary.Checks, summarySort)
 
 	return summary
 }
