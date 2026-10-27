@@ -5,7 +5,6 @@ package xdscommon
 
 import (
 	"slices"
-	"sort"
 	"testing"
 
 	"github.com/hashicorp/go-version"
@@ -29,8 +28,8 @@ func TestProxySupportOrder(t *testing.T) {
 
 	// After this, the versions are properly sorted
 	// go-version has a collection container, but it only allows for sorting in ascending order
-	sort.Slice(versions, func(i, j int) bool {
-		return versions[j].LessThan(versions[i])
+	slices.SortFunc(versions, func(a, b *version.Version) int {
+		return b.Compare(a)
 	})
 
 	// Check that we already have a sorted list
