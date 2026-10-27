@@ -1348,7 +1348,7 @@ func TestCompile_CE(t *testing.T) {
 
 type testingT interface {
 	Helper()
-	Fatalf(format string, args ...interface{})
+	Fatalf(format string, args ...any)
 	require.TestingT
 }
 
