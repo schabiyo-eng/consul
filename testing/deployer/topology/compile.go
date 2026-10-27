@@ -10,7 +10,9 @@ import (
 	"fmt"
 	"reflect"
 	"regexp"
+	"slices"
 	"sort"
+	"strings"
 
 	"github.com/google/go-cmp/cmp"
 	"golang.org/x/exp/maps"
@@ -414,8 +416,8 @@ func compile(logger hclog.Logger, raw *Config, prev *Topology, testingID string)
 			sort.Strings(p.Namespaces)
 			c.Partitions = append(c.Partitions, p)
 		}
-		sort.Slice(c.Partitions, func(i, j int) bool {
-			return c.Partitions[i].Name < c.Partitions[j].Name
+		slices.SortFunc(c.Partitions, func(a, b *Partition) int {
+			return strings.Compare(a.Name, b.Name)
 		})
 
 		if !c.Enterprise {

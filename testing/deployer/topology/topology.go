@@ -4,11 +4,13 @@
 package topology
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"net"
 	"net/netip"
 	"reflect"
+	"slices"
 	"sort"
 
 	"github.com/hashicorp/consul/api"
@@ -69,8 +71,8 @@ func (t *Topology) SortedNetworks() []*Network {
 	for _, n := range t.Networks {
 		out = append(out, n)
 	}
-	sort.Slice(out, func(i, j int) bool {
-		return out[i].Name < out[j].Name
+	slices.SortFunc(out, func(a, b *Network) int {
+		return cmp.Compare(a.Name, b.Name)
 	})
 	return out
 }
@@ -80,8 +82,8 @@ func (t *Topology) SortedClusters() []*Cluster {
 	for _, c := range t.Clusters {
 		out = append(out, c)
 	}
-	sort.Slice(out, func(i, j int) bool {
-		return out[i].Name < out[j].Name
+	slices.SortFunc(out, func(a, b *Cluster) int {
+		return cmp.Compare(a.Name, b.Name)
 	})
 	return out
 }
@@ -394,26 +396,19 @@ func (c *Cluster) SortedNodes() []*Node {
 		NodeKindClient:    2,
 		NodeKindDataplane: 2,
 	}
-	sort.Slice(out, func(i, j int) bool {
-		ni, nj := out[i], out[j]
-
+	slices.SortFunc(out, func(ni, nj *Node) int {
 		// servers before clients/dataplanes
-		ki, kj := kindOrder[ni.Kind], kindOrder[nj.Kind]
-		if ki < kj {
-			return true
-		} else if ki > kj {
-			return false
+		if c := cmp.Compare(kindOrder[ni.Kind], kindOrder[nj.Kind]); c != 0 {
+			return c
 		}
 
 		// lex sort by partition
-		if ni.Partition < nj.Partition {
-			return true
-		} else if ni.Partition > nj.Partition {
-			return false
+		if c := cmp.Compare(ni.Partition, nj.Partition); c != 0 {
+			return c
 		}
 
 		// lex sort by name
-		return ni.Name < nj.Name
+		return cmp.Compare(ni.Name, nj.Name)
 	})
 	return out
 }
