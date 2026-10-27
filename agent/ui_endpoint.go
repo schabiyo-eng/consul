@@ -4,6 +4,7 @@
 package agent
 
 import (
+	"cmp"
 	"fmt"
 	"net/http"
 	"net/http/httputil"
@@ -682,7 +683,7 @@ func prepSummaryOutput(summaries map[structs.PeeredServiceName]*ServiceSummary, 
 		if b.LessThan(a) {
 			return 1
 		}
-		return 0
+		return cmp.Compare(a.PeerName, b.PeerName)
 	})
 	return resp
 }
