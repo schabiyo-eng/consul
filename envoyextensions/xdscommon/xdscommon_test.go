@@ -46,7 +46,7 @@ func TestCloneIndexedResources(t *testing.T) {
 		},
 	}
 
-	getPointerField := func(msg proto.Message) interface{} {
+	getPointerField := func(msg proto.Message) any {
 		switch typedMsg := msg.(type) {
 		case *envoy_cluster_v3.Cluster:
 			return typedMsg.TransportSocketMatches[0]
