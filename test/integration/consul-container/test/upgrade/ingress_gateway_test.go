@@ -58,7 +58,7 @@ func TestIngressGateway_UpgradeToTarget_fromLatest(t *testing.T) {
 	require.NoError(t, cluster.ConfigEntryWrite(&api.ProxyConfigEntry{
 		Name: api.ProxyConfigGlobal,
 		Kind: api.ProxyDefaults,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "http",
 		},
 	}))
@@ -298,7 +298,7 @@ func TestIngressGateway_UpgradeToTarget_fromLatest(t *testing.T) {
 					r.Fatal("could not fetch envoy configuration")
 				}
 			})
-			var m interface{}
+			var m any
 			err = json.Unmarshal([]byte(dump), &m)
 			require.NoError(t, err)
 

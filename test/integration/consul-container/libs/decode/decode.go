@@ -36,7 +36,7 @@ import (
 // default struct field tag of `mapstructure`. If mapstructure.DecoderConfig.TagName
 // is set to a different value this function will need to be parameterized with
 // that value to correctly find the canonical data key.
-func HookTranslateKeys(_, to reflect.Type, data interface{}) (interface{}, error) {
+func HookTranslateKeys(_, to reflect.Type, data any) (any, error) {
 	// Return immediately if target is not a struct, as only structs can have
 	// field tags. If the target is a pointer to a struct, mapstructure will call
 	// the hook again with the struct.
@@ -45,7 +45,7 @@ func HookTranslateKeys(_, to reflect.Type, data interface{}) (interface{}, error
 	}
 
 	// Avoid doing any work if data is not a map
-	source, ok := data.(map[string]interface{})
+	source, ok := data.(map[string]any)
 	if !ok {
 		return data, nil
 	}
@@ -55,7 +55,7 @@ func HookTranslateKeys(_, to reflect.Type, data interface{}) (interface{}, error
 	if len(rules) == 0 {
 		return data, nil
 	}
-	result := make(map[string]interface{}, len(source))
+	result := make(map[string]any, len(source))
 	for k, v := range source {
 		lowerK := strings.ToLower(k)
 		canonKey, ok := rules[lowerK]
@@ -159,13 +159,13 @@ type mapstructureFieldTags struct {
 //
 // This hook allows config to be read from the HCL format into a raw structure,
 // and later decoded into a strongly typed structure.
-func HookWeakDecodeFromSlice(from, to reflect.Type, data interface{}) (interface{}, error) {
+func HookWeakDecodeFromSlice(from, to reflect.Type, data any) (any, error) {
 	if from.Kind() == reflect.Slice && (to.Kind() == reflect.Slice || to.Kind() == reflect.Array) {
 		return data, nil
 	}
 
 	switch d := data.(type) {
-	case []map[string]interface{}:
+	case []map[string]any:
 		switch {
 		case len(d) != 1:
 			return data, nil
@@ -176,7 +176,7 @@ func HookWeakDecodeFromSlice(from, to reflect.Type, data interface{}) (interface
 		}
 
 	// a slice map be encoded as []interface{} in some cases
-	case []interface{}:
+	case []any:
 		switch {
 		case len(d) != 1:
 			return data, nil
@@ -189,9 +189,9 @@ func HookWeakDecodeFromSlice(from, to reflect.Type, data interface{}) (interface
 	return data, nil
 }
 
-var typeOfEmptyInterface = reflect.TypeOf((*interface{})(nil)).Elem()
+var typeOfEmptyInterface = reflect.TypeOf((*any)(nil)).Elem()
 
-func unSlice(data interface{}) (interface{}, error) {
+func unSlice(data any) (any, error) {
 	err := reflectwalk.Walk(data, &unSliceWalker{})
 	return data, err
 }

@@ -118,7 +118,7 @@ func TestHTTPRouteFlattening(t *testing.T) {
 		Kind:      api.ProxyDefaults,
 		Name:      api.ProxyConfigGlobal,
 		Namespace: "", // proxy-defaults can only be set in the default namespace
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "http",
 		},
 	}
@@ -353,7 +353,7 @@ func TestHTTPRouteFilters(t *testing.T) {
 		Kind:      api.ProxyDefaults,
 		Name:      api.ProxyConfigGlobal,
 		Namespace: "", // proxy-defaults can only be set in the default namespace
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "http",
 		},
 	}
@@ -569,7 +569,7 @@ func TestHTTPRouteParentRefChange(t *testing.T) {
 	proxyDefaults := &api.ProxyConfigEntry{
 		Kind: api.ProxyDefaults,
 		Name: api.ProxyConfigGlobal,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "http",
 		},
 	}
@@ -829,7 +829,7 @@ func TestHTTPRouteRetryAndTimeout(t *testing.T) {
 	proxyDefaults := &api.ProxyConfigEntry{
 		Kind: api.ProxyDefaults,
 		Name: api.ProxyConfigGlobal,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "http",
 		},
 	}

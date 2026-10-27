@@ -34,7 +34,7 @@ func JQFilter(config, filter string) ([]string, error) {
 		return nil, err
 	}
 
-	var m interface{}
+	var m any
 	err = json.Unmarshal([]byte(config), &m)
 	if err != nil {
 		return nil, err

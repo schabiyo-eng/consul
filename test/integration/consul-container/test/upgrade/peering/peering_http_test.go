@@ -62,7 +62,7 @@ func TestPeering_HTTPRouter(t *testing.T) {
 	require.NoError(t, acceptingCluster.ConfigEntryWrite(&api.ProxyConfigEntry{
 		Kind: api.ProxyDefaults,
 		Name: "global",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "http",
 		},
 	}))
@@ -119,7 +119,7 @@ func TestPeering_HTTPResolverAndFailover(t *testing.T) {
 	require.NoError(t, dialingCluster.ConfigEntryWrite(&api.ProxyConfigEntry{
 		Kind: api.ProxyDefaults,
 		Name: "global",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "http",
 		},
 	}))
@@ -220,7 +220,7 @@ func TestPeering_HTTPResolverAndSplitter(t *testing.T) {
 	require.NoError(t, dialingCluster.ConfigEntryWrite(&api.ProxyConfigEntry{
 		Kind: api.ProxyDefaults,
 		Name: "global",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "http",
 		},
 	}))

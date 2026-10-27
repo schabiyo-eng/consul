@@ -125,7 +125,7 @@ type AgentInfo struct {
 }
 
 func convertHcl2Json(in string) (string, error) {
-	var raw map[string]interface{}
+	var raw map[string]any
 	err := hcl.Decode(&raw, in)
 	if err != nil {
 		return "", err
