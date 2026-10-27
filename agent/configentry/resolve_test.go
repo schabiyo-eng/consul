@@ -4,7 +4,8 @@
 package configentry
 
 import (
-	"sort"
+	"cmp"
+	"slices"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -569,8 +570,8 @@ func Test_ComputeResolvedServiceConfig(t *testing.T) {
 			got, err := ComputeResolvedServiceConfig(tt.args.scReq, tt.args.entries, nil)
 			require.NoError(t, err)
 			// This is needed because map iteration is random and determines the order of some outputs.
-			sort.Slice(got.UpstreamConfigs, func(i, j int) bool {
-				return got.UpstreamConfigs[i].Upstream.ServiceName.Name < got.UpstreamConfigs[j].Upstream.ServiceName.Name
+			slices.SortFunc(got.UpstreamConfigs, func(a, b structs.OpaqueUpstreamConfig) int {
+				return cmp.Compare(a.Upstream.ServiceName.Name, b.Upstream.ServiceName.Name)
 			})
 			require.Equal(t, tt.want, got)
 		})
