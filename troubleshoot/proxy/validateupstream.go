@@ -74,7 +74,7 @@ func Validate(indexedResources *xdscommon.IndexedResources, envoyID string, vip 
 	extConfig := extensioncommon.RuntimeConfig{
 		EnvoyExtension: api.EnvoyExtension{
 			Name: "builtin/proxy/validate",
-			Arguments: map[string]interface{}{
+			Arguments: map[string]any{
 				"envoyID": envoyID,
 			},
 		},
