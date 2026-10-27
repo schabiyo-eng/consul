@@ -62,7 +62,7 @@ func visit(path string, v reflect.Value, t reflect.Type, fn visitor) error {
 // structures) and calls the visitor function. Each string found will get
 // a unique path computed. If any visitor returns an error then the search
 // will stop and that error will be returned.
-func walk(obj interface{}, fn visitor) error {
+func walk(obj any, fn visitor) error {
 	v := reflect.ValueOf(obj).Elem()
 	t := v.Type()
 	return visit("", v, t, fn)

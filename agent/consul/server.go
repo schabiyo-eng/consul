@@ -1185,7 +1185,7 @@ func (s *Server) setupRaft() error {
 
 // endpointFactory is a function that returns an RPC endpoint bound to the given
 // server.
-type factory func(s *Server) interface{}
+type factory func(s *Server) any
 
 // endpoints is a list of registered RPC endpoint factories.
 var endpoints []factory
@@ -1615,8 +1615,8 @@ func (s *Server) AgentEnterpriseMeta() *acl.EnterpriseMeta {
 // inmemCodec is used to do an RPC call without going over a network
 type inmemCodec struct {
 	method     string
-	args       interface{}
-	reply      interface{}
+	args       any
+	reply      any
 	err        error
 	sourceAddr net.Addr
 }
@@ -1626,14 +1626,14 @@ func (i *inmemCodec) ReadRequestHeader(req *rpc.Request) error {
 	return nil
 }
 
-func (i *inmemCodec) ReadRequestBody(args interface{}) error {
+func (i *inmemCodec) ReadRequestBody(args any) error {
 	sourceValue := reflect.Indirect(reflect.Indirect(reflect.ValueOf(i.args)))
 	dst := reflect.Indirect(reflect.Indirect(reflect.ValueOf(args)))
 	dst.Set(sourceValue)
 	return nil
 }
 
-func (i *inmemCodec) WriteResponse(resp *rpc.Response, reply interface{}) error {
+func (i *inmemCodec) WriteResponse(resp *rpc.Response, reply any) error {
 	if resp.Error != "" {
 		i.err = errors.New(resp.Error)
 		return nil
@@ -1653,7 +1653,7 @@ func (i *inmemCodec) Close() error {
 }
 
 // RPC is used to make a local RPC call
-func (s *Server) RPC(ctx context.Context, method string, args interface{}, reply interface{}) error {
+func (s *Server) RPC(ctx context.Context, method string, args any, reply any) error {
 	remoteAddr, _ := RemoteAddrFromContext(ctx)
 	codec := &inmemCodec{
 		method:     method,
@@ -1727,7 +1727,7 @@ func (s *Server) SnapshotRPC(args *structs.SnapshotRequest, in io.Reader, out io
 }
 
 // RegisterEndpoint is used to substitute an endpoint for testing.
-func (s *Server) RegisterEndpoint(name string, handler interface{}) error {
+func (s *Server) RegisterEndpoint(name string, handler any) error {
 	s.logger.Warn("endpoint injected; this should only be used for testing")
 	return s.rpcServer.RegisterName(name, handler)
 }

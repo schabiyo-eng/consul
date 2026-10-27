@@ -45,7 +45,7 @@ func (f FileSource) Parse() (Config, Metadata, error) {
 		return Config{}, m, ErrNoData
 	}
 
-	var raw map[string]interface{}
+	var raw map[string]any
 	var err error
 	var md mapstructure.Metadata
 	switch f.Format {
@@ -256,8 +256,8 @@ type Config struct {
 	UIDir    *string     `mapstructure:"ui_dir" json:"-"`
 	UIConfig RawUIConfig `mapstructure:"ui_config" json:"-"`
 
-	UnixSocket UnixSocket               `mapstructure:"unix_sockets" json:"-"`
-	Watches    []map[string]interface{} `mapstructure:"watches" json:"-"`
+	UnixSocket UnixSocket       `mapstructure:"unix_sockets" json:"-"`
+	Watches    []map[string]any `mapstructure:"watches" json:"-"`
 
 	RPC RPC `mapstructure:"rpc" json:"-"`
 
@@ -271,7 +271,7 @@ type Config struct {
 	// can deploy their snapshot agent configs alongside their Consul configs
 	// so we have a placeholder here so it can be parsed but this doesn't
 	// manifest itself in any way inside the runtime config.
-	SnapshotAgent map[string]interface{} `mapstructure:"snapshot_agent" json:"-"`
+	SnapshotAgent map[string]any `mapstructure:"snapshot_agent" json:"-"`
 
 	// non-user configurable values
 	AEInterval                 *string    `mapstructure:"ae_interval" json:"-"`
@@ -584,7 +584,7 @@ type ServiceProxy struct {
 
 	// Config is the arbitrary configuration data provided with the proxy
 	// registration.
-	Config map[string]interface{} `mapstructure:"config"`
+	Config map[string]any `mapstructure:"config"`
 
 	// Upstreams describes any upstream dependencies the proxy instance should
 	// setup.
@@ -639,7 +639,7 @@ type Upstream struct {
 	// Config is an opaque config that is specific to the proxy process being run.
 	// It can be used to pass arbitrary configuration for this specific upstream
 	// to the proxy.
-	Config map[string]interface{} `mapstructure:"config"`
+	Config map[string]any `mapstructure:"config"`
 
 	// Mesh Gateway Configuration
 	MeshGateway *MeshGatewayConfig `mapstructure:"mesh_gateway"`
@@ -708,12 +708,12 @@ type AutoEncrypt struct {
 type Connect struct {
 	// Enabled opts the agent into connect. It should be set on all clients and
 	// servers in a cluster for correct connect operation.
-	Enabled                         *bool                  `mapstructure:"enabled" json:"enabled,omitempty"`
-	CAProvider                      *string                `mapstructure:"ca_provider" json:"ca_provider,omitempty"`
-	CAConfig                        map[string]interface{} `mapstructure:"ca_config" json:"ca_config,omitempty"`
-	MeshGatewayWANFederationEnabled *bool                  `mapstructure:"enable_mesh_gateway_wan_federation" json:"enable_mesh_gateway_wan_federation,omitempty"`
-	VirtualIPCIDRv4                 *string                `mapstructure:"virtual_ip_cidr_v4" json:"virtual_ip_cidr_v4,omitempty"`
-	VirtualIPCIDRv6                 *string                `mapstructure:"virtual_ip_cidr_v6" json:"virtual_ip_cidr_v6,omitempty"`
+	Enabled                         *bool          `mapstructure:"enabled" json:"enabled,omitempty"`
+	CAProvider                      *string        `mapstructure:"ca_provider" json:"ca_provider,omitempty"`
+	CAConfig                        map[string]any `mapstructure:"ca_config" json:"ca_config,omitempty"`
+	MeshGatewayWANFederationEnabled *bool          `mapstructure:"enable_mesh_gateway_wan_federation" json:"enable_mesh_gateway_wan_federation,omitempty"`
+	VirtualIPCIDRv4                 *string        `mapstructure:"virtual_ip_cidr_v4" json:"virtual_ip_cidr_v4,omitempty"`
+	VirtualIPCIDRv6                 *string        `mapstructure:"virtual_ip_cidr_v6" json:"virtual_ip_cidr_v6,omitempty"`
 
 	// TestCALeafRootChangeSpread controls how long after a CA roots change before new leaf certs will be generated.
 	// This is only tuned in tests, generally set to 1ns to make tests deterministic with when to expect updated leaf
@@ -914,7 +914,7 @@ type ConfigEntries struct {
 	// already. The type is map not structs.ConfigEntry for decoding reasons - we
 	// need to figure out the right concrete type before we can decode it
 	// unabiguously.
-	Bootstrap []map[string]interface{} `mapstructure:"bootstrap"`
+	Bootstrap []map[string]any `mapstructure:"bootstrap"`
 }
 
 // Audit allows us to enable and define destinations for auditing

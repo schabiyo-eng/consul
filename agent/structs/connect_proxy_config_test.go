@@ -25,7 +25,7 @@ func TestConnectProxyConfig_ToAPI(t *testing.T) {
 				DestinationServiceID:   "web1",
 				LocalServiceAddress:    "127.0.0.2",
 				LocalServicePort:       5555,
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"foo": "bar",
 				},
 				MeshGateway: MeshGatewayConfig{
@@ -59,7 +59,7 @@ func TestConnectProxyConfig_ToAPI(t *testing.T) {
 				DestinationServiceID:   "web1",
 				LocalServiceAddress:    "127.0.0.2",
 				LocalServicePort:       5555,
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"foo": "bar",
 				},
 				MeshGateway: api.MeshGatewayConfig{
@@ -112,7 +112,7 @@ func TestConnectProxyConfig_MarshalJSON(t *testing.T) {
 				LocalServiceAddress:    "127.0.0.1",
 				LocalServicePort:       8080,
 				Mode:                   ProxyModeDirect,
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"connect_timeout_ms": 5000,
 				},
 				Upstreams: Upstreams{
@@ -168,7 +168,7 @@ func TestConnectProxyConfig_MarshalJSON(t *testing.T) {
 				LocalServiceAddress:    "127.0.0.1",
 				LocalServicePort:       8080,
 				Mode:                   ProxyModeTransparent,
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"connect_timeout_ms": 5000,
 				},
 				MeshGateway: MeshGatewayConfig{Mode: MeshGatewayModeLocal},
@@ -378,7 +378,7 @@ func TestUpstream_UnmarshalJSON(t *testing.T) {
 				Datacenter:           "dc1",
 				LocalBindAddress:     "127.0.0.2",
 				LocalBindPort:        6060,
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"x": "y",
 					"z": float64(-2),
 				},
@@ -550,7 +550,7 @@ func TestConnectProxyConfig_UnmarshalJSON(t *testing.T) {
 				DestinationServiceID:   "foo-id",
 				LocalServiceAddress:    "127.0.0.1",
 				LocalServicePort:       5050,
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"a": "b",
 					"v": float64(42),
 				},
@@ -562,7 +562,7 @@ func TestConnectProxyConfig_UnmarshalJSON(t *testing.T) {
 						Datacenter:           "dc1",
 						LocalBindAddress:     "127.0.0.2",
 						LocalBindPort:        6060,
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"x": "y",
 							"z": float64(-2),
 						},

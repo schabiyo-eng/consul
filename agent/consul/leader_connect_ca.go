@@ -48,7 +48,7 @@ type caServerDelegate interface {
 	IsLeader() bool
 	ApplyCALeafRequest() (uint64, error)
 
-	forwardDC(method, dc string, args interface{}, reply interface{}) error
+	forwardDC(method, dc string, args any, reply any) error
 	generateCASignRequest(csr string) *structs.CASignRequest
 
 	ServersSupportMultiDCConnectCA() error
@@ -95,7 +95,7 @@ func (c *caDelegateWithState) State() *state.Store {
 	return c.fsm.State()
 }
 
-func (c *caDelegateWithState) ApplyCARequest(req *structs.CARequest) (interface{}, error) {
+func (c *caDelegateWithState) ApplyCARequest(req *structs.CARequest) (any, error) {
 	return c.raftApplyMsgpack(structs.ConnectCARequestType, req)
 }
 
@@ -237,7 +237,7 @@ func (c *CAManager) initializeCAConfig() (*structs.CAConfiguration, error) {
 		}
 	} else if _, ok := config.Config["IntermediateCertTTL"]; !ok {
 		dup := *config
-		copied := make(map[string]interface{})
+		copied := make(map[string]any)
 		for k, v := range dup.Config {
 			copied[k] = v
 		}
@@ -482,8 +482,8 @@ func (c *CAManager) newProvider(conf *structs.CAConfiguration) (ca.Provider, err
 // provider.Configure so that an operator:write caller cannot use the
 // ConnectCA.ConfigurationSet API to widen the Vault credential-file allowlist
 // after the agent has started.
-func (c *CAManager) injectTokenDirs(rawConfig map[string]interface{}) map[string]interface{} {
-	out := make(map[string]interface{}, len(rawConfig)+1)
+func (c *CAManager) injectTokenDirs(rawConfig map[string]any) map[string]any {
+	out := make(map[string]any, len(rawConfig)+1)
 	for k, v := range rawConfig {
 		if k != "TokenDirs" {
 			out[k] = v
@@ -895,7 +895,7 @@ type ValidateConfigUpdater interface {
 	// incompatible with the previous configuration.
 	//
 	// TODO: use better types after https://github.com/hashicorp/consul/issues/12238
-	ValidateConfigUpdate(previous, next map[string]interface{}) error
+	ValidateConfigUpdate(previous, next map[string]any) error
 }
 
 func (c *CAManager) primaryUpdateRootCA(newProvider ca.Provider, args *structs.CARequest, config *structs.CAConfiguration) error {

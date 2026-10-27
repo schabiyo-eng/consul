@@ -93,7 +93,7 @@ func timeDurationToStringHookFunc() mapstructure.DecodeHookFunc {
 	return func(
 		f reflect.Type,
 		t reflect.Type,
-		data interface{}) (interface{}, error) {
+		data any) (any, error) {
 		dur, ok := data.(time.Duration)
 		if !ok {
 			return data, nil

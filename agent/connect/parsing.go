@@ -165,7 +165,7 @@ func ParseCSR(pemValue string) (*x509.CertificateRequest, error) {
 
 // KeyId returns a x509 KeyId from the given signing key. The key must be
 // an *ecdsa.PublicKey currently, but may support more types in the future.
-func KeyId(raw interface{}) ([]byte, error) {
+func KeyId(raw any) ([]byte, error) {
 	switch raw.(type) {
 	case *ecdsa.PublicKey:
 	case *rsa.PublicKey:

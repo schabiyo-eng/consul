@@ -1048,7 +1048,7 @@ func TestMergeAPIGatewayUpstreamLimits_ZeroValuesOmitted(t *testing.T) {
 func TestMergedAPIGatewayUpstreamConfig(t *testing.T) {
 	t.Parallel()
 
-	original := map[string]interface{}{
+	original := map[string]any{
 		"protocol": "http",
 		"custom":   "value",
 	}
@@ -1114,7 +1114,7 @@ func TestMergeAPIGatewayUpstreamLimits_PassiveHealthCheckPreserved(t *testing.T)
 func TestMergedAPIGatewayUpstreamConfig_PassiveHealthCheckSurfaced(t *testing.T) {
 	t.Parallel()
 
-	original := map[string]interface{}{"protocol": "http"}
+	original := map[string]any{"protocol": "http"}
 	limits := &structs.UpstreamLimits{
 		MaxConnections:     intPointer(321),
 		PassiveHealthCheck: &structs.PassiveHealthCheck{Interval: 7 * time.Second, MaxFailures: 4},
@@ -1152,7 +1152,7 @@ func TestAPIGatewayPassiveHealthCheckDataPath(t *testing.T) {
 		MaxConnections:     intPointer(25),
 		PassiveHealthCheck: &structs.PassiveHealthCheck{Interval: 9 * time.Second, MaxFailures: 6},
 	}
-	upstreamCfg := map[string]interface{}{}
+	upstreamCfg := map[string]any{}
 	structs.UpstreamConfig{Protocol: "http", Limits: effective}.MergeInto(upstreamCfg)
 
 	// xDS side: parse the per-listener config, merge across listeners, surface.

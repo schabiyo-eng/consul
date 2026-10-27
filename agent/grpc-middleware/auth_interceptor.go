@@ -30,10 +30,10 @@ type AuthInterceptor struct {
 // based on the SNI information.
 func (a *AuthInterceptor) InterceptUnary(
 	ctx context.Context,
-	req interface{},
+	req any,
 	info *grpc.UnaryServerInfo,
 	handler grpc.UnaryHandler,
-) (interface{}, error) {
+) (any, error) {
 	p, ok := peer.FromContext(ctx)
 	if !ok {
 		return nil, fmt.Errorf("unable to fetch peer info from grpc context")
@@ -48,7 +48,7 @@ func (a *AuthInterceptor) InterceptUnary(
 // InterceptUnary prevents streaming gRPC calls from calling certain endpoints,
 // based on the SNI information.
 func (a *AuthInterceptor) InterceptStream(
-	srv interface{},
+	srv any,
 	ss grpc.ServerStream,
 	info *grpc.StreamServerInfo,
 	handler grpc.StreamHandler,

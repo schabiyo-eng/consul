@@ -3494,7 +3494,7 @@ func TestLoad_IntegrationWithFlags(t *testing.T) {
 			rt.DataDir = dataDir
 			rt.ConnectEnabled = true
 			rt.ConnectCAProvider = "vault"
-			rt.ConnectCAConfig = map[string]interface{}{
+			rt.ConnectCAConfig = map[string]any{
 				"CAFile":              "/capath/ca.pem",
 				"CAPath":              "/capath/",
 				"CertFile":            "/certpath/cert.pem",
@@ -3552,7 +3552,7 @@ func TestLoad_IntegrationWithFlags(t *testing.T) {
 			rt.DataDir = dataDir
 			rt.ConnectEnabled = true
 			rt.ConnectCAProvider = "vault"
-			rt.ConnectCAConfig = map[string]interface{}{
+			rt.ConnectCAConfig = map[string]any{
 				"CAFile":              "/capath/ca.pem",
 				"CAPath":              "/capath/",
 				"CertFile":            "/certpath/cert.pem",
@@ -3595,7 +3595,7 @@ func TestLoad_IntegrationWithFlags(t *testing.T) {
 			rt.DataDir = dataDir
 			rt.ConnectEnabled = true
 			rt.ConnectCAProvider = "aws-pca"
-			rt.ConnectCAConfig = map[string]interface{}{
+			rt.ConnectCAConfig = map[string]any{
 				"ExistingARN":  "foo",
 				"DeleteOnExit": true,
 			}
@@ -3972,9 +3972,9 @@ func TestLoad_IntegrationWithFlags(t *testing.T) {
 					Kind:           structs.ProxyDefaults,
 					Name:           structs.ProxyConfigGlobal,
 					EnterpriseMeta: *defaultEntMeta,
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"bar": "abc",
-						"moreconfig": map[string]interface{}{
+						"moreconfig": map[string]any{
 							"moar": "config",
 						},
 					},
@@ -4045,9 +4045,9 @@ func TestLoad_IntegrationWithFlags(t *testing.T) {
 					Kind:           structs.ProxyDefaults,
 					Name:           structs.ProxyConfigGlobal,
 					EnterpriseMeta: *defaultEntMeta,
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"bar": "abc",
-						"moreconfig": map[string]interface{}{
+						"moreconfig": map[string]any{
 							"moar": "config",
 						},
 					},
@@ -6557,7 +6557,7 @@ func TestLoad_FullConfig(t *testing.T) {
 				Kind:           structs.ProxyDefaults,
 				Name:           structs.ProxyConfigGlobal,
 				EnterpriseMeta: *defaultEntMeta,
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"foo": "bar",
 					// has to be a float due to being a map[string]interface
 					"bar": float64(1),
@@ -6583,7 +6583,7 @@ func TestLoad_FullConfig(t *testing.T) {
 					Name:           "Auto Config Authorizer",
 					Type:           "jwt",
 					EnterpriseMeta: *structs.DefaultEnterpriseMetaInDefaultPartition(),
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"JWTValidationPubKeys": []string{"-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAERVchfCZng4mmdvQz1+sJHRN40snC\nYt8NjYOnbnScEXMkyoUmASr88gb7jaVAVt3RYASAbgBjB2Z+EUizWkx5Tg==\n-----END PUBLIC KEY-----"},
 						"ClaimMappings": map[string]string{
 							"node": "node",
@@ -6611,7 +6611,7 @@ func TestLoad_FullConfig(t *testing.T) {
 		ExposeMinPort:         1111,
 		ExposeMaxPort:         2222,
 		ConnectCAProvider:     "consul",
-		ConnectCAConfig: map[string]interface{}{
+		ConnectCAConfig: map[string]any{
 			"IntermediateCertTTL": "8760h",
 			"LeafCertTTL":         "1h",
 			"RootCertTTL":         "96360h",
@@ -6867,7 +6867,7 @@ func TestLoad_FullConfig(t *testing.T) {
 					DestinationServiceID:   "6L6BVfgH-id",
 					LocalServiceAddress:    "127.0.0.2",
 					LocalServicePort:       23759,
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"cedGGtZf": "pWrUNiWw",
 					},
 					Upstreams: structs.Upstreams{
@@ -6877,7 +6877,7 @@ func TestLoad_FullConfig(t *testing.T) {
 							DestinationPartition: defaultEntMeta.PartitionOrEmpty(),
 							DestinationNamespace: defaultEntMeta.NamespaceOrEmpty(),
 							LocalBindPort:        4051,
-							Config: map[string]interface{}{
+							Config: map[string]any{
 								"kzRnZOyd": "nUNKoL8H",
 							},
 						},
@@ -6926,7 +6926,7 @@ func TestLoad_FullConfig(t *testing.T) {
 				Name: "gw-primary-dc",
 				Port: 27147,
 				Proxy: &structs.ConnectProxyConfig{
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"1CuJHVfw": "Kzqsa7yc",
 					},
 					Upstreams: structs.Upstreams{},
@@ -7190,7 +7190,7 @@ func TestLoad_FullConfig(t *testing.T) {
 		UnixSocketUser:  "E0nB1DwA",
 		UnixSocketGroup: "8pFodrV8",
 		UnixSocketMode:  "E8sAwOv4",
-		Watches: []map[string]interface{}{
+		Watches: []map[string]any{
 			{
 				"type":       "key",
 				"datacenter": "GyE6jpeW",
@@ -7201,7 +7201,7 @@ func TestLoad_FullConfig(t *testing.T) {
 				"type":       "keyprefix",
 				"datacenter": "fYrl3F5d",
 				"key":        "sl3Dffu7",
-				"args":       []interface{}{"dltjDJ2a", "flEa7C2d"},
+				"args":       []any{"dltjDJ2a", "flEa7C2d"},
 			},
 		},
 		XDSUpdateRateLimit: 9526.2,
@@ -7287,16 +7287,16 @@ func TestLoad_FullConfig(t *testing.T) {
 // bool: check not zero (cannot check uniqueness)
 // string, int, uint: check not zero and unique
 // other: error
-func nonZero(name string, uniq map[interface{}]string, v interface{}) error {
+func nonZero(name string, uniq map[any]string, v any) error {
 	if v == nil {
 		return fmt.Errorf("%q is nil", name)
 	}
 
 	if uniq == nil {
-		uniq = map[interface{}]string{}
+		uniq = map[any]string{}
 	}
 
-	isUnique := func(v interface{}) error {
+	isUnique := func(v any) error {
 		if other := uniq[v]; other != "" {
 			return fmt.Errorf("%q and %q both use value %q", name, other, v)
 		}
@@ -7391,7 +7391,7 @@ func nonZero(name string, uniq map[interface{}]string, v interface{}) error {
 func TestNonZero(t *testing.T) {
 	tests := []struct {
 		desc string
-		v    interface{}
+		v    any
 		err  error
 	}{
 		{"nil", nil, errors.New(`"x" is nil`)},
@@ -7864,7 +7864,7 @@ func TestConnectCAConfiguration(t *testing.T) {
 			},
 			expected: &structs.CAConfiguration{
 				Provider: "consul",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"LeafCertTTL":         "72h",
 					"IntermediateCertTTL": "8760h",  // 365 * 24h
 					"RootCertTTL":         "87600h", // 365 * 10 * 24h
@@ -7874,14 +7874,14 @@ func TestConnectCAConfiguration(t *testing.T) {
 		"cluster-id-override": {
 			config: RuntimeConfig{
 				ConnectEnabled: true,
-				ConnectCAConfig: map[string]interface{}{
+				ConnectCAConfig: map[string]any{
 					"cluster_id": "adfe7697-09b4-413a-ac0a-fa81ed3a3001",
 				},
 			},
 			expected: &structs.CAConfiguration{
 				Provider:  "consul",
 				ClusterID: "adfe7697-09b4-413a-ac0a-fa81ed3a3001",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"LeafCertTTL":         "72h",
 					"IntermediateCertTTL": "8760h",  // 365 * 24h
 					"RootCertTTL":         "87600h", // 365 * 10 * 24h
@@ -7892,7 +7892,7 @@ func TestConnectCAConfiguration(t *testing.T) {
 		"cluster-id-non-uuid": {
 			config: RuntimeConfig{
 				ConnectEnabled: true,
-				ConnectCAConfig: map[string]interface{}{
+				ConnectCAConfig: map[string]any{
 					"cluster_id": "foo",
 				},
 			},
@@ -7905,7 +7905,7 @@ func TestConnectCAConfiguration(t *testing.T) {
 			},
 			expected: &structs.CAConfiguration{
 				Provider: "vault",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"LeafCertTTL":         "72h",
 					"IntermediateCertTTL": "8760h",  // 365 * 24h
 					"RootCertTTL":         "87600h", // 365 * 10 * 24h
@@ -7915,14 +7915,14 @@ func TestConnectCAConfiguration(t *testing.T) {
 		"other-config": {
 			config: RuntimeConfig{
 				ConnectEnabled: true,
-				ConnectCAConfig: map[string]interface{}{
+				ConnectCAConfig: map[string]any{
 					"foo":         "bar",
 					"RootCertTTL": "8761h", // 365 * 24h + 1
 				},
 			},
 			expected: &structs.CAConfiguration{
 				Provider: "consul",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"LeafCertTTL":         "72h",
 					"IntermediateCertTTL": "8760h", // 365 * 24h
 					"RootCertTTL":         "8761h", // 365 * 24h + 1

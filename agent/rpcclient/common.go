@@ -15,12 +15,12 @@ import (
 
 // NetRPC reprents an interface for making RPC requests
 type NetRPC interface {
-	RPC(ctx context.Context, method string, args interface{}, reply interface{}) error
+	RPC(ctx context.Context, method string, args any, reply any) error
 }
 
 // CacheGetter represents an interface for interacting with the cache
 type CacheGetter interface {
-	Get(ctx context.Context, t string, r cache.Request) (interface{}, cache.ResultMeta, error)
+	Get(ctx context.Context, t string, r cache.Request) (any, cache.ResultMeta, error)
 	NotifyCallback(ctx context.Context, t string, r cache.Request, cID string, cb cache.Callback) error
 }
 

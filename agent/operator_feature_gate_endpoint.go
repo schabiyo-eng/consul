@@ -24,7 +24,7 @@ func isFeatureGateUnavailable(err error) bool {
 		(err != nil && strings.Contains(err.Error(), "rpc: can't find method Operator.FeatureGate"))
 }
 
-func (s *HTTPHandlers) OperatorFeatureGateList(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) OperatorFeatureGateList(resp http.ResponseWriter, req *http.Request) (any, error) {
 	var args structs.FeatureGateQueryRequest
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
 		return nil, nil
@@ -49,7 +49,7 @@ func (s *HTTPHandlers) OperatorFeatureGateList(resp http.ResponseWriter, req *ht
 	return features, nil
 }
 
-func (s *HTTPHandlers) OperatorFeatureGate(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) OperatorFeatureGate(resp http.ResponseWriter, req *http.Request) (any, error) {
 	name := strings.TrimPrefix(req.URL.Path, "/v1/operator/feature/")
 	if name == "" {
 		return nil, HTTPError{StatusCode: http.StatusBadRequest, Reason: "feature gate name is required"}

@@ -132,7 +132,7 @@ func TestAuthMethodUpdateCommand(t *testing.T) {
 			DisplayName:     "updated display",
 			Description:     "updated description",
 			TokenNameFormat: structs.DefaultACLAuthMethodTokenNameFormat,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"SessionID": "foo",
 			},
 		}
@@ -164,8 +164,8 @@ func TestAuthMethodUpdateCommand(t *testing.T) {
 			DisplayName:     "updated display",
 			Description:     "updated description",
 			TokenNameFormat: structs.DefaultACLAuthMethodTokenNameFormat,
-			Config: map[string]interface{}{
-				"Data": map[string]interface{}{
+			Config: map[string]any{
+				"Data": map[string]any{
 					"foo": "bar",
 				},
 			},
@@ -282,7 +282,7 @@ func TestAuthMethodUpdateCommand_JSON(t *testing.T) {
 			DisplayName:     "updated display",
 			Description:     "updated description",
 			TokenNameFormat: structs.DefaultACLAuthMethodTokenNameFormat,
-			Config:          map[string]interface{}{},
+			Config:          map[string]any{},
 		}
 		require.Equal(t, expect, got)
 	})
@@ -309,7 +309,7 @@ func TestAuthMethodUpdateCommand_JSON(t *testing.T) {
 		require.Empty(t, ui.ErrorWriter.String())
 
 		// Verify the JSON output contains the correct format
-		var jsonOutput map[string]interface{}
+		var jsonOutput map[string]any
 		require.NoError(t, json.Unmarshal([]byte(output), &jsonOutput))
 		require.Equal(t, tokenFormat, jsonOutput["TokenNameFormat"])
 
@@ -487,7 +487,7 @@ func TestAuthMethodUpdateCommand_k8s(t *testing.T) {
 				Name:        methodName,
 				Type:        "kubernetes",
 				Description: "test",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"Host":              "https://foo.internal:8443",
 					"CACert":            ca.RootCert,
 					"ServiceAccountJWT": acl.TestKubernetesJWT_A,
@@ -528,7 +528,7 @@ func TestAuthMethodUpdateCommand_k8s(t *testing.T) {
 			DisplayName:     "updated display",
 			Description:     "updated description",
 			TokenNameFormat: structs.DefaultACLAuthMethodTokenNameFormat,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"Host":              "https://foo-new.internal:8443",
 				"CACert":            ca2.RootCert,
 				"ServiceAccountJWT": acl.TestKubernetesJWT_B,
@@ -726,7 +726,7 @@ func TestAuthMethodUpdateCommand_k8s_noMerge(t *testing.T) {
 				Name:        methodName,
 				Type:        "kubernetes",
 				Description: "test",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"Host":              "https://foo.internal:8443",
 					"CACert":            ca.RootCert,
 					"ServiceAccountJWT": acl.TestKubernetesJWT_A,
@@ -913,7 +913,7 @@ func TestAuthMethodUpdateCommand_config(t *testing.T) {
 				Name:        methodName,
 				Type:        "testing",
 				Description: "test",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"SessionID": "big",
 				},
 			},

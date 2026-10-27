@@ -87,7 +87,7 @@ type ServiceTopology struct {
 
 // UINodes is used to list the nodes in a given datacenter. We return a
 // NodeDump which provides overview information for all the nodes
-func (s *HTTPHandlers) UINodes(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) UINodes(resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Parse arguments
 	args := structs.DCSpecificRequest{}
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
@@ -216,7 +216,7 @@ func AgentMembersMapAddrVer(s *HTTPHandlers, req *http.Request) (map[string]stri
 
 // UINodeInfo is used to get info on a single node in a given datacenter. We return a
 // NodeInfo which provides overview information for the node
-func (s *HTTPHandlers) UINodeInfo(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) UINodeInfo(resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Parse arguments
 	args := structs.NodeSpecificRequest{}
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
@@ -289,7 +289,7 @@ RPC:
 
 // UICatalogOverview is used to get a high-level overview of the health of nodes, services,
 // and checks in the datacenter.
-func (s *HTTPHandlers) UICatalogOverview(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) UICatalogOverview(resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Parse arguments
 	args := structs.DCSpecificRequest{}
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
@@ -307,7 +307,7 @@ func (s *HTTPHandlers) UICatalogOverview(resp http.ResponseWriter, req *http.Req
 
 // UIServices is used to list the services in a given datacenter. We return a
 // ServiceSummary which provides overview information for the service
-func (s *HTTPHandlers) UIServices(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) UIServices(resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Parse arguments
 	args := structs.ServiceDumpRequest{}
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
@@ -375,7 +375,7 @@ RPC:
 }
 
 // UIGatewayServices is used to query all the nodes for services associated with a gateway along with their gateway config
-func (s *HTTPHandlers) UIGatewayServicesNodes(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) UIGatewayServicesNodes(resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Parse arguments
 	args := structs.ServiceSpecificRequest{}
 	if err := s.parseEntMetaNoWildcard(req, &args.EnterpriseMeta); err != nil {
@@ -416,7 +416,7 @@ RPC:
 // UIServiceTopology returns the list of upstreams and downstreams for a Connect enabled service.
 //   - Downstreams are services that list the given service as an upstream
 //   - Upstreams are the upstreams defined in the given service's proxy registrations
-func (s *HTTPHandlers) UIServiceTopology(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) UIServiceTopology(resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Parse arguments
 	args := structs.ServiceSpecificRequest{}
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
@@ -728,7 +728,7 @@ func modifySummaryForGatewayService(
 }
 
 // GET /v1/internal/ui/gateway-intentions/:gateway
-func (s *HTTPHandlers) UIGatewayIntentions(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) UIGatewayIntentions(resp http.ResponseWriter, req *http.Request) (any, error) {
 	var args structs.IntentionQueryRequest
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
 		return nil, nil
@@ -768,7 +768,7 @@ func (s *HTTPHandlers) UIGatewayIntentions(resp http.ResponseWriter, req *http.R
 // UIMetricsProxy handles the /v1/internal/ui/metrics-proxy/ endpoint which, if
 // configured, provides a simple read-only HTTP proxy to a single metrics
 // backend to expose it to the UI.
-func (s *HTTPHandlers) UIMetricsProxy(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) UIMetricsProxy(resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Check the UI was enabled at agent startup (note this is not reloadable
 	// currently).
 	if !s.IsUIEnabled() {
@@ -934,7 +934,7 @@ func (s *HTTPHandlers) UIMetricsProxy(resp http.ResponseWriter, req *http.Reques
 // UIExportedServices is used to list the exported services to a given peer. We return a
 // barebones ServiceListingSummary which only contains the name and enterprise meta of a service.
 // Currently, the request and response mirror UIServices but the API may change in the future.
-func (s *HTTPHandlers) UIExportedServices(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) UIExportedServices(resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Parse arguments
 	args := structs.ServiceDumpRequest{}
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {

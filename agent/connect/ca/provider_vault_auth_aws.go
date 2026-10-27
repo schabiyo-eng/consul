@@ -52,7 +52,7 @@ type AWSLoginDataGenerator struct {
 
 // GenerateLoginData derives the login data for the Vault AWS auth login request from the CA
 // provider auth method config.
-func (g *AWSLoginDataGenerator) GenerateLoginData(authMethod *structs.VaultAuthMethod) (map[string]interface{}, error) {
+func (g *AWSLoginDataGenerator) GenerateLoginData(authMethod *structs.VaultAuthMethod) (map[string]any, error) {
 	ctx := context.Background()
 
 	// Create the credential configuration from the parameters.
@@ -113,10 +113,10 @@ func (g *AWSLoginDataGenerator) GenerateLoginData(authMethod *structs.VaultAuthM
 }
 
 // newAWSCredentialsConfig creates an awsutil.CredentialsConfig from the given set of parameters.
-func newAWSCredentialsConfig(config map[string]interface{}) (*awsutil.CredentialsConfig, string, error) {
+func newAWSCredentialsConfig(config map[string]any) (*awsutil.CredentialsConfig, string, error) {
 	// Filter out non-credential parameters before passing to awsutil
 	// These parameters (endpoints, role) are handled separately in the auth flow
-	filteredConfig := make(map[string]interface{})
+	filteredConfig := make(map[string]any)
 	for k, v := range config {
 		// Skip parameters that aren't credentials-related
 		if k == "sts_endpoint" || k == "iam_endpoint" || k == "role" {

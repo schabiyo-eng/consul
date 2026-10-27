@@ -46,7 +46,7 @@ func createHTTPClient(caCert string) (*http.Client, error) {
 }
 
 // extractClaims extracts all configured claims from the received claims.
-func (a *Authenticator) extractClaims(allClaims map[string]interface{}) (*Claims, error) {
+func (a *Authenticator) extractClaims(allClaims map[string]any) (*Claims, error) {
 	metadata, err := extractStringMetadata(a.logger, allClaims, a.config.ClaimMappings)
 	if err != nil {
 		return nil, err
@@ -72,7 +72,7 @@ func (a *Authenticator) extractClaims(allClaims map[string]interface{}) (*Claims
 //	    "another_claim": "metadata_key2",
 //	     ...
 //	}
-func extractStringMetadata(logger hclog.Logger, allClaims map[string]interface{}, claimMappings map[string]string) (map[string]string, error) {
+func extractStringMetadata(logger hclog.Logger, allClaims map[string]any, claimMappings map[string]string) (map[string]string, error) {
 	metadata := make(map[string]string)
 	for source, target := range claimMappings {
 		rawValue := getClaim(logger, allClaims, source)
@@ -99,7 +99,7 @@ func extractStringMetadata(logger hclog.Logger, allClaims map[string]interface{}
 //	    "another_claim": "metadata_key2",
 //	     ...
 //	}
-func extractListMetadata(logger hclog.Logger, allClaims map[string]interface{}, listClaimMappings map[string]string) (map[string][]string, error) {
+func extractListMetadata(logger hclog.Logger, allClaims map[string]any, listClaimMappings map[string]string) (map[string][]string, error) {
 	out := make(map[string][]string)
 	for source, target := range listClaimMappings {
 		if rawValue := getClaim(logger, allClaims, source); rawValue != nil {
@@ -133,7 +133,7 @@ func extractListMetadata(logger hclog.Logger, allClaims map[string]interface{}, 
 //
 // There is no fixup done to the returned data type here. That happens a layer
 // up in the caller.
-func getClaim(logger hclog.Logger, allClaims map[string]interface{}, claim string) interface{} {
+func getClaim(logger hclog.Logger, allClaims map[string]any, claim string) any {
 	if !strings.HasPrefix(claim, "/") {
 		return allClaims[claim]
 	}
@@ -155,9 +155,9 @@ func getClaim(logger hclog.Logger, allClaims map[string]interface{}, claim strin
 //
 // There is no fixup done to elements of the returned slice here. That happens
 // a layer up in the caller.
-func normalizeList(raw interface{}) ([]interface{}, bool) {
+func normalizeList(raw any) ([]any, bool) {
 	switch v := raw.(type) {
-	case []interface{}:
+	case []any:
 		return v, true
 	case string, // note: this list should be the same as stringifyMetadataValue
 		bool,
@@ -174,7 +174,7 @@ func normalizeList(raw interface{}) ([]interface{}, bool) {
 		uint32,
 		uint64,
 		uint:
-		return []interface{}{v}, true
+		return []any{v}, true
 	default:
 		return nil, false
 	}
@@ -192,7 +192,7 @@ func normalizeList(raw interface{}) ([]interface{}, bool) {
 //
 // If successful the string value and true are returned. otherwise an empty
 // string and false are returned.
-func stringifyMetadataValue(rawValue interface{}) (string, bool) {
+func stringifyMetadataValue(rawValue any) (string, bool) {
 	switch v := rawValue.(type) {
 	case string:
 		return v, true

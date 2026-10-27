@@ -13,7 +13,7 @@ import (
 type EnvoyExtension struct {
 	Name          string
 	Required      bool
-	Arguments     map[string]interface{} `bexpr:"-"`
+	Arguments     map[string]any `bexpr:"-"`
 	ConsulVersion string
 	EnvoyVersion  string
 }
@@ -138,7 +138,7 @@ func EnvoyEscapeHatchKeyNames() []string {
 // HasEnvoyEscapeHatchKey reports whether the given opaque config map (e.g. a
 // ConnectProxyConfig.Config or Upstream.Config value) sets any Envoy
 // escape-hatch key.
-func HasEnvoyEscapeHatchKey(cfg map[string]interface{}) bool {
+func HasEnvoyEscapeHatchKey(cfg map[string]any) bool {
 	for key := range cfg {
 		if IsEnvoyEscapeHatchKey(key) {
 			return true

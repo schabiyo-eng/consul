@@ -943,7 +943,7 @@ func registerTestTopologyEntries(t *testing.T, codec rpc.ClientCodec, token stri
 			Entry: &structs.ProxyConfigEntry{
 				Kind: structs.ProxyDefaults,
 				Name: structs.ProxyConfigGlobal,
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"protocol": "http",
 				},
 			},
@@ -1175,7 +1175,7 @@ func registerTestRoutingConfigTopologyEntries(t *testing.T, codec rpc.ClientCode
 			Entry: &structs.ProxyConfigEntry{
 				Kind: structs.ProxyDefaults,
 				Name: structs.ProxyConfigGlobal,
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"protocol": "http",
 				},
 			},

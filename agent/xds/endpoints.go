@@ -710,7 +710,7 @@ func (s *ResourceGenerator) endpointsFromDiscoveryChain(
 		return nil, nil
 	}
 
-	upstreamConfigMap := make(map[string]interface{})
+	upstreamConfigMap := make(map[string]any)
 	if upstream != nil {
 		upstreamConfigMap = upstream.Config
 	}

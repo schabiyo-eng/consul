@@ -600,7 +600,7 @@ func TestLeader_ConfigEntryBootstrap(t *testing.T) {
 	global_entry_init := &structs.ProxyConfigEntry{
 		Kind: structs.ProxyDefaults,
 		Name: structs.ProxyConfigGlobal,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"foo": "bar",
 			"bar": int64(1),
 		},
@@ -713,7 +713,7 @@ func TestLeader_ConfigEntryBootstrap_Fail(t *testing.T) {
 				scan := bufio.NewScanner(pr)
 				for scan.Scan() {
 					line := scan.Text()
-					lineJson := map[string]interface{}{}
+					lineJson := map[string]any{}
 					json.Unmarshal([]byte(line), &lineJson)
 
 					if strings.Contains(line, "failed to establish leadership") {

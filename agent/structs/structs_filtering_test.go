@@ -68,7 +68,7 @@ func TestPointerStructure(t *testing.T) {
 // /////////////////////////////////////////////////////////////////////////////
 
 type fieldConfigTest struct {
-	dataType interface{}
+	dataType any
 	expected bexpr.FieldConfigurations
 }
 

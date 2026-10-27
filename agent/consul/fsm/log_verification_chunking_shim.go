@@ -26,7 +26,7 @@ func init() {
 }
 
 // Apply implements raft.FSM.
-func (s *logVerificationChunkingShim) Apply(l *raft.Log) interface{} {
+func (s *logVerificationChunkingShim) Apply(l *raft.Log) any {
 	// This is a hack because raftchunking doesn't play nicely with lower-level
 	// usage of Extensions field like we need for LogStore verification. We might
 	// change that instead but just seeing if I can get this to work here without

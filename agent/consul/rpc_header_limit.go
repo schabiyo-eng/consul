@@ -161,10 +161,10 @@ func (c *boundedHeaderCodec) validateHeaderSize() error {
 // ReadRequestBody decodes the request body. Bodies are intentionally not size
 // bounded here: they are decoded only after method lookup and the request rate
 // limiter have run, and legitimate requests may carry large bodies.
-func (c *boundedHeaderCodec) ReadRequestBody(body interface{}) error {
+func (c *boundedHeaderCodec) ReadRequestBody(body any) error {
 	if body == nil {
 		// net/rpc asks us to discard the body (e.g. unknown method).
-		var throwaway interface{}
+		var throwaway any
 		body = &throwaway
 	}
 	if err := c.dec.Decode(body); err != nil {
@@ -177,7 +177,7 @@ func (c *boundedHeaderCodec) ReadRequestBody(body interface{}) error {
 }
 
 // WriteResponse encodes the response header and body back to the client.
-func (c *boundedHeaderCodec) WriteResponse(r *netRPC.Response, body interface{}) error {
+func (c *boundedHeaderCodec) WriteResponse(r *netRPC.Response, body any) error {
 	c.writeLock.Lock()
 	defer c.writeLock.Unlock()
 	if err := c.enc.Encode(r); err != nil {

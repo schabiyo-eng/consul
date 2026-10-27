@@ -701,7 +701,7 @@ func (s *Store) ACLTokenListWithParameters(ws memdb.WatchSet, params ACLTokenLis
 	}
 
 	if needLocalityFilter && params.Global != params.Local {
-		iter = memdb.NewFilterIterator(iter, func(raw interface{}) bool {
+		iter = memdb.NewFilterIterator(iter, func(raw any) bool {
 			token, ok := raw.(*structs.ACLToken)
 			if !ok {
 				return true
@@ -971,7 +971,7 @@ func (s *Store) ACLPolicyGetByName(ws memdb.WatchSet, name string, entMeta *acl.
 	return s.aclPolicyGet(ws, name, aclPolicyGetByName, entMeta)
 }
 
-func aclPolicyGetByName(tx ReadTxn, name string, entMeta *acl.EnterpriseMeta) (<-chan struct{}, interface{}, error) {
+func aclPolicyGetByName(tx ReadTxn, name string, entMeta *acl.EnterpriseMeta) (<-chan struct{}, any, error) {
 	// todo: accept non-pointer value
 	if entMeta == nil {
 		entMeta = structs.DefaultEnterpriseMetaInDefaultPartition()
@@ -1003,7 +1003,7 @@ func (s *Store) ACLPolicyBatchGet(ws memdb.WatchSet, ids []string) (uint64, stru
 	return idx, policies, nil
 }
 
-type aclPolicyGetFn func(ReadTxn, string, *acl.EnterpriseMeta) (<-chan struct{}, interface{}, error)
+type aclPolicyGetFn func(ReadTxn, string, *acl.EnterpriseMeta) (<-chan struct{}, any, error)
 
 func getPolicyWithTxn(tx ReadTxn, ws memdb.WatchSet, value string, fn aclPolicyGetFn, entMeta *acl.EnterpriseMeta) (*structs.ACLPolicy, error) {
 	watchCh, policy, err := fn(tx, value, entMeta)
@@ -1214,7 +1214,7 @@ func aclRoleSetTxn(tx WriteTxn, idx uint64, role *structs.ACLRole, allowMissing 
 	return aclRoleInsert(tx, role)
 }
 
-type aclRoleGetFn func(ReadTxn, string, *acl.EnterpriseMeta) (<-chan struct{}, interface{}, error)
+type aclRoleGetFn func(ReadTxn, string, *acl.EnterpriseMeta) (<-chan struct{}, any, error)
 
 func (s *Store) ACLRoleGetByID(ws memdb.WatchSet, id string, entMeta *acl.EnterpriseMeta) (uint64, *structs.ACLRole, error) {
 	return s.aclRoleGet(ws, id, aclRoleGetByID, entMeta)
@@ -1224,7 +1224,7 @@ func (s *Store) ACLRoleGetByName(ws memdb.WatchSet, name string, entMeta *acl.En
 	return s.aclRoleGet(ws, name, aclRoleGetByName, entMeta)
 }
 
-func aclRoleGetByName(tx ReadTxn, name string, entMeta *acl.EnterpriseMeta) (<-chan struct{}, interface{}, error) {
+func aclRoleGetByName(tx ReadTxn, name string, entMeta *acl.EnterpriseMeta) (<-chan struct{}, any, error) {
 	// TODO: accept non-pointer value
 	if entMeta == nil {
 		entMeta = structs.DefaultEnterpriseMetaInDefaultPartition()

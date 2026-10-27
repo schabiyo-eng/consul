@@ -36,7 +36,7 @@ func (r *FederationStateReplicator) PluralNoun() string { return "federation sta
 func (r *FederationStateReplicator) MetricName() string { return "federation-state" }
 
 // FetchRemote implements IndexReplicatorDelegate.
-func (r *FederationStateReplicator) FetchRemote(lastRemoteIndex uint64) (int, interface{}, uint64, error) {
+func (r *FederationStateReplicator) FetchRemote(lastRemoteIndex uint64) (int, any, uint64, error) {
 	if !r.srv.DatacenterSupportsFederationStates() {
 		return 0, nil, 0, errFederationStatesNotSupported
 	}
@@ -47,7 +47,7 @@ func (r *FederationStateReplicator) FetchRemote(lastRemoteIndex uint64) (int, in
 	return lenRemote, remote, remoteIndex, err
 }
 
-func (r *FederationStateReplicator) fetchRemote(lastRemoteIndex uint64) (int, interface{}, uint64, error) {
+func (r *FederationStateReplicator) fetchRemote(lastRemoteIndex uint64) (int, any, uint64, error) {
 	req := structs.DCSpecificRequest{
 		Datacenter: r.srv.config.PrimaryDatacenter,
 		QueryOptions: structs.QueryOptions{
@@ -68,7 +68,7 @@ func (r *FederationStateReplicator) fetchRemote(lastRemoteIndex uint64) (int, in
 }
 
 // FetchLocal implements IndexReplicatorDelegate.
-func (r *FederationStateReplicator) FetchLocal() (int, interface{}, error) {
+func (r *FederationStateReplicator) FetchLocal() (int, any, error) {
 	_, local, err := r.srv.fsm.State().FederationStateList(nil)
 	if err != nil {
 		return 0, nil, err
@@ -78,7 +78,7 @@ func (r *FederationStateReplicator) FetchLocal() (int, interface{}, error) {
 }
 
 // DiffRemoteAndLocalState implements IndexReplicatorDelegate.
-func (r *FederationStateReplicator) DiffRemoteAndLocalState(localRaw interface{}, remoteRaw interface{}, lastRemoteIndex uint64) (*IndexReplicatorDiff, error) {
+func (r *FederationStateReplicator) DiffRemoteAndLocalState(localRaw any, remoteRaw any, lastRemoteIndex uint64) (*IndexReplicatorDiff, error) {
 	local, ok := localRaw.([]*structs.FederationState)
 	if !ok {
 		return nil, fmt.Errorf("invalid type for local federation states: %T", localRaw)
@@ -141,7 +141,7 @@ func federationStateSort(states []*structs.FederationState) {
 }
 
 // PerformDeletions implements IndexReplicatorDelegate.
-func (r *FederationStateReplicator) PerformDeletions(ctx context.Context, deletionsRaw interface{}) (exit bool, err error) {
+func (r *FederationStateReplicator) PerformDeletions(ctx context.Context, deletionsRaw any) (exit bool, err error) {
 	deletions, ok := deletionsRaw.([]*structs.FederationState)
 	if !ok {
 		return false, fmt.Errorf("invalid type for federation states deletions list: %T", deletionsRaw)
@@ -176,7 +176,7 @@ func (r *FederationStateReplicator) PerformDeletions(ctx context.Context, deleti
 }
 
 // PerformUpdates implements IndexReplicatorDelegate.
-func (r *FederationStateReplicator) PerformUpdates(ctx context.Context, updatesRaw interface{}) (exit bool, err error) {
+func (r *FederationStateReplicator) PerformUpdates(ctx context.Context, updatesRaw any) (exit bool, err error) {
 	updates, ok := updatesRaw.([]*structs.FederationState)
 	if !ok {
 		return false, fmt.Errorf("invalid type for federation states update list: %T", updatesRaw)

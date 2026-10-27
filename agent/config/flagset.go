@@ -32,7 +32,7 @@ func (s *boolPtrValue) Set(val string) error {
 	return nil
 }
 
-func (s *boolPtrValue) Get() interface{} {
+func (s *boolPtrValue) Get() any {
 	if s.b {
 		return *s.v
 	}
@@ -67,7 +67,7 @@ func (s *durationPtrValue) Set(val string) error {
 	return nil
 }
 
-func (s *durationPtrValue) Get() interface{} {
+func (s *durationPtrValue) Get() any {
 	if s.b {
 		return *s.v
 	}
@@ -102,7 +102,7 @@ func (s *intPtrValue) Set(val string) error {
 	return nil
 }
 
-func (s *intPtrValue) Get() interface{} {
+func (s *intPtrValue) Get() any {
 	if s.b {
 		return *s.v
 	}
@@ -135,7 +135,7 @@ func (s *stringMapValue) Set(val string) error {
 	return nil
 }
 
-func (s *stringMapValue) Get() interface{} {
+func (s *stringMapValue) Get() any {
 	return s
 }
 
@@ -167,7 +167,7 @@ func (s *stringPtrValue) Set(val string) error {
 	return nil
 }
 
-func (s *stringPtrValue) Get() interface{} {
+func (s *stringPtrValue) Get() any {
 	if s.b {
 		return *s.v
 	}
@@ -194,7 +194,7 @@ func (s *stringSliceValue) Set(val string) error {
 	return nil
 }
 
-func (s *stringSliceValue) Get() interface{} {
+func (s *stringSliceValue) Get() any {
 	return s
 }
 

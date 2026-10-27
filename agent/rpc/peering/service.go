@@ -113,7 +113,7 @@ func NewServer(cfg Config) *Server {
 	}
 }
 
-func requireNotNil(v interface{}, name string) {
+func requireNotNil(v any, name string) {
 	if v == nil {
 		panic(name + " is required")
 	}

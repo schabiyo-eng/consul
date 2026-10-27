@@ -31,7 +31,7 @@ func TestUIServerIndex(t *testing.T) {
 		wantStatus      int
 		wantContains    []string
 		wantNotContains []string
-		wantEnv         map[string]interface{}
+		wantEnv         map[string]any
 		wantUICfgJSON   string
 	}{
 		{
@@ -136,9 +136,9 @@ func TestUIServerIndex(t *testing.T) {
 				withMetricsProvider("foo"),
 			),
 			path: "/",
-			tx: func(data map[string]interface{}) error {
+			tx: func(data map[string]any) error {
 				data["SSOEnabled"] = true
-				o := data["UIConfig"].(map[string]interface{})
+				o := data["UIConfig"].(map[string]any)
 				o["metrics_provider"] = "bar"
 				return nil
 			},
@@ -405,7 +405,7 @@ func TestHandler_ServeHTTP_TransformIsEvaluatedOnEachRequest(t *testing.T) {
 	cfg := basicUIEnabledConfig()
 
 	value := "seeds"
-	transform := func(data map[string]interface{}) error {
+	transform := func(data map[string]any) error {
 		data["apple"] = value
 		return nil
 	}
@@ -558,7 +558,7 @@ func TestServeTransformedJS_ErrorCases(t *testing.T) {
 		cfg.UIConfig.Dir = uiDir
 
 		// Create a transform function that returns an error
-		transform := func(data map[string]interface{}) error {
+		transform := func(data map[string]any) error {
 			return &UITransformError{msg: "transform failed"}
 		}
 		h := NewHandler(cfg, testutil.Logger(t), transform)
@@ -587,7 +587,7 @@ func TestServeTransformedJS_ErrorCases(t *testing.T) {
 		cfg.UIConfig.Dir = uiDir
 
 		// Create a transform function that removes ContentPath
-		transform := func(data map[string]interface{}) error {
+		transform := func(data map[string]any) error {
 			delete(data, "ContentPath")
 			return nil
 		}
@@ -617,7 +617,7 @@ func TestServeTransformedJS_ErrorCases(t *testing.T) {
 		cfg.UIConfig.Dir = uiDir
 
 		// Create a transform function that changes ContentPath to wrong type
-		transform := func(data map[string]interface{}) error {
+		transform := func(data map[string]any) error {
 			data["ContentPath"] = 123 // Set to non-string type
 			return nil
 		}

@@ -21,7 +21,7 @@ func PanicHandlerMiddlewareOpts(logger Logger) []recovery.Option {
 // NewPanicHandler returns a recovery.RecoveryHandlerFunc closure function
 // to handle panic in GRPC server's handlers.
 func NewPanicHandler(logger Logger) recovery.RecoveryHandlerFunc {
-	return func(p interface{}) (err error) {
+	return func(p any) (err error) {
 		// Log the panic and the stack trace of the Goroutine that caused the panic.
 		stacktrace := hclog.Stacktrace()
 		logger.Error("panic serving grpc request",
@@ -34,6 +34,6 @@ func NewPanicHandler(logger Logger) recovery.RecoveryHandlerFunc {
 }
 
 type Logger interface {
-	Error(string, ...interface{})
-	Warn(string, ...interface{})
+	Error(string, ...any)
+	Warn(string, ...any)
 }

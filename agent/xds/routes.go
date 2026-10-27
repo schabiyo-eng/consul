@@ -552,7 +552,7 @@ func buildHTTPRouteUpstream(route structs.HTTPRouteConfigEntry, listener structs
 		DestinationPartition: route.PartitionOrDefault(),
 		IngressHosts:         route.Hostnames,
 		LocalBindPort:        listener.Port,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": string(listener.Protocol),
 		},
 	}
@@ -674,7 +674,7 @@ func (s *ResourceGenerator) makeUpstreamRouteForDiscoveryChain(
 	}
 
 	// Get the upstream config for this service to support failover logic
-	var upstreamConfigMap map[string]interface{}
+	var upstreamConfigMap map[string]any
 	upstream, skip := cfgSnap.ConnectProxy.GetUpstream(uid, &cfgSnap.ProxyID.EnterpriseMeta)
 	if !skip && upstream != nil {
 		upstreamConfigMap = upstream.Config

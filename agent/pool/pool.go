@@ -569,8 +569,8 @@ func (p *ConnPool) RPC(
 	nodeName string,
 	addr net.Addr,
 	method string,
-	args interface{},
-	reply interface{},
+	args any,
+	reply any,
 ) error {
 	if nodeName == "" {
 		return fmt.Errorf("pool: ConnPool.RPC requires a node name")
@@ -592,7 +592,7 @@ func (p *ConnPool) RPC(
 // transparent for the consumer. The pool cannot be used because
 // AutoEncrypt.Sign is a one-off call and it doesn't make sense to pool that
 // connection if it is not being reused.
-func (p *ConnPool) rpcInsecure(dc string, addr net.Addr, method string, args interface{}, reply interface{}) error {
+func (p *ConnPool) rpcInsecure(dc string, addr net.Addr, method string, args any, reply any) error {
 	if dc != p.Datacenter {
 		return fmt.Errorf("insecure dialing prohibited between datacenters")
 	}
@@ -624,7 +624,7 @@ type BlockableQuery interface {
 var _ BlockableQuery = (*structs.QueryOptions)(nil)
 var _ BlockableQuery = (*pbcommon.QueryOptions)(nil)
 
-func (p *ConnPool) rpc(dc string, nodeName string, addr net.Addr, method string, args interface{}, reply interface{}) error {
+func (p *ConnPool) rpc(dc string, nodeName string, addr net.Addr, method string, args any, reply any) error {
 	p.once.Do(p.init)
 
 	// Get a usable client

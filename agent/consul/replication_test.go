@@ -57,28 +57,28 @@ func (d *indexReplicatorTestDelegate) MetricName() string {
 	return "test"
 }
 
-func (d *indexReplicatorTestDelegate) FetchRemote(lastRemoteIndex uint64) (int, interface{}, uint64, error) {
+func (d *indexReplicatorTestDelegate) FetchRemote(lastRemoteIndex uint64) (int, any, uint64, error) {
 	ret := d.Called(lastRemoteIndex)
 	return ret.Int(0), ret.Get(1), ret.Get(2).(uint64), ret.Error(3)
 }
 
-func (d *indexReplicatorTestDelegate) FetchLocal() (int, interface{}, error) {
+func (d *indexReplicatorTestDelegate) FetchLocal() (int, any, error) {
 	ret := d.Called()
 	return ret.Int(0), ret.Get(1), ret.Error(2)
 }
 
-func (d *indexReplicatorTestDelegate) DiffRemoteAndLocalState(local interface{}, remote interface{}, lastRemoteIndex uint64) (*IndexReplicatorDiff, error) {
+func (d *indexReplicatorTestDelegate) DiffRemoteAndLocalState(local any, remote any, lastRemoteIndex uint64) (*IndexReplicatorDiff, error) {
 	ret := d.Called(local, remote, lastRemoteIndex)
 	return ret.Get(0).(*IndexReplicatorDiff), ret.Error(1)
 }
 
-func (d *indexReplicatorTestDelegate) PerformDeletions(ctx context.Context, deletions interface{}) (exit bool, err error) {
+func (d *indexReplicatorTestDelegate) PerformDeletions(ctx context.Context, deletions any) (exit bool, err error) {
 	// ignore the context for the call
 	ret := d.Called(deletions)
 	return ret.Bool(0), ret.Error(1)
 }
 
-func (d *indexReplicatorTestDelegate) PerformUpdates(ctx context.Context, updates interface{}) (exit bool, err error) {
+func (d *indexReplicatorTestDelegate) PerformUpdates(ctx context.Context, updates any) (exit bool, err error) {
 	// ignore the context for the call
 	ret := d.Called(updates)
 	return ret.Bool(0), ret.Error(1)

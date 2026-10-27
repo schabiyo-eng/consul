@@ -99,12 +99,12 @@ func requireCheckMissing(t *testing.T, a *TestAgent, id types.CheckID) {
 	require.Nil(t, getCheck(a, id), "have check %q (expected missing)", id)
 }
 
-func requireCheckExistsMap(t *testing.T, m interface{}, id types.CheckID) {
+func requireCheckExistsMap(t *testing.T, m any, id types.CheckID) {
 	t.Helper()
 	require.Contains(t, m, structs.NewCheckID(id, nil), "missing check %q", id)
 }
 
-func requireCheckMissingMap(t *testing.T, m interface{}, id types.CheckID) {
+func requireCheckMissingMap(t *testing.T, m any, id types.CheckID) {
 	t.Helper()
 	require.NotContains(t, m, structs.NewCheckID(id, nil), "have check %q (expected missing)", id)
 }
@@ -1886,7 +1886,7 @@ func TestAgent_RestoreServiceWithAliasCheck(t *testing.T) {
 
 	// We do this so that the agent logs and the informational messages from
 	// the test itself are interwoven properly.
-	logf := func(a *TestAgent, format string, args ...interface{}) {
+	logf := func(a *TestAgent, format string, args ...any) {
 		a.logger.Info("testharness: " + fmt.Sprintf(format, args...))
 	}
 
@@ -4072,11 +4072,11 @@ func TestAgent_reloadWatches(t *testing.T) {
 
 	// Normal watch with http addr set, should succeed
 	newConf := *a.config
-	newConf.Watches = []map[string]interface{}{
+	newConf.Watches = []map[string]any{
 		{
 			"type": "key",
 			"key":  "asdf",
-			"args": []interface{}{"ls"},
+			"args": []any{"ls"},
 		},
 	}
 	if err := a.reloadWatches(&newConf); err != nil {
@@ -4084,11 +4084,11 @@ func TestAgent_reloadWatches(t *testing.T) {
 	}
 
 	// Should fail to reload with connect watches
-	newConf.Watches = []map[string]interface{}{
+	newConf.Watches = []map[string]any{
 		{
 			"type": "connect_roots",
 			"key":  "asdf",
-			"args": []interface{}{"ls"},
+			"args": []any{"ls"},
 		},
 	}
 	if err := a.reloadWatches(&newConf); err == nil || !strings.Contains(err.Error(), "not allowed in agent config") {
@@ -4098,11 +4098,11 @@ func TestAgent_reloadWatches(t *testing.T) {
 	// Should still succeed with only HTTPS addresses
 	newConf.HTTPSAddrs = newConf.HTTPAddrs
 	newConf.HTTPAddrs = make([]net.Addr, 0)
-	newConf.Watches = []map[string]interface{}{
+	newConf.Watches = []map[string]any{
 		{
 			"type": "key",
 			"key":  "asdf",
-			"args": []interface{}{"ls"},
+			"args": []any{"ls"},
 		},
 	}
 	if err := a.reloadWatches(&newConf); err != nil {
@@ -4111,11 +4111,11 @@ func TestAgent_reloadWatches(t *testing.T) {
 
 	// Should fail to reload with no http or https addrs
 	newConf.HTTPSAddrs = make([]net.Addr, 0)
-	newConf.Watches = []map[string]interface{}{
+	newConf.Watches = []map[string]any{
 		{
 			"type": "key",
 			"key":  "asdf",
-			"args": []interface{}{"ls"},
+			"args": []any{"ls"},
 		},
 	}
 	if err := a.reloadWatches(&newConf); err == nil || !strings.Contains(err.Error(), "watch plans require an HTTP or HTTPS endpoint") {
@@ -4137,11 +4137,11 @@ func TestAgent_reloadWatchesHTTPS(t *testing.T) {
 
 	// Normal watch with http addr set, should succeed
 	newConf := *a.config
-	newConf.Watches = []map[string]interface{}{
+	newConf.Watches = []map[string]any{
 		{
 			"type": "key",
 			"key":  "asdf",
-			"args": []interface{}{"ls"},
+			"args": []any{"ls"},
 		},
 	}
 	if err := a.reloadWatches(&newConf); err != nil {
@@ -5444,7 +5444,7 @@ func TestAutoConfig_Integration(t *testing.T) {
 		Audience:  jwt.Audience{"consul"},
 		NotBefore: jwt.NewNumericDate(now.Add(-1 * time.Second)),
 		Expiry:    jwt.NewNumericDate(now.Add(5 * time.Minute)),
-	}, map[string]interface{}{
+	}, map[string]any{
 		"consul_node_name": "test-client",
 	})
 	require.NoError(t, err)
@@ -5498,7 +5498,7 @@ func TestAutoConfig_Integration(t *testing.T) {
 		WriteRequest: structs.WriteRequest{Token: TestDefaultInitialManagementToken},
 		Config: &structs.CAConfiguration{
 			Provider: "consul",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"LeafCertTTL":         "1h",
 				"PrivateKey":          ca.SigningKey,
 				"RootCert":            ca.RootCert,
@@ -5506,7 +5506,7 @@ func TestAutoConfig_Integration(t *testing.T) {
 			},
 		},
 	}
-	var reply interface{}
+	var reply any
 	require.NoError(t, srv.RPC(context.Background(), "ConnectCA.ConfigurationSet", &req, &reply))
 
 	// ensure that a new cert gets generated and pushed into the TLS configurator
@@ -6499,7 +6499,7 @@ var cmpCertPool = cmp.Options{
 	cmp.AllowUnexported(x509.CertPool{}),
 }
 
-func assertDeepEqual(t *testing.T, x, y interface{}, opts ...cmp.Option) {
+func assertDeepEqual(t *testing.T, x, y any, opts ...cmp.Option) {
 	t.Helper()
 	if diff := cmp.Diff(x, y, opts...); diff != "" {
 		t.Fatalf("assertion failed: values are not equal\n--- expected\n+++ actual\n%v", diff)

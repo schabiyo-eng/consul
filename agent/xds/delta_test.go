@@ -64,7 +64,7 @@ func TestServer_DeltaAggregatedResources_v3_BasicProtocol_TCP(t *testing.T) {
 				ns.Proxy.EnvoyExtensions = []structs.EnvoyExtension{
 					{
 						Name: api.BuiltinLuaExtension,
-						Arguments: map[string]interface{}{
+						Arguments: map[string]any{
 							"ProxyType": "connect-proxy",
 							"Listener":  "inbound",
 							"Script":    "x = 0",
@@ -1802,9 +1802,9 @@ func Test_validateAndApplyEnvoyExtension_Validations(t *testing.T) {
 		Namespace: "ns1",
 	}
 
-	makeRuntimeConfig := func(required bool, consulVersion string, envoyVersion string, args map[string]interface{}) extensioncommon.RuntimeConfig {
+	makeRuntimeConfig := func(required bool, consulVersion string, envoyVersion string, args map[string]any) extensioncommon.RuntimeConfig {
 		if args == nil {
-			args = map[string]interface{}{
+			args = map[string]any{
 				"ARN": "arn:aws:lambda:us-east-1:111111111111:function:lambda-1234",
 			}
 
@@ -1856,13 +1856,13 @@ func Test_validateAndApplyEnvoyExtension_Validations(t *testing.T) {
 		},
 		{
 			name:          "invalid extension arguments - required",
-			runtimeConfig: makeRuntimeConfig(true, ">= 1.15.0", ">= 1.25.0", map[string]interface{}{"bad": "args"}),
+			runtimeConfig: makeRuntimeConfig(true, ">= 1.15.0", ">= 1.25.0", map[string]any{"bad": "args"}),
 			err:           true,
 			errString:     "failed to construct extension",
 		},
 		{
 			name:          "invalid extension arguments - not required",
-			runtimeConfig: makeRuntimeConfig(false, ">= 1.15.0", ">= 1.25.0", map[string]interface{}{"bad": "args"}),
+			runtimeConfig: makeRuntimeConfig(false, ">= 1.15.0", ">= 1.25.0", map[string]any{"bad": "args"}),
 			err:           false,
 		},
 		{

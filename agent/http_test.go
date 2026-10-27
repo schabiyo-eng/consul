@@ -448,7 +448,7 @@ func TestHTTPAPI_BlockEndpoints(t *testing.T) {
 	`)
 	defer a.Shutdown()
 
-	handler := func(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+	handler := func(resp http.ResponseWriter, req *http.Request) (any, error) {
 		return nil, nil
 	}
 
@@ -536,7 +536,7 @@ func TestHTTPAPI_TranslateAddrHeader(t *testing.T) {
 		defer a.Shutdown()
 
 		resp := httptest.NewRecorder()
-		handler := func(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+		handler := func(resp http.ResponseWriter, req *http.Request) (any, error) {
 			return nil, nil
 		}
 
@@ -557,7 +557,7 @@ func TestHTTPAPI_TranslateAddrHeader(t *testing.T) {
 		defer a.Shutdown()
 
 		resp := httptest.NewRecorder()
-		handler := func(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+		handler := func(resp http.ResponseWriter, req *http.Request) (any, error) {
 			return nil, nil
 		}
 
@@ -611,7 +611,7 @@ func TestHTTPAPI_DefaultACLPolicy(t *testing.T) {
 			defer a.Shutdown()
 
 			resp := httptest.NewRecorder()
-			handler := func(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+			handler := func(resp http.ResponseWriter, req *http.Request) (any, error) {
 				return nil, nil
 			}
 
@@ -849,7 +849,7 @@ func TestContentTypeIsJSON(t *testing.T) {
 	defer a.Shutdown()
 
 	resp := httptest.NewRecorder()
-	handler := func(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+	handler := func(resp http.ResponseWriter, req *http.Request) (any, error) {
 		// stub out a DirEntry so that it will be encoded as JSON
 		return &structs.DirEntry{Key: "key"}, nil
 	}
@@ -877,7 +877,7 @@ func TestHTTP_wrap_obfuscateLog(t *testing.T) {
 	})
 	defer a.Shutdown()
 
-	handler := func(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+	handler := func(resp http.ResponseWriter, req *http.Request) (any, error) {
 		return nil, nil
 	}
 
@@ -947,7 +947,7 @@ func testPrettyPrint(pretty string, t *testing.T) {
 	r := &structs.DirEntry{Key: "key"}
 
 	resp := httptest.NewRecorder()
-	handler := func(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+	handler := func(resp http.ResponseWriter, req *http.Request) (any, error) {
 		return r, nil
 	}
 
@@ -1907,7 +1907,7 @@ func getIndex(t *testing.T, resp *httptest.ResponseRecorder) uint64 {
 	return uint64(val)
 }
 
-func jsonReader(v interface{}) io.Reader {
+func jsonReader(v any) io.Reader {
 	if v == nil {
 		return nil
 	}

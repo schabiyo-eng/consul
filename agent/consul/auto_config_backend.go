@@ -20,7 +20,7 @@ type autoConfigBackend struct {
 	Server *Server
 }
 
-func (b autoConfigBackend) ForwardRPC(method string, info structs.RPCInfo, reply interface{}) (bool, error) {
+func (b autoConfigBackend) ForwardRPC(method string, info structs.RPCInfo, reply any) (bool, error) {
 	return b.Server.ForwardRPC(method, info, reply)
 }
 

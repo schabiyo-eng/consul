@@ -84,8 +84,8 @@ func TestSetFilePermissions(t *testing.T) {
 }
 
 func TestDurationFixer(t *testing.T) {
-	obj := map[string]interface{}{
-		"key1": []map[string]interface{}{
+	obj := map[string]any{
+		"key1": []map[string]any{
 			{
 				"subkey1": "10s",
 			},
@@ -93,15 +93,15 @@ func TestDurationFixer(t *testing.T) {
 				"subkey2": "5d",
 			},
 		},
-		"key2": map[string]interface{}{
+		"key2": map[string]any{
 			"subkey3": "30s",
 			"subkey4": "20m",
 		},
 		"key3": "11s",
 		"key4": "49h",
 	}
-	expected := map[string]interface{}{
-		"key1": []map[string]interface{}{
+	expected := map[string]any{
+		"key1": []map[string]any{
 			{
 				"subkey1": 10 * time.Second,
 			},
@@ -109,7 +109,7 @@ func TestDurationFixer(t *testing.T) {
 				"subkey2": "5d",
 			},
 		},
-		"key2": map[string]interface{}{
+		"key2": map[string]any{
 			"subkey3": "30s",
 			"subkey4": 20 * time.Minute,
 		},

@@ -87,7 +87,7 @@ func NewServiceWithConfig(serviceName string, config Config) (*Service, error) {
 	}
 
 	// Set up root and leaf watches
-	p, err := watch.Parse(map[string]interface{}{
+	p, err := watch.Parse(map[string]any{
 		"type": "connect_roots",
 	})
 	if err != nil {
@@ -96,7 +96,7 @@ func NewServiceWithConfig(serviceName string, config Config) (*Service, error) {
 	s.rootsWatch = p
 	s.rootsWatch.HybridHandler = s.rootsWatchHandler
 
-	p, err = watch.Parse(map[string]interface{}{
+	p, err = watch.Parse(map[string]any{
 		"type":    "connect_leaf",
 		"service": s.service,
 	})
@@ -292,7 +292,7 @@ func (s *Service) Close() error {
 	return nil
 }
 
-func (s *Service) rootsWatchHandler(blockParam watch.BlockingParamVal, raw interface{}) {
+func (s *Service) rootsWatchHandler(blockParam watch.BlockingParamVal, raw any) {
 	if raw == nil {
 		return
 	}
@@ -311,7 +311,7 @@ func (s *Service) rootsWatchHandler(blockParam watch.BlockingParamVal, raw inter
 	s.tlsCfg.SetRoots(roots)
 }
 
-func (s *Service) leafWatchHandler(blockParam watch.BlockingParamVal, raw interface{}) {
+func (s *Service) leafWatchHandler(blockParam watch.BlockingParamVal, raw any) {
 	if raw == nil {
 		return // ignore
 	}

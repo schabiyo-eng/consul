@@ -100,7 +100,7 @@ func TestSessionCreate(t *testing.T) {
 		// Associate session with node and 2 health checks
 		body := bytes.NewBuffer(nil)
 		enc := json.NewEncoder(body)
-		raw := map[string]interface{}{
+		raw := map[string]any{
 			"Name":      "my-cool-session",
 			"Node":      a.Config.NodeName,
 			"Checks":    []types.CheckID{"consul"},
@@ -162,7 +162,7 @@ func TestSessionCreate_NodeChecks(t *testing.T) {
 		// Associate session with node and 2 health checks
 		body := bytes.NewBuffer(nil)
 		enc := json.NewEncoder(body)
-		raw := map[string]interface{}{
+		raw := map[string]any{
 			"Name": "my-cool-session",
 			"Node": a.Config.NodeName,
 			"ServiceChecks": []structs.ServiceCheck{
@@ -225,7 +225,7 @@ func TestSessionCreate_Delete(t *testing.T) {
 		// Associate session with node and 2 health checks, and make it delete on session destroy
 		body := bytes.NewBuffer(nil)
 		enc := json.NewEncoder(body)
-		raw := map[string]interface{}{
+		raw := map[string]any{
 			"Name":       "my-cool-session",
 			"Node":       a.Config.NodeName,
 			"Checks":     []types.CheckID{"consul"},
@@ -265,7 +265,7 @@ func TestSessionCreate_DefaultCheck(t *testing.T) {
 	defer a.Shutdown()
 	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
 
-	raw := map[string]interface{}{
+	raw := map[string]any{
 		"Name":      "my-cool-session",
 		"Node":      a.Config.NodeName,
 		"LockDelay": "20s",
@@ -304,7 +304,7 @@ func TestSessionCreate_NoCheck(t *testing.T) {
 
 	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
 
-	raw := map[string]interface{}{
+	raw := map[string]any{
 		"Name":      "my-cool-session",
 		"Node":      a.Config.NodeName,
 		"LockDelay": "20s",
@@ -335,7 +335,7 @@ func TestSessionCreate_NoCheck(t *testing.T) {
 	})
 
 	t.Run("overwrite nodechecks to associate with no checks", func(t *testing.T) {
-		raw := map[string]interface{}{
+		raw := map[string]any{
 			"Name":       "my-cool-session",
 			"Node":       a.Config.NodeName,
 			"NodeChecks": []string{},
@@ -365,7 +365,7 @@ func TestSessionCreate_NoCheck(t *testing.T) {
 	})
 
 	t.Run("overwrite checks to associate with no checks", func(t *testing.T) {
-		raw := map[string]interface{}{
+		raw := map[string]any{
 			"Name":      "my-cool-session",
 			"Node":      a.Config.NodeName,
 			"Checks":    []string{},
@@ -415,7 +415,7 @@ func makeTestSessionDelete(t *testing.T, srv *HTTPHandlers) string {
 	// Create Session with delete behavior
 	body := bytes.NewBuffer(nil)
 	enc := json.NewEncoder(body)
-	raw := map[string]interface{}{
+	raw := map[string]any{
 		"Behavior": "delete",
 	}
 	require.NoError(t, enc.Encode(raw))
@@ -436,7 +436,7 @@ func makeTestSessionTTL(t testutil.TestingTB, srv *HTTPHandlers, ttl string) str
 	// Create Session with TTL
 	body := bytes.NewBuffer(nil)
 	enc := json.NewEncoder(body)
-	raw := map[string]interface{}{
+	raw := map[string]any{
 		"TTL": ttl,
 	}
 	require.NoError(t, enc.Encode(raw))

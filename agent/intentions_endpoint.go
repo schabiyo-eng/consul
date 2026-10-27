@@ -15,7 +15,7 @@ import (
 )
 
 // /v1/connect/intentions
-func (s *HTTPHandlers) IntentionEndpoint(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) IntentionEndpoint(resp http.ResponseWriter, req *http.Request) (any, error) {
 	switch req.Method {
 	case "GET":
 		return s.IntentionList(resp, req)
@@ -29,7 +29,7 @@ func (s *HTTPHandlers) IntentionEndpoint(resp http.ResponseWriter, req *http.Req
 }
 
 // GET /v1/connect/intentions
-func (s *HTTPHandlers) IntentionList(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) IntentionList(resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Method is tested in IntentionEndpoint
 
 	var args structs.IntentionListRequest
@@ -52,7 +52,7 @@ func (s *HTTPHandlers) IntentionList(resp http.ResponseWriter, req *http.Request
 
 // IntentionCreate is used to create legacy intentions.
 // Deprecated: use IntentionPutExact.
-func (s *HTTPHandlers) IntentionCreate(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) IntentionCreate(resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Method is tested in IntentionEndpoint
 
 	var entMeta acl.EnterpriseMeta
@@ -112,7 +112,7 @@ func (s *HTTPHandlers) validateEnterpriseIntention(ixn *structs.Intention) error
 }
 
 // GET /v1/connect/intentions/match
-func (s *HTTPHandlers) IntentionMatch(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) IntentionMatch(resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Prepare args
 	args := &structs.IntentionQueryRequest{Match: &structs.IntentionQueryMatch{}}
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
@@ -205,7 +205,7 @@ func (s *HTTPHandlers) IntentionMatch(resp http.ResponseWriter, req *http.Reques
 }
 
 // GET /v1/connect/intentions/check
-func (s *HTTPHandlers) IntentionCheck(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) IntentionCheck(resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Prepare args
 	args := &structs.IntentionQueryRequest{Check: &structs.IntentionQueryCheck{}}
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
@@ -265,7 +265,7 @@ func (s *HTTPHandlers) IntentionCheck(resp http.ResponseWriter, req *http.Reques
 }
 
 // IntentionExact handles the endpoint for /v1/connect/intentions/exact
-func (s *HTTPHandlers) IntentionExact(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) IntentionExact(resp http.ResponseWriter, req *http.Request) (any, error) {
 	switch req.Method {
 	case "GET":
 		return s.IntentionGetExact(resp, req)
@@ -279,7 +279,7 @@ func (s *HTTPHandlers) IntentionExact(resp http.ResponseWriter, req *http.Reques
 }
 
 // GET /v1/connect/intentions/exact
-func (s *HTTPHandlers) IntentionGetExact(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) IntentionGetExact(resp http.ResponseWriter, req *http.Request) (any, error) {
 	var entMeta acl.EnterpriseMeta
 	if err := s.parseEntMetaNoWildcard(req, &entMeta); err != nil {
 		return nil, err
@@ -355,7 +355,7 @@ func (s *HTTPHandlers) IntentionGetExact(resp http.ResponseWriter, req *http.Req
 }
 
 // PUT /v1/connect/intentions/exact
-func (s *HTTPHandlers) IntentionPutExact(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) IntentionPutExact(resp http.ResponseWriter, req *http.Request) (any, error) {
 	var entMeta acl.EnterpriseMeta
 	if err := s.parseEntMetaNoWildcard(req, &entMeta); err != nil {
 		return nil, err
@@ -397,7 +397,7 @@ func (s *HTTPHandlers) IntentionPutExact(resp http.ResponseWriter, req *http.Req
 }
 
 // DELETE /v1/connect/intentions/exact
-func (s *HTTPHandlers) IntentionDeleteExact(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) IntentionDeleteExact(resp http.ResponseWriter, req *http.Request) (any, error) {
 	var entMeta acl.EnterpriseMeta
 	if err := s.parseEntMetaNoWildcard(req, &entMeta); err != nil {
 		return nil, err
@@ -515,7 +515,7 @@ func parseIntentionStringComponent(input string, entMeta *acl.EnterpriseMeta, al
 
 // IntentionSpecific handles the endpoint for /v1/connect/intentions/:id.
 // Deprecated: use IntentionExact.
-func (s *HTTPHandlers) IntentionSpecific(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) IntentionSpecific(resp http.ResponseWriter, req *http.Request) (any, error) {
 	id := strings.TrimPrefix(req.URL.Path, "/v1/connect/intentions/")
 
 	switch req.Method {
@@ -534,7 +534,7 @@ func (s *HTTPHandlers) IntentionSpecific(resp http.ResponseWriter, req *http.Req
 }
 
 // Deprecated: use IntentionGetExact.
-func (s *HTTPHandlers) IntentionSpecificGet(id string, resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) IntentionSpecificGet(id string, resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Method is tested in IntentionEndpoint
 
 	args := structs.IntentionQueryRequest{
@@ -573,7 +573,7 @@ func (s *HTTPHandlers) IntentionSpecificGet(id string, resp http.ResponseWriter,
 }
 
 // Deprecated: use IntentionPutExact.
-func (s *HTTPHandlers) IntentionSpecificUpdate(id string, resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) IntentionSpecificUpdate(id string, resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Method is tested in IntentionEndpoint
 
 	var entMeta acl.EnterpriseMeta
@@ -616,7 +616,7 @@ func (s *HTTPHandlers) IntentionSpecificUpdate(id string, resp http.ResponseWrit
 }
 
 // Deprecated: use IntentionDeleteExact.
-func (s *HTTPHandlers) IntentionSpecificDelete(id string, resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) IntentionSpecificDelete(id string, resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Method is tested in IntentionEndpoint
 
 	args := structs.IntentionRequest{

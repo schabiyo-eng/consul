@@ -84,7 +84,7 @@ func (s *ConnectCA) ConfigurationGet(
 // ConfigurationSet updates the configuration for the CA.
 func (s *ConnectCA) ConfigurationSet(
 	args *structs.CARequest,
-	reply *interface{}) error {
+	reply *any) error {
 	// Exit early if Connect hasn't been enabled.
 	if !s.srv.config.ConnectEnabled {
 		return ErrConnectNotEnabled

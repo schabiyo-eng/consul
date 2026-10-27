@@ -1269,7 +1269,7 @@ func registerProxyDefaults(t *testing.T, a *TestAgent) (proxyGlobalEntry structs
 		Kind: structs.ProxyDefaults,
 		Name: structs.ProxyConfigGlobal,
 		Mode: structs.ProxyModeDirect,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"local_connect_timeout_ms": uint64(1000),
 			"handshake_timeout_ms":     uint64(1000),
 		},
@@ -1372,7 +1372,7 @@ func TestListServiceNodes_MergeCentralConfig(t *testing.T) {
 		}
 		req, _ := http.NewRequest("GET", url, nil)
 		resp := httptest.NewRecorder()
-		var obj interface{}
+		var obj any
 		var err error
 		if tc.connect {
 			obj, err = a.srv.CatalogConnectServiceNodes(resp, req)

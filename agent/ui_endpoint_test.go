@@ -1750,7 +1750,7 @@ func TestUIServiceTopology(t *testing.T) {
 				Entry: &structs.ProxyConfigEntry{
 					Kind: structs.ProxyDefaults,
 					Name: structs.ProxyConfigGlobal,
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"protocol": "http",
 					},
 				},
@@ -2375,7 +2375,7 @@ func TestUIServiceTopology_RoutingConfigs(t *testing.T) {
 				Entry: &structs.ProxyConfigEntry{
 					Kind: structs.ProxyDefaults,
 					Name: structs.ProxyConfigGlobal,
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"protocol": "http",
 					},
 				},

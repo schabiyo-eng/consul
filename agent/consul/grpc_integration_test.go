@@ -162,7 +162,7 @@ func TestGRPCIntegration_ACL_Login_Logout(t *testing.T) {
 	testauth.InstallSessionToken(testSessionID, "fake-token", "default", "demo", "abc123")
 
 	authMethod, err := upsertTestCustomizedAuthMethod(primaryCodec, TestDefaultInitialManagementToken, "primary", func(method *structs.ACLAuthMethod) {
-		method.Config = map[string]interface{}{
+		method.Config = map[string]any{
 			"SessionID": testSessionID,
 		}
 		method.TokenLocality = "global"

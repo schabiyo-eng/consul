@@ -54,7 +54,7 @@ func TestLeader_PeeringSync_Lifecycle_ClientDeletion(t *testing.T) {
 		c.CAConfig = &structs.CAConfiguration{
 			ClusterID: connect.TestClusterID,
 			Provider:  structs.ConsulCAProvider,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"PrivateKey": ca.SigningKey,
 				"RootCert":   ca.RootCert,
 			},
@@ -180,7 +180,7 @@ func TestLeader_PeeringSync_Lifecycle_UnexportWhileDown(t *testing.T) {
 		c.CAConfig = &structs.CAConfiguration{
 			ClusterID: connect.TestClusterID,
 			Provider:  structs.ConsulCAProvider,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"PrivateKey": ca.SigningKey,
 				"RootCert":   ca.RootCert,
 			},
@@ -370,7 +370,7 @@ func TestLeader_PeeringSync_Lifecycle_ServerDeletion(t *testing.T) {
 		c.CAConfig = &structs.CAConfiguration{
 			ClusterID: connect.TestClusterID,
 			Provider:  structs.ConsulCAProvider,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"PrivateKey": ca.SigningKey,
 				"RootCert":   ca.RootCert,
 			},
@@ -530,7 +530,7 @@ func testLeader_PeeringSync_failsForTLSError(t *testing.T, tokenMutateFn func(to
 		c.CAConfig = &structs.CAConfiguration{
 			ClusterID: connect.TestClusterID,
 			Provider:  structs.ConsulCAProvider,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"PrivateKey": ca.SigningKey,
 				"RootCert":   ca.RootCert,
 			},
@@ -704,7 +704,7 @@ func TestLeader_Peering_RemoteInfo(t *testing.T) {
 		c.CAConfig = &structs.CAConfiguration{
 			ClusterID: connect.TestClusterID,
 			Provider:  structs.ConsulCAProvider,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"PrivateKey": ca.SigningKey,
 				"RootCert":   ca.RootCert,
 			},
@@ -824,7 +824,7 @@ func TestLeader_Peering_DialerReestablishesConnectionOnError(t *testing.T) {
 		c.CAConfig = &structs.CAConfiguration{
 			ClusterID: connect.TestClusterID,
 			Provider:  structs.ConsulCAProvider,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"PrivateKey": ca.SigningKey,
 				"RootCert":   ca.RootCert,
 			},
@@ -939,7 +939,7 @@ func TestLeader_Peering_DialerReestablishesConnectionOnError(t *testing.T) {
 		c.CAConfig = &structs.CAConfiguration{
 			ClusterID: connect.TestClusterID,
 			Provider:  structs.ConsulCAProvider,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"PrivateKey": ca.SigningKey,
 				"RootCert":   ca.RootCert,
 			},
@@ -1046,7 +1046,7 @@ func TestLeader_Peering_ImportedExportedServicesCount(t *testing.T) {
 		c.CAConfig = &structs.CAConfiguration{
 			ClusterID: connect.TestClusterID,
 			Provider:  structs.ConsulCAProvider,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"PrivateKey": ca.SigningKey,
 				"RootCert":   ca.RootCert,
 			},
@@ -1355,7 +1355,7 @@ func TestLeader_PeeringMetrics_emitPeeringMetrics(t *testing.T) {
 		c.CAConfig = &structs.CAConfiguration{
 			ClusterID: connect.TestClusterID,
 			Provider:  structs.ConsulCAProvider,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"PrivateKey": ca.SigningKey,
 				"RootCert":   ca.RootCert,
 			},
@@ -1799,7 +1799,7 @@ func Test_Leader_PeeringSync_ServerAddressUpdates(t *testing.T) {
 		c.CAConfig = &structs.CAConfiguration{
 			ClusterID: connect.TestClusterID,
 			Provider:  structs.ConsulCAProvider,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"PrivateKey": ca.SigningKey,
 				"RootCert":   ca.RootCert,
 			},
@@ -1941,7 +1941,7 @@ func Test_Leader_PeeringSync_PeerThroughMeshGateways_ServerFallBack(t *testing.T
 		c.CAConfig = &structs.CAConfiguration{
 			ClusterID: connect.TestClusterID,
 			Provider:  structs.ConsulCAProvider,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"PrivateKey": ca.SigningKey,
 				"RootCert":   ca.RootCert,
 			},
@@ -2045,7 +2045,7 @@ func Test_Leader_PeeringSync_PeerThroughMeshGateways_Success(t *testing.T) {
 		c.CAConfig = &structs.CAConfiguration{
 			ClusterID: connect.TestClusterID,
 			Provider:  structs.ConsulCAProvider,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"PrivateKey": ca.SigningKey,
 				"RootCert":   ca.RootCert,
 			},

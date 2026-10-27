@@ -88,7 +88,7 @@ func ParseHost(host string) (string, string, string, error) {
 	return proto, addr, basePath, nil
 }
 
-func (c *DockerClient) call(method, uri string, v interface{}) (*circbuf.Buffer, int, error) {
+func (c *DockerClient) call(method, uri string, v any) (*circbuf.Buffer, int, error) {
 	req, err := http.NewRequest(method, uri, nil)
 	if err != nil {
 		return nil, 0, err

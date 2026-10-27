@@ -230,7 +230,7 @@ func NewAgentConfigWatcher(client *api.Client, proxyID string,
 	}
 
 	// Setup watch plan for config
-	plan, err := watch.Parse(map[string]interface{}{
+	plan, err := watch.Parse(map[string]any{
 		"type":       "agent_service",
 		"service_id": w.proxyID,
 	})
@@ -244,7 +244,7 @@ func NewAgentConfigWatcher(client *api.Client, proxyID string,
 }
 
 func (w *AgentConfigWatcher) handler(blockVal watch.BlockingParamVal,
-	val interface{}) {
+	val any) {
 
 	resp, ok := val.(*api.AgentService)
 	if !ok {

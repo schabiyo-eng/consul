@@ -413,7 +413,7 @@ func newClientWithGRPCPlumbing(t *testing.T, ops ...func(*Config)) (*Client, *re
 }
 
 type testLogger interface {
-	Logf(format string, args ...interface{})
+	Logf(format string, args ...any)
 }
 
 func verifyMonotonicStreamUpdates(ctx context.Context, logger testLogger, client pbsubscribe.StateChangeSubscriptionClient, i int, updateCount *uint64) error {

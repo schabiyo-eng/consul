@@ -997,23 +997,23 @@ func intentionMatchOneTxn(tx ReadTxn, ws memdb.WatchSet,
 // TODO(partitions): Update for partitions
 // intentionMatchGetParams returns the tx.Get parameters to find all the
 // intentions for a certain entry.
-func intentionMatchGetParams(entry structs.IntentionMatchEntry) ([][]interface{}, error) {
+func intentionMatchGetParams(entry structs.IntentionMatchEntry) ([][]any, error) {
 	// We always query for "*/*" so include that. If the namespace is a
 	// wildcard, then we're actually done.
-	result := make([][]interface{}, 0, 3)
-	result = append(result, []interface{}{structs.WildcardSpecifier, structs.WildcardSpecifier})
+	result := make([][]any, 0, 3)
+	result = append(result, []any{structs.WildcardSpecifier, structs.WildcardSpecifier})
 	if entry.Namespace == structs.WildcardSpecifier {
 		return result, nil
 	}
 
 	// Search for NS/* intentions. If we have a wildcard name, then we're done.
-	result = append(result, []interface{}{entry.Namespace, structs.WildcardSpecifier})
+	result = append(result, []any{entry.Namespace, structs.WildcardSpecifier})
 	if entry.Name == structs.WildcardSpecifier {
 		return result, nil
 	}
 
 	// Search for the exact NS/N value.
-	result = append(result, []interface{}{entry.Namespace, entry.Name})
+	result = append(result, []any{entry.Namespace, entry.Name})
 	return result, nil
 }
 

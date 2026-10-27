@@ -235,7 +235,7 @@ func TestUserEventToken(t *testing.T) {
 }
 
 type RPC interface {
-	RPC(ctx context.Context, method string, args interface{}, reply interface{}) error
+	RPC(ctx context.Context, method string, args any, reply any) error
 }
 
 func createToken(t *testing.T, rpc RPC, policyRules string) string {

@@ -102,7 +102,7 @@ func (s *HTTPHandlers) enterpriseRequest(w http.ResponseWriter, req *http.Reques
 
 // uiTemplateDataTransform returns an optional uiserver.UIDataTransform to allow
 // altering UI data in enterprise.
-func (s *HTTPHandlers) uiTemplateDataTransform(data map[string]interface{}) error {
+func (s *HTTPHandlers) uiTemplateDataTransform(data map[string]any) error {
 	return nil
 }
 

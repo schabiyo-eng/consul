@@ -213,9 +213,9 @@ func (r *FunctionReplicator) Replicate(ctx context.Context, lastRemoteIndex uint
 
 type IndexReplicatorDiff struct {
 	NumUpdates   int
-	Updates      interface{}
+	Updates      any
 	NumDeletions int
-	Deletions    interface{}
+	Deletions    any
 }
 
 type IndexReplicatorDelegate interface {
@@ -230,17 +230,17 @@ type IndexReplicatorDelegate interface {
 
 	// FetchRemote retrieves items newer than the provided index from the
 	// remote datacenter (for diffing purposes).
-	FetchRemote(lastRemoteIndex uint64) (int, interface{}, uint64, error)
+	FetchRemote(lastRemoteIndex uint64) (int, any, uint64, error)
 
 	// FetchLocal retrieves items from the current datacenter (for diffing
 	// purposes).
-	FetchLocal() (int, interface{}, error)
+	FetchLocal() (int, any, error)
 
-	DiffRemoteAndLocalState(local interface{}, remote interface{}, lastRemoteIndex uint64) (*IndexReplicatorDiff, error)
+	DiffRemoteAndLocalState(local any, remote any, lastRemoteIndex uint64) (*IndexReplicatorDiff, error)
 
-	PerformDeletions(ctx context.Context, deletions interface{}) (exit bool, err error)
+	PerformDeletions(ctx context.Context, deletions any) (exit bool, err error)
 
-	PerformUpdates(ctx context.Context, updates interface{}) (exit bool, err error)
+	PerformUpdates(ctx context.Context, updates any) (exit bool, err error)
 }
 
 type IndexReplicator struct {

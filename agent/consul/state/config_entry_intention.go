@@ -17,7 +17,7 @@ type ServiceIntentionLegacyIDIndex struct {
 	uuidFieldIndex memdb.UUIDFieldIndex // for helper code
 }
 
-func (s *ServiceIntentionLegacyIDIndex) FromObject(obj interface{}) (bool, [][]byte, error) {
+func (s *ServiceIntentionLegacyIDIndex) FromObject(obj any) (bool, [][]byte, error) {
 	entry, ok := obj.(structs.ConfigEntry)
 	if !ok {
 		return false, nil, fmt.Errorf("object is not a ConfigEntry")
@@ -52,7 +52,7 @@ func (s *ServiceIntentionLegacyIDIndex) FromObject(obj interface{}) (bool, [][]b
 	return true, vals, nil
 }
 
-func (s *ServiceIntentionLegacyIDIndex) FromArgs(args ...interface{}) ([]byte, error) {
+func (s *ServiceIntentionLegacyIDIndex) FromArgs(args ...any) ([]byte, error) {
 	arg, err := s.uuidFieldIndex.FromArgs(args...)
 	if err != nil {
 		return nil, err
@@ -65,7 +65,7 @@ func (s *ServiceIntentionLegacyIDIndex) FromArgs(args ...interface{}) ([]byte, e
 	return b, nil
 }
 
-func (s *ServiceIntentionLegacyIDIndex) PrefixFromArgs(args ...interface{}) ([]byte, error) {
+func (s *ServiceIntentionLegacyIDIndex) PrefixFromArgs(args ...any) ([]byte, error) {
 	val, err := s.FromArgs(args...)
 	if err != nil {
 		return nil, err
@@ -87,7 +87,7 @@ type SamenessGroupMemberIndex struct {
 var _ memdb.Indexer = (*SamenessGroupMemberIndex)(nil)
 var _ memdb.MultiIndexer = (*SamenessGroupMemberIndex)(nil)
 
-func (s *SamenessGroupMemberIndex) FromObject(obj interface{}) (bool, [][]byte, error) {
+func (s *SamenessGroupMemberIndex) FromObject(obj any) (bool, [][]byte, error) {
 	entry, ok := obj.(structs.ConfigEntry)
 	if !ok {
 		return false, nil, fmt.Errorf("object is not a ConfigEntry")
@@ -117,7 +117,7 @@ func (s *SamenessGroupMemberIndex) FromObject(obj interface{}) (bool, [][]byte, 
 	return true, vals, nil
 }
 
-func (s *SamenessGroupMemberIndex) FromArgs(args ...interface{}) ([]byte, error) {
+func (s *SamenessGroupMemberIndex) FromArgs(args ...any) ([]byte, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("must provide only a single argument")
 	}
@@ -139,7 +139,7 @@ type ServiceIntentionSourceSamenessGroupIndex struct {
 var _ memdb.Indexer = (*ServiceIntentionSourceSamenessGroupIndex)(nil)
 var _ memdb.MultiIndexer = (*ServiceIntentionSourceSamenessGroupIndex)(nil)
 
-func (s *ServiceIntentionSourceSamenessGroupIndex) FromObject(obj interface{}) (bool, [][]byte, error) {
+func (s *ServiceIntentionSourceSamenessGroupIndex) FromObject(obj any) (bool, [][]byte, error) {
 	entry, ok := obj.(structs.ConfigEntry)
 	if !ok {
 		return false, nil, fmt.Errorf("object is not a ConfigEntry")
@@ -176,7 +176,7 @@ func (s *ServiceIntentionSourceSamenessGroupIndex) FromObject(obj interface{}) (
 	return true, vals, nil
 }
 
-func (s *ServiceIntentionSourceSamenessGroupIndex) FromArgs(args ...interface{}) ([]byte, error) {
+func (s *ServiceIntentionSourceSamenessGroupIndex) FromArgs(args ...any) ([]byte, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("must provide only a single argument")
 	}
@@ -203,7 +203,7 @@ type ServiceIntentionSourceIndex struct {
 var _ memdb.Indexer = (*ServiceIntentionSourceIndex)(nil)
 var _ memdb.MultiIndexer = (*ServiceIntentionSourceIndex)(nil)
 
-func (s *ServiceIntentionSourceIndex) FromObject(obj interface{}) (bool, [][]byte, error) {
+func (s *ServiceIntentionSourceIndex) FromObject(obj any) (bool, [][]byte, error) {
 	entry, ok := obj.(structs.ConfigEntry)
 	if !ok {
 		return false, nil, fmt.Errorf("object is not a ConfigEntry")
@@ -244,7 +244,7 @@ func (s *ServiceIntentionSourceIndex) FromObject(obj interface{}) (bool, [][]byt
 	return true, vals, nil
 }
 
-func (s *ServiceIntentionSourceIndex) FromArgs(args ...interface{}) ([]byte, error) {
+func (s *ServiceIntentionSourceIndex) FromArgs(args ...any) ([]byte, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("must provide only a single argument")
 	}

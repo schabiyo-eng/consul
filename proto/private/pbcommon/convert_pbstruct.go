@@ -10,7 +10,7 @@ import (
 
 // ProtobufTypesStructToMapStringInterface converts a protobuf/structpb.Struct into a
 // map[string]interface{}.
-func ProtobufTypesStructToMapStringInterface(s *structpb.Struct) map[string]interface{} {
+func ProtobufTypesStructToMapStringInterface(s *structpb.Struct) map[string]any {
 	if s == nil {
 		return nil
 	}
@@ -18,7 +18,7 @@ func ProtobufTypesStructToMapStringInterface(s *structpb.Struct) map[string]inte
 }
 
 // MapStringInterfaceToProtobufTypesStruct converts a map[string]interface{} into a proto.Struct
-func MapStringInterfaceToProtobufTypesStruct(m map[string]interface{}) *structpb.Struct {
+func MapStringInterfaceToProtobufTypesStruct(m map[string]any) *structpb.Struct {
 	if len(m) < 1 {
 		return nil
 	}
@@ -30,7 +30,7 @@ func MapStringInterfaceToProtobufTypesStruct(m map[string]interface{}) *structpb
 // SliceToPBListValue converts a []interface{} into a proto.ListValue. It's used
 // internally by MapStringInterfaceToProtobufTypesStruct when it encouters slices.
 // TODO (remove usage of this struct in favor of structpb.NewListValue)
-func SliceToPBListValue(s []interface{}) *structpb.ListValue {
+func SliceToPBListValue(s []any) *structpb.ListValue {
 	if len(s) < 1 {
 		return nil
 	}

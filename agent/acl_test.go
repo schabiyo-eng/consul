@@ -150,7 +150,7 @@ func (a *TestACLAgent) JoinLAN(addrs []string, entMeta *acl.EnterpriseMeta) (n i
 func (a *TestACLAgent) RemoveFailedNode(node string, prune bool, entMeta *acl.EnterpriseMeta) error {
 	return fmt.Errorf("Unimplemented")
 }
-func (a *TestACLAgent) RPC(ctx context.Context, method string, args interface{}, reply interface{}) error {
+func (a *TestACLAgent) RPC(ctx context.Context, method string, args any, reply any) error {
 	return fmt.Errorf("Unimplemented")
 }
 func (a *TestACLAgent) SnapshotRPC(args *structs.SnapshotRequest, in io.Reader, out io.Writer, replyFn structs.SnapshotReplyFn) error {
@@ -317,7 +317,7 @@ func TestACL_vetServiceRegister_bootstrapEscapeHatch(t *testing.T) {
 		Kind:    structs.ServiceKindConnectProxy,
 		Proxy: structs.ConnectProxyConfig{
 			DestinationServiceName: "web",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"envoy_extra_static_listeners_json": `{"name":"attacker-listener"}`,
 			},
 		},
@@ -341,7 +341,7 @@ func TestACL_vetServiceRegister_bootstrapEscapeHatch(t *testing.T) {
 		Kind:    structs.ServiceKindConnectProxy,
 		Proxy: structs.ConnectProxyConfig{
 			DestinationServiceName: "web",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"protocol": "http",
 			},
 		},
@@ -358,7 +358,7 @@ func TestACL_vetServiceRegister_bootstrapEscapeHatch(t *testing.T) {
 				Kind:    structs.ServiceKindConnectProxy,
 				Proxy: structs.ConnectProxyConfig{
 					DestinationServiceName: "web",
-					Config:                 map[string]interface{}{key: `{}`},
+					Config:                 map[string]any{key: `{}`},
 				},
 			}
 			err := a.vetServiceRegisterWithAuthorizer(authzServiceOnly, svc)
@@ -403,7 +403,7 @@ func TestACL_vetServiceRegister_bootstrapEscapeHatch_Upstream(t *testing.T) {
 	} {
 		key := key
 		t.Run(key, func(t *testing.T) {
-			decoded, decodeErr := structs.ParseUpstreamConfigNoDefaults(map[string]interface{}{key: `{}`})
+			decoded, decodeErr := structs.ParseUpstreamConfigNoDefaults(map[string]any{key: `{}`})
 			require.NoError(t, decodeErr)
 			switch key {
 			case "envoy_listener_json", "EnvoyListenerJSON", "ENVOYLISTENERJSON":
@@ -421,7 +421,7 @@ func TestACL_vetServiceRegister_bootstrapEscapeHatch_Upstream(t *testing.T) {
 					Upstreams: structs.Upstreams{
 						{
 							DestinationName: "db",
-							Config:          map[string]interface{}{key: `{"name":"attacker-listener"}`},
+							Config:          map[string]any{key: `{"name":"attacker-listener"}`},
 						},
 					},
 				},
@@ -468,7 +468,7 @@ func TestACL_vetServiceRegister_bootstrapEscapeHatch_CaseInsensitive(t *testing.
 				Kind:    structs.ServiceKindConnectProxy,
 				Proxy: structs.ConnectProxyConfig{
 					DestinationServiceName: "web",
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						key: `{"name":"attacker-listener"}`,
 					},
 				},

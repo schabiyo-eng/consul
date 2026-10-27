@@ -96,7 +96,7 @@ func TestCloneSerfLANConfig(t *testing.T) {
 	require.Equal(t, config, clone)
 }
 
-func fuzzNonIgnoredFields(value interface{}, ignoredFields []string) []string {
+func fuzzNonIgnoredFields(value any, ignoredFields []string) []string {
 	ignored := make(map[string]struct{})
 	for _, field := range ignoredFields {
 		ignored[field] = struct{}{}

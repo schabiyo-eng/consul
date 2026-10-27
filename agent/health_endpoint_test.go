@@ -1800,7 +1800,7 @@ func testHealthIngressServiceNodes(t *testing.T, agentHCL string) {
 	require.Nil(t, a.RPC(context.Background(), "ConfigEntry.Apply", req, &outB))
 	require.True(t, outB)
 
-	checkResults := func(t *testing.T, obj interface{}) {
+	checkResults := func(t *testing.T, obj any) {
 		nodes := obj.(structs.CheckServiceNodes)
 		require.Len(t, nodes, 1)
 		require.Equal(t, structs.ServiceKindIngressGateway, nodes[0].Service.Kind)
@@ -2054,7 +2054,7 @@ func TestListHealthyServiceNodes_MergeCentralConfig(t *testing.T) {
 		}
 		req, _ := http.NewRequest("GET", url, nil)
 		resp := httptest.NewRecorder()
-		var obj interface{}
+		var obj any
 		var err error
 		if tc.connect {
 			obj, err = a.srv.HealthConnectServiceNodes(resp, req)

@@ -23,7 +23,7 @@ func kvsIndexer() indexerSingleWithPrefix[singleValueID, singleValueID, any] {
 	}
 }
 
-func prefixIndexForIDValue(arg interface{}) ([]byte, error) {
+func prefixIndexForIDValue(arg any) ([]byte, error) {
 	switch v := arg.(type) {
 	// DeletePrefix always uses a string, pass it along unmodified
 	case string:

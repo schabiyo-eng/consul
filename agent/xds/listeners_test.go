@@ -691,26 +691,26 @@ func Test_makeAPIGatewayListeners_maxRequestHeadersKb(t *testing.T) {
 
 func Test_makeMeshGatewayPeerFilterChain_maxRequestHeadersKb(t *testing.T) {
 	tests := map[string]struct {
-		proxyConfig        map[string]interface{}
-		serviceProxyConfig map[string]interface{}
+		proxyConfig        map[string]any
+		serviceProxyConfig map[string]any
 		protocol           string
 		wantPresent        bool
 		wantValue          uint32
 	}{
 		"defaults to proxy config when no service override": {
-			proxyConfig: map[string]interface{}{
+			proxyConfig: map[string]any{
 				"max_request_headers_kb": int64(128),
 			},
-			serviceProxyConfig: map[string]interface{}{},
+			serviceProxyConfig: map[string]any{},
 			protocol:           "http",
 			wantPresent:        true,
 			wantValue:          128,
 		},
 		"service override takes precedence over proxy config": {
-			proxyConfig: map[string]interface{}{
+			proxyConfig: map[string]any{
 				"max_request_headers_kb": int64(128),
 			},
-			serviceProxyConfig: map[string]interface{}{
+			serviceProxyConfig: map[string]any{
 				"max_request_headers_kb": int64(256),
 			},
 			protocol:    "http",
@@ -718,14 +718,14 @@ func Test_makeMeshGatewayPeerFilterChain_maxRequestHeadersKb(t *testing.T) {
 			wantValue:   256,
 		},
 		"no proxy config and no service override": {
-			proxyConfig:        map[string]interface{}{},
-			serviceProxyConfig: map[string]interface{}{},
+			proxyConfig:        map[string]any{},
+			serviceProxyConfig: map[string]any{},
 			protocol:           "http",
 			wantPresent:        false,
 		},
 		"service override with nil proxy config": {
 			proxyConfig: nil,
-			serviceProxyConfig: map[string]interface{}{
+			serviceProxyConfig: map[string]any{
 				"max_request_headers_kb": int64(64),
 			},
 			protocol:    "http",
@@ -733,20 +733,20 @@ func Test_makeMeshGatewayPeerFilterChain_maxRequestHeadersKb(t *testing.T) {
 			wantValue:   64,
 		},
 		"tcp protocol ignores header settings": {
-			proxyConfig: map[string]interface{}{
+			proxyConfig: map[string]any{
 				"max_request_headers_kb": int64(128),
 			},
-			serviceProxyConfig: map[string]interface{}{
+			serviceProxyConfig: map[string]any{
 				"max_request_headers_kb": int64(256),
 			},
 			protocol:    "tcp",
 			wantPresent: false,
 		},
 		"grpc protocol uses service override": {
-			proxyConfig: map[string]interface{}{
+			proxyConfig: map[string]any{
 				"max_request_headers_kb": int64(128),
 			},
-			serviceProxyConfig: map[string]interface{}{
+			serviceProxyConfig: map[string]any{
 				"max_request_headers_kb": int64(512),
 			},
 			protocol:    "grpc",

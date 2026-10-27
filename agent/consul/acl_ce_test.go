@@ -29,11 +29,11 @@ func testRoleForIDEnterprise(string) (bool, *structs.ACLRole, error) {
 type EnterpriseACLResolverTestDelegate struct{}
 
 // RPC stub for the EnterpriseACLResolverTestDelegate
-func (d *EnterpriseACLResolverTestDelegate) RPC(context.Context, string, interface{}, interface{}) (bool, error) {
+func (d *EnterpriseACLResolverTestDelegate) RPC(context.Context, string, any, any) (bool, error) {
 	return false, nil
 }
 
-func (d *EnterpriseACLResolverTestDelegate) UseTestLocalData(data []interface{}) {
+func (d *EnterpriseACLResolverTestDelegate) UseTestLocalData(data []any) {
 	if len(data) > 0 {
 		panic(fmt.Sprintf("unexpected data type: %T", data[0]))
 	}

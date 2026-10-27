@@ -22,7 +22,7 @@ import (
 const ConfigEntryNotFoundErr string = "Config entry not found"
 
 // Config switches on the different CRUD operations for config entries.
-func (s *HTTPHandlers) Config(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) Config(resp http.ResponseWriter, req *http.Request) (any, error) {
 	switch req.Method {
 	case "GET":
 		return s.configGet(resp, req)
@@ -37,7 +37,7 @@ func (s *HTTPHandlers) Config(resp http.ResponseWriter, req *http.Request) (inte
 
 // configGet gets either a specific config entry, or lists all config entries
 // of a kind if no name is provided.
-func (s *HTTPHandlers) configGet(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) configGet(resp http.ResponseWriter, req *http.Request) (any, error) {
 	var args structs.ConfigEntryQuery
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
 		return nil, nil
@@ -86,7 +86,7 @@ func (s *HTTPHandlers) configGet(resp http.ResponseWriter, req *http.Request) (i
 }
 
 // configDelete deletes the given config entry.
-func (s *HTTPHandlers) configDelete(req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) configDelete(req *http.Request) (any, error) {
 	var args structs.ConfigEntryRequest
 	s.parseDC(req, &args.Datacenter)
 	s.parseToken(req, &args.Token)
@@ -133,14 +133,14 @@ func (s *HTTPHandlers) configDelete(req *http.Request) (interface{}, error) {
 }
 
 // ConfigApply applies the given config entry update.
-func (s *HTTPHandlers) ConfigApply(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) ConfigApply(resp http.ResponseWriter, req *http.Request) (any, error) {
 	args := structs.ConfigEntryRequest{
 		Op: structs.ConfigEntryUpsert,
 	}
 	s.parseDC(req, &args.Datacenter)
 	s.parseToken(req, &args.Token)
 
-	var raw map[string]interface{}
+	var raw map[string]any
 	if err := decodeBodyDeprecated(req, &raw, nil); err != nil {
 		return nil, HTTPError{StatusCode: http.StatusBadRequest, Reason: fmt.Sprintf("Request decoding failed: %v", err)}
 	}
@@ -185,7 +185,7 @@ func (s *HTTPHandlers) parseEntMetaForConfigEntryKind(kind string, req *http.Req
 
 // ExportedServices returns all the exported services by resolving wildcards and sameness groups
 // in the exported services configuration entry
-func (s *HTTPHandlers) ExportedServices(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) ExportedServices(resp http.ResponseWriter, req *http.Request) (any, error) {
 	var entMeta acl.EnterpriseMeta
 	if err := s.parseEntMetaPartition(req, &entMeta); err != nil {
 		return nil, err
@@ -225,7 +225,7 @@ func (s *HTTPHandlers) ExportedServices(resp http.ResponseWriter, req *http.Requ
 	return svcs, nil
 }
 
-func (s *HTTPHandlers) ImportedServices(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) ImportedServices(resp http.ResponseWriter, req *http.Request) (any, error) {
 	var entMeta acl.EnterpriseMeta
 	if err := s.parseEntMetaPartition(req, &entMeta); err != nil {
 		return nil, err

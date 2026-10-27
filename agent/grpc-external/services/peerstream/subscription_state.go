@@ -148,7 +148,7 @@ const (
 	discoveryChainPayloadIDPrefix = "chain:"
 )
 
-func (p *pendingPayload) Add(id string, correlationID string, raw interface{}) error {
+func (p *pendingPayload) Add(id string, correlationID string, raw any) error {
 	result, ok := raw.(proto.Message)
 	if !ok {
 		return fmt.Errorf("invalid type for %q event: %T", correlationID, raw)

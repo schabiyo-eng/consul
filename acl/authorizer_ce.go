@@ -20,7 +20,7 @@ func (c *AuthorizerContext) PeerOrEmpty() string {
 }
 
 // enterpriseAuthorizer stub interface
-type enterpriseAuthorizer interface{}
+type enterpriseAuthorizer any
 
 func enforceEnterprise(_ Authorizer, _ Resource, _ string, _ string, _ *AuthorizerContext) (bool, EnforcementDecision, error) {
 	return false, Deny, nil

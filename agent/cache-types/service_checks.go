@@ -25,7 +25,7 @@ type Agent interface {
 	ServiceHTTPBasedChecks(id structs.ServiceID) []structs.CheckType
 	LocalState() *local.State
 	LocalBlockingQuery(alwaysBlock bool, hash string, wait time.Duration,
-		fn func(ws memdb.WatchSet) (string, interface{}, error)) (string, interface{}, error)
+		fn func(ws memdb.WatchSet) (string, any, error)) (string, any, error)
 }
 
 // ServiceHTTPBasedChecks supports fetching discovering checks in the local state
@@ -62,7 +62,7 @@ func (c *ServiceHTTPChecks) Fetch(_ context.Context, opts cache.FetchOptions, re
 	}
 
 	hash, resp, err := c.Agent.LocalBlockingQuery(true, lastHash, reqReal.MaxQueryTime,
-		func(ws memdb.WatchSet) (string, interface{}, error) {
+		func(ws memdb.WatchSet) (string, any, error) {
 			sid := structs.NewServiceID(reqReal.ServiceID, &reqReal.EnterpriseMeta)
 			svcState := c.Agent.LocalState().ServiceState(sid)
 			if svcState == nil {
@@ -121,7 +121,7 @@ func (s *ServiceHTTPChecksRequest) CacheInfo() cache.RequestInfo {
 		Timeout:    s.MaxQueryTime,
 	}
 
-	v, err := hashstructure.Hash([]interface{}{
+	v, err := hashstructure.Hash([]any{
 		s.ServiceID,
 		s.EnterpriseMeta,
 	}, nil)

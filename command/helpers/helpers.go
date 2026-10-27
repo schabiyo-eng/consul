@@ -72,7 +72,7 @@ func LoadDataSourceNoRaw(data string, testStdin io.Reader) (string, error) {
 
 func ParseConfigEntry(data string) (api.ConfigEntry, error) {
 	// parse the data
-	var raw map[string]interface{}
+	var raw map[string]any
 	if err := hclDecode(&raw, data); err != nil {
 		return nil, fmt.Errorf("Failed to decode config entry input: %v", err)
 	}
@@ -82,7 +82,7 @@ func ParseConfigEntry(data string) (api.ConfigEntry, error) {
 
 // There is a 'structs' variation of this in
 // agent/structs/config_entry.go:DecodeConfigEntry
-func newDecodeConfigEntry(raw map[string]interface{}) (api.ConfigEntry, error) {
+func newDecodeConfigEntry(raw map[string]any) (api.ConfigEntry, error) {
 	var entry api.ConfigEntry
 
 	kindVal, ok := raw["Kind"]

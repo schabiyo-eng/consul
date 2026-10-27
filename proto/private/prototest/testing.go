@@ -13,7 +13,7 @@ type TestingT interface {
 	Fatalf(string, ...any)
 }
 
-func AssertDeepEqual(t TestingT, exp, got interface{}, opts ...cmp.Option) {
+func AssertDeepEqual(t TestingT, exp, got any, opts ...cmp.Option) {
 	t.Helper()
 
 	opts = append(opts, protocmp.Transform())

@@ -46,7 +46,7 @@ func validateFIPSConfig(_ *config.RuntimeConfig) error {
 }
 
 // WriteEvent is a noop stub for the func defined agent_ent.go
-func (a *Agent) WriteEvent(eventType string, payload interface{}) {
+func (a *Agent) WriteEvent(eventType string, payload any) {
 }
 
 // startLicenseManager is used to start the license management process
@@ -70,7 +70,7 @@ func (a *Agent) registerEntCache() {}
 
 func (*Agent) fillEnterpriseProxyDataSources(*proxycfg.DataSources) {}
 
-func (a *Agent) writeAuditRPCEvent(_ string, _ string) interface{} {
+func (a *Agent) writeAuditRPCEvent(_ string, _ string) any {
 	return nil
 }
 

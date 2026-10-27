@@ -341,7 +341,7 @@ func (m *Manager) generateNewLeaf(
 				criticalDays := m.config.CertificateTelemetryCriticalThresholdDays
 				warningDays := m.config.CertificateTelemetryWarningThresholdDays
 
-				logFields := []interface{}{
+				logFields := []any{
 					"service", req.Service,
 					"kind", req.Kind,
 					"consecutive_errors", newState.consecutiveRateLimitErrs + 1,
@@ -434,7 +434,7 @@ func (m *Manager) generateNewLeaf(
 			criticalDays := m.config.CertificateTelemetryCriticalThresholdDays
 			warningDays := m.config.CertificateTelemetryWarningThresholdDays
 
-			logFields := []interface{}{
+			logFields := []any{
 				"service", req.Service,
 				"kind", req.Kind,
 				"error", err,

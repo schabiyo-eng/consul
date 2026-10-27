@@ -535,7 +535,7 @@ func TestConfigSnapshotMeshGateway(t testing.T, variant string, nsFn func(ns *st
 		Address: "1.2.3.4",
 		Port:    8443,
 		Proxy: structs.ConnectProxyConfig{
-			Config: map[string]interface{}{},
+			Config: map[string]any{},
 		},
 		Meta: make(map[string]string),
 		TaggedAddresses: map[string]structs.ServiceAddress{
@@ -669,7 +669,7 @@ func TestConfigSnapshotPeeredMeshGateway(t testing.T, variant string, nsFn func(
 	case "default-services-http":
 		proxyDefaults := &structs.ProxyConfigEntry{
 			Protocol: "http",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"protocol": "http",
 			},
 		}
@@ -774,7 +774,7 @@ func TestConfigSnapshotPeeredMeshGateway(t testing.T, variant string, nsFn func(
 			&structs.ProxyConfigEntry{
 				Kind: structs.ProxyDefaults,
 				Name: structs.ProxyConfigGlobal,
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"protocol": "http",
 				},
 			},
@@ -840,7 +840,7 @@ func TestConfigSnapshotPeeredMeshGateway(t testing.T, variant string, nsFn func(
 				Kind:     structs.ProxyDefaults,
 				Name:     structs.ProxyConfigGlobal,
 				Protocol: "http",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"protocol": "http",
 				},
 			},
@@ -1128,7 +1128,7 @@ func TestConfigSnapshotPeeredMeshGateway(t testing.T, variant string, nsFn func(
 		Address: "1.2.3.4",
 		Port:    8443,
 		Proxy: structs.ConnectProxyConfig{
-			Config: map[string]interface{}{},
+			Config: map[string]any{},
 		},
 		Meta: make(map[string]string),
 		TaggedAddresses: map[string]structs.ServiceAddress{

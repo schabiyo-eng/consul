@@ -282,7 +282,7 @@ func (c *cmd) enhance(file io.Reader) (SnapshotInfo, error) {
 			s.Name = name
 		}
 
-		var val interface{}
+		var val any
 		err := dec.Decode(&val)
 		if err != nil {
 			return fmt.Errorf("failed to decode msg type %v, error %v", name, err)
@@ -307,14 +307,14 @@ func (c *cmd) enhance(file io.Reader) (SnapshotInfo, error) {
 
 // kvEnhance populates the struct with all of the snapshot's
 // size information for KV data stored in it
-func (c *cmd) kvEnhance(keyType string, val interface{}, size int, info *SnapshotInfo) {
+func (c *cmd) kvEnhance(keyType string, val any, size int, info *SnapshotInfo) {
 	if c.kvDetails {
 		if keyType != "KVS" {
 			return
 		}
 
 		// have to coerce this into a usable type here or this won't work
-		keyVal := val.(map[string]interface{})
+		keyVal := val.(map[string]any)
 		for k, v := range keyVal {
 			// we only care about the entry on the key specifically
 			// related to the key name, so skip all others

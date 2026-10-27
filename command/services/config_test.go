@@ -142,7 +142,7 @@ func TestStructsToAgentService(t *testing.T) {
 					LocalServicePort:       8181,
 					Upstreams:              structs.TestUpstreams(t, false),
 					Mode:                   structs.ProxyModeTransparent,
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"foo": "bar",
 					},
 				},
@@ -159,7 +159,7 @@ func TestStructsToAgentService(t *testing.T) {
 					LocalServicePort:       8181,
 					Upstreams:              structs.TestUpstreams(t, false).ToAPI(),
 					Mode:                   api.ProxyModeTransparent,
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"foo": "bar",
 					},
 				},
@@ -189,7 +189,7 @@ func TestStructsToAgentService(t *testing.T) {
 						Path:                "/var/logs/envoy.logs",
 						TextFormat:          "MY START TIME %START_TIME%",
 					},
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"foo": "bar",
 					},
 				},
@@ -216,7 +216,7 @@ func TestStructsToAgentService(t *testing.T) {
 						Path:                "/var/logs/envoy.logs",
 						TextFormat:          "MY START TIME %START_TIME%",
 					},
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"foo": "bar",
 					},
 				},

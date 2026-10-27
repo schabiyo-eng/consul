@@ -1364,7 +1364,7 @@ func TestRPC_AuthorizeRaftRPC(t *testing.T) {
 		c.CAConfig = &structs.CAConfiguration{
 			ClusterID: connect.TestClusterID,
 			Provider:  structs.ConsulCAProvider,
-			Config:    map[string]interface{}{"PrivateKey": connectCApk},
+			Config:    map[string]any{"PrivateKey": connectCApk},
 		}
 
 	})
@@ -1680,8 +1680,8 @@ func getFirstSubscribeEventOrError(conn *grpc.ClientConn, req *pbsubscribe.Subsc
 func channelCallRPC(
 	srv *Server,
 	method string,
-	args interface{},
-	resp interface{},
+	args any,
+	resp any,
 	responseInterceptor func() error,
 ) <-chan error {
 	errCh := make(chan error, 1)
@@ -1790,7 +1790,7 @@ func TestRPC_PooledConnectionIdleTimeout(t *testing.T) {
 
 	for _, transport := range []string{"raw", "yamux pool"} {
 		t.Run(transport, func(t *testing.T) {
-			var call func(string, interface{}, interface{}) error
+			var call func(string, any, any) error
 			if transport == "raw" {
 				conn, err := net.DialTimeout("tcp", s1.config.RPCAdvertise.String(), time.Second)
 				require.NoError(t, err)
@@ -1800,7 +1800,7 @@ func TestRPC_PooledConnectionIdleTimeout(t *testing.T) {
 				require.NoError(t, err)
 				clientCodec := msgpackrpc.NewCodecFromHandle(true, true, conn, structs.MsgpackHandle)
 				defer clientCodec.Close()
-				call = func(method string, args, reply interface{}) error {
+				call = func(method string, args, reply any) error {
 					require.NoError(t, conn.SetDeadline(time.Now().Add(5*time.Second)))
 					return msgpackrpc.CallWithCodec(clientCodec, method, args, reply)
 				}
@@ -1815,7 +1815,7 @@ func TestRPC_PooledConnectionIdleTimeout(t *testing.T) {
 				}
 				defer connPool.Shutdown()
 				connPool.SetRPCClientTimeout(5 * time.Second)
-				call = func(method string, args, reply interface{}) error {
+				call = func(method string, args, reply any) error {
 					return connPool.RPC("dc1", s1.config.NodeName, s1.config.RPCAdvertise, method, args, reply)
 				}
 			}

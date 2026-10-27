@@ -44,14 +44,14 @@ type Server struct {
 	jwks                *jose.JSONWebKeySet
 	allowedRedirectURIs []string
 	replySubject        string
-	replyUserinfo       map[string]interface{}
+	replyUserinfo       map[string]any
 
 	mu                sync.Mutex
 	clientID          string
 	clientSecret      string
 	expectedAuthCode  string
 	expectedAuthNonce string
-	customClaims      map[string]interface{}
+	customClaims      map[string]any
 	customAudience    string
 	omitIDToken       bool
 	disableUserInfo   bool
@@ -141,7 +141,7 @@ func (s *Server) SetAllowedRedirectURIs(uris []string) {
 
 // SetCustomClaims lets you set claims to return in the JWT issued by the OIDC
 // workflow.
-func (s *Server) SetCustomClaims(customClaims map[string]interface{}) {
+func (s *Server) SetCustomClaims(customClaims map[string]any) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.customClaims = customClaims
@@ -417,7 +417,7 @@ func newJWKS(pubKey string) (*jose.JSONWebKeySet, error) {
 	}, nil
 }
 
-func writeJSON(w http.ResponseWriter, out interface{}) error {
+func writeJSON(w http.ResponseWriter, out any) error {
 	enc := json.NewEncoder(w)
 	return enc.Encode(out)
 }
@@ -427,7 +427,7 @@ func writeJSON(w http.ResponseWriter, out interface{}) error {
 //
 // If no private key is provided, the default package keys are used. These can
 // be retrieved via the SigningKeys() method.
-func SignJWT(privKey string, claims jwt.Claims, privateClaims interface{}) (string, error) {
+func SignJWT(privKey string, claims jwt.Claims, privateClaims any) (string, error) {
 	if privKey == "" {
 		privKey = ecdsaPrivateKey
 	}

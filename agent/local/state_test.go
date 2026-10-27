@@ -1152,7 +1152,7 @@ func TestAgentAntiEntropy_ConfigFileRegistrationToken(t *testing.T) {
 }
 
 type RPC interface {
-	RPC(ctx context.Context, method string, args interface{}, reply interface{}) error
+	RPC(ctx context.Context, method string, args any, reply any) error
 }
 
 func createToken(t *testing.T, rpc RPC, policyRules string) string {
@@ -2619,11 +2619,11 @@ type fakeRPC struct {
 
 type callRPC struct {
 	method string
-	args   interface{}
-	reply  interface{}
+	args   any
+	reply  any
 }
 
-func (f *fakeRPC) RPC(ctx context.Context, method string, args interface{}, reply interface{}) error {
+func (f *fakeRPC) RPC(ctx context.Context, method string, args any, reply any) error {
 	f.calls = append(f.calls, callRPC{method: method, args: args, reply: reply})
 	return nil
 }

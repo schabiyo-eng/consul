@@ -149,7 +149,7 @@ func applyAdd(parentM protoreflect.Message, fieldDesc protoreflect.FieldDescript
 	if patch.Value == nil {
 		return fmt.Errorf("non-nil Value is required; use an empty map to reset all fields on a message or the 'remove' op to unset fields")
 	}
-	mapValue, isMapValue := patch.Value.(map[string]interface{})
+	mapValue, isMapValue := patch.Value.(map[string]any)
 	// If the field is a proto map type, we'll treat it as a "single" field for error handling purposes.
 	// If we support proto map targets in the future, it will still likely be treated as a single field,
 	// similar to a list (repeated field). This map handling is specific to _our_ patch semantics for
@@ -222,7 +222,7 @@ func fieldListStr(messageDesc protoreflect.MessageDescriptor, debug bool) string
 	return msg.String()
 }
 
-func toProtoValue(parentM protoreflect.Message, fieldDesc protoreflect.FieldDescriptor, patchValue interface{}) (v protoreflect.Value, e error) {
+func toProtoValue(parentM protoreflect.Message, fieldDesc protoreflect.FieldDescriptor, patchValue any) (v protoreflect.Value, e error) {
 	// Repeated fields. Check for these first, so we can use Kind below for single value
 	// fields (repeated fields have a Kind corresponding to their members).
 	// We have to do special handling for int types and strings since they could be enums.
@@ -510,7 +510,7 @@ func toProtoIntWrapperValue[V int | int32 | int64 | uint | uint32 | uint64 | flo
 	}
 }
 
-func typeMismatchErr(fieldDesc protoreflect.FieldDescriptor, v interface{}) (protoreflect.Value, error) {
+func typeMismatchErr(fieldDesc protoreflect.FieldDescriptor, v any) (protoreflect.Value, error) {
 	return protoreflect.Value{}, fmt.Errorf("patch value type %T could not be applied to target field type '%s'", v, fieldType(fieldDesc))
 }
 

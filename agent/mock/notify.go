@@ -52,7 +52,7 @@ func NewNotifyChan() (*Notify, chan int) {
 	return n, n.updated
 }
 
-func (m *Notify) sprintf(v interface{}) string {
+func (m *Notify) sprintf(v any) string {
 	m.RLock()
 	defer m.RUnlock()
 	return fmt.Sprintf("%v", v)

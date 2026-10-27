@@ -18,7 +18,7 @@ type PreparedQueryIndex struct {
 
 // FromObject is used to compute the index key when inserting or updating an
 // object.
-func (*PreparedQueryIndex) FromObject(obj interface{}) (bool, []byte, error) {
+func (*PreparedQueryIndex) FromObject(obj any) (bool, []byte, error) {
 	wrapped, ok := obj.(*queryWrapper)
 	if !ok {
 		return false, nil, fmt.Errorf("invalid object given to index as prepared query")
@@ -36,12 +36,12 @@ func (*PreparedQueryIndex) FromObject(obj interface{}) (bool, []byte, error) {
 
 // FromArgs is used when querying for an exact match. Since we don't add any
 // suffix we can just call the prefix version.
-func (p *PreparedQueryIndex) FromArgs(args ...interface{}) ([]byte, error) {
+func (p *PreparedQueryIndex) FromArgs(args ...any) ([]byte, error) {
 	return p.PrefixFromArgs(args...)
 }
 
 // PrefixFromArgs is used when doing a prefix scan for an object.
-func (*PreparedQueryIndex) PrefixFromArgs(args ...interface{}) ([]byte, error) {
+func (*PreparedQueryIndex) PrefixFromArgs(args ...any) ([]byte, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("must provide only a single argument")
 	}

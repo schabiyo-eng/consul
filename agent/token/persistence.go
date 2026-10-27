@@ -14,7 +14,7 @@ import (
 
 // Logger used by Store.Load to report warnings.
 type Logger interface {
-	Warn(msg string, args ...interface{})
+	Warn(msg string, args ...any)
 }
 
 // Config used by Store.Load, which includes tokens and settings for persistence.

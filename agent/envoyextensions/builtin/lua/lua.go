@@ -44,7 +44,7 @@ func Constructor(ext api.EnvoyExtension) (extensioncommon.EnvoyExtender, error) 
 	}, nil
 }
 
-func (l *lua) fromArguments(args map[string]interface{}) error {
+func (l *lua) fromArguments(args map[string]any) error {
 	if err := mapstructure.Decode(args, l); err != nil {
 		return fmt.Errorf("error decoding extension arguments: %v", err)
 	}

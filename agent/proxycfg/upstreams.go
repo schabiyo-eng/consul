@@ -589,7 +589,7 @@ func (c *reducedUpstreamConfig) ConnectTimeout() time.Duration {
 	return time.Duration(c.ConnectTimeoutMs) * time.Millisecond
 }
 
-func parseReducedUpstreamConfig(m map[string]interface{}) (reducedUpstreamConfig, error) {
+func parseReducedUpstreamConfig(m map[string]any) (reducedUpstreamConfig, error) {
 	var cfg reducedUpstreamConfig
 	err := mapstructure.WeakDecode(m, &cfg)
 	return cfg, err

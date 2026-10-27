@@ -1259,7 +1259,7 @@ func TestFSM_CAConfig(t *testing.T) {
 		Op: structs.CAOpSetConfig,
 		Config: &structs.CAConfiguration{
 			Provider: "consul",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"PrivateKey":          "asdf",
 				"RootCert":            "qwer",
 				"IntermediateCertTTL": 365 * 24 * time.Hour,
@@ -1395,7 +1395,7 @@ func TestFSM_ConfigEntry(t *testing.T) {
 	entry := &structs.ProxyConfigEntry{
 		Kind: structs.ProxyDefaults,
 		Name: "global",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"foo": "bar",
 		},
 		EnterpriseMeta: *structs.DefaultEnterpriseMetaInDefaultPartition(),
@@ -1733,7 +1733,7 @@ func TestFSM_Chunking_Lifecycle(t *testing.T) {
 
 	// Apply the rest of the logs
 	for _, logs := range logOfLogs {
-		var resp interface{}
+		var resp any
 		for i, log := range logs {
 			switch i {
 			case 0, 3, 8:

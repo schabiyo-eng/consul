@@ -320,7 +320,7 @@ func TestAgent_Services_MeshGateway(t *testing.T) {
 		Service: "mg-dc1",
 		Port:    8443,
 		Proxy: structs.ConnectProxyConfig{
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": "bar",
 			},
 		},
@@ -364,7 +364,7 @@ func TestAgent_Services_TerminatingGateway(t *testing.T) {
 		Service: "tg-dc1",
 		Port:    8443,
 		Proxy: structs.ConnectProxyConfig{
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": "bar",
 			},
 		},
@@ -2845,11 +2845,11 @@ func TestAgent_RegisterCheck_Scripts(t *testing.T) {
 
 	tests := []struct {
 		name  string
-		check map[string]interface{}
+		check map[string]any
 	}{
 		{
 			"== Consul 1.0.0",
-			map[string]interface{}{
+			map[string]any{
 				"Name":       "test",
 				"Interval":   "2s",
 				"ScriptArgs": []string{"true"},
@@ -2857,7 +2857,7 @@ func TestAgent_RegisterCheck_Scripts(t *testing.T) {
 		},
 		{
 			"> Consul 1.0.0 (fixup)",
-			map[string]interface{}{
+			map[string]any{
 				"Name":        "test",
 				"Interval":    "2s",
 				"script_args": []string{"true"},
@@ -2865,7 +2865,7 @@ func TestAgent_RegisterCheck_Scripts(t *testing.T) {
 		},
 		{
 			"> Consul 1.0.0",
-			map[string]interface{}{
+			map[string]any{
 				"Name":     "test",
 				"Interval": "2s",
 				"Args":     []string{"true"},
@@ -2883,7 +2883,7 @@ func TestAgent_RegisterCheck_Scripts(t *testing.T) {
 		})
 
 		t.Run(tt.name+" as top-level service check", func(t *testing.T) {
-			args := map[string]interface{}{
+			args := map[string]any{
 				"Name":  "a",
 				"Port":  1234,
 				"Check": tt.check,
@@ -2898,10 +2898,10 @@ func TestAgent_RegisterCheck_Scripts(t *testing.T) {
 		})
 
 		t.Run(tt.name+" as slice-based service check", func(t *testing.T) {
-			args := map[string]interface{}{
+			args := map[string]any{
 				"Name":   "a",
 				"Port":   1234,
-				"Checks": []map[string]interface{}{tt.check},
+				"Checks": []map[string]any{tt.check},
 			}
 
 			req, _ := http.NewRequest("PUT", "/v1/agent/service/register", jsonReader(args))
@@ -3995,7 +3995,7 @@ func testAgent_RegisterService_TranslateKeys(t *testing.T, extraHCL string) {
 					DestinationServiceID:   "web",
 					LocalServiceAddress:    tt.ip,
 					LocalServicePort:       1234,
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"destination_type": "proxy.config is 'opaque' so should not get translated",
 					},
 					Upstreams: structs.Upstreams{
@@ -4006,7 +4006,7 @@ func testAgent_RegisterService_TranslateKeys(t *testing.T, extraHCL string) {
 							DestinationPartition: "default",
 							LocalBindAddress:     tt.ip,
 							LocalBindPort:        1234,
-							Config: map[string]interface{}{
+							Config: map[string]any{
 								"destination_type": "proxy.upstreams.config is 'opaque' so should not get translated",
 							},
 						},
@@ -4050,7 +4050,7 @@ func testAgent_RegisterService_TranslateKeys(t *testing.T, extraHCL string) {
 							DestinationPartition: "default",
 							LocalBindAddress:     tt.ip,
 							LocalBindPort:        1234,
-							Config: map[string]interface{}{
+							Config: map[string]any{
 								"destination_type": "sidecar_service.proxy.upstreams.config is 'opaque' so should not get translated",
 							},
 						},
@@ -4220,7 +4220,7 @@ func testAgent_RegisterService_TranslateKeys_UDP(t *testing.T, extraHCL string) 
 					DestinationServiceID:   "web",
 					LocalServiceAddress:    tt.ip,
 					LocalServicePort:       1234,
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"destination_type": "proxy.config is 'opaque' so should not get translated",
 					},
 					Upstreams: structs.Upstreams{
@@ -4231,7 +4231,7 @@ func testAgent_RegisterService_TranslateKeys_UDP(t *testing.T, extraHCL string) 
 							DestinationPartition: "default",
 							LocalBindAddress:     tt.ip,
 							LocalBindPort:        1234,
-							Config: map[string]interface{}{
+							Config: map[string]any{
 								"destination_type": "proxy.upstreams.config is 'opaque' so should not get translated",
 							},
 						},
@@ -4275,7 +4275,7 @@ func testAgent_RegisterService_TranslateKeys_UDP(t *testing.T, extraHCL string) 
 							DestinationPartition: "default",
 							LocalBindAddress:     tt.ip,
 							LocalBindPort:        1234,
-							Config: map[string]interface{}{
+							Config: map[string]any{
 								"destination_type": "sidecar_service.proxy.upstreams.config is 'opaque' so should not get translated",
 							},
 						},
@@ -4517,9 +4517,9 @@ func testCreateToken(t testutil.TestingTB, a *TestAgent, rules string) string {
 
 	policyID := testCreatePolicy(t, a, policyName, rules)
 
-	args := map[string]interface{}{
+	args := map[string]any{
 		"Description": "User Token",
-		"Policies": []map[string]interface{}{
+		"Policies": []map[string]any{
 			{
 				"ID": policyID,
 			},
@@ -4541,7 +4541,7 @@ func testCreateToken(t testutil.TestingTB, a *TestAgent, rules string) string {
 }
 
 func testCreatePolicy(t testutil.TestingTB, a *TestAgent, name, rules string) string {
-	args := map[string]interface{}{
+	args := map[string]any{
 		"Name":  name,
 		"Rules": rules,
 	}
@@ -6316,7 +6316,7 @@ func TestAgent_Monitor(t *testing.T) {
 			// Each line is output as a separate JSON object, we grab the first and
 			// make sure it can be unmarshalled.
 			firstLine := bytes.Split(resp.Body.Bytes(), []byte("\n"))[0]
-			var output map[string]interface{}
+			var output map[string]any
 			if err := json.Unmarshal(firstLine, &output); err != nil {
 				r.Fatalf("err: %v", err)
 			}
@@ -8567,7 +8567,7 @@ func TestAgent_Self_Reload(t *testing.T) {
 	val := &Self{}
 	require.NoError(t, dec.Decode(val))
 
-	require.Equal(t, "info", val.DebugConfig["Logging"].(map[string]interface{})["LogLevel"])
+	require.Equal(t, "info", val.DebugConfig["Logging"].(map[string]any)["LogLevel"])
 	require.Equal(t, float64(100), val.DebugConfig["RaftSnapshotThreshold"].(float64))
 
 	// reload with new config
@@ -8595,7 +8595,7 @@ func TestAgent_Self_Reload(t *testing.T) {
 	dec = json.NewDecoder(resp.Body)
 	val = &Self{}
 	require.NoError(t, dec.Decode(val))
-	require.Equal(t, "debug", val.DebugConfig["Logging"].(map[string]interface{})["LogLevel"])
+	require.Equal(t, "debug", val.DebugConfig["Logging"].(map[string]any)["LogLevel"])
 	require.Equal(t, float64(200), val.DebugConfig["RaftSnapshotThreshold"].(float64))
 
 }

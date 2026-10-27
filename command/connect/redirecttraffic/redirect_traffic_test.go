@@ -172,7 +172,7 @@ func TestGenerateConfigFromFlags(t *testing.T) {
 					Address: "1.1.1.1",
 					Proxy: &api.AgentServiceConnectProxyConfig{
 						DestinationServiceName: "foo",
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"bind_port": 21000,
 						},
 					},
@@ -326,7 +326,7 @@ func TestGenerateConfigFromFlags(t *testing.T) {
 					Address: "1.1.1.1",
 					Proxy: &api.AgentServiceConnectProxyConfig{
 						DestinationServiceName: "foo",
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"bind_port": "21000",
 						},
 					},
@@ -356,7 +356,7 @@ func TestGenerateConfigFromFlags(t *testing.T) {
 					Address: "1.1.1.1",
 					Proxy: &api.AgentServiceConnectProxyConfig{
 						DestinationServiceName: "foo",
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"bind_port": "invalid",
 						},
 					},
@@ -541,7 +541,7 @@ func TestGenerateConfigFromFlags(t *testing.T) {
 					Address: "1.1.1.1",
 					Proxy: &api.AgentServiceConnectProxyConfig{
 						DestinationServiceName: "foo",
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"envoy_prometheus_bind_addr": "0.0.0.0:9000",
 						},
 					},
@@ -572,7 +572,7 @@ func TestGenerateConfigFromFlags(t *testing.T) {
 					Address: "1.1.1.1",
 					Proxy: &api.AgentServiceConnectProxyConfig{
 						DestinationServiceName: "foo",
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"envoy_prometheus_bind_addr": "9000",
 						},
 					},
@@ -598,7 +598,7 @@ func TestGenerateConfigFromFlags(t *testing.T) {
 					Address: "1.1.1.1",
 					Proxy: &api.AgentServiceConnectProxyConfig{
 						DestinationServiceName: "foo",
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"envoy_stats_bind_addr": "0.0.0.0:8000",
 						},
 					},
@@ -629,7 +629,7 @@ func TestGenerateConfigFromFlags(t *testing.T) {
 					Address: "1.1.1.1",
 					Proxy: &api.AgentServiceConnectProxyConfig{
 						DestinationServiceName: "foo",
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"envoy_stats_bind_addr": "8000",
 						},
 					},

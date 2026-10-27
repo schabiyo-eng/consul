@@ -98,7 +98,7 @@ func TestStore_IntegrationWithBackend(t *testing.T) {
 	}
 }
 
-func assertDeepEqual(t *testing.T, idx uint64, x, y interface{}) {
+func assertDeepEqual(t *testing.T, idx uint64, x, y any) {
 	t.Helper()
 	if diff := cmp.Diff(x, y, cmpopts.EquateEmpty()); diff != "" {
 		t.Fatalf("assertion failed: values at index %d are not equal\n--- expected\n+++ actual\n%v", idx, diff)

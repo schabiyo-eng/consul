@@ -33,7 +33,7 @@ func TestVaultCAProvider_GCPAuthClient(t *testing.T) {
 		"explicit config": {
 			authMethod: &structs.VaultAuthMethod{
 				Type: "gcp",
-				Params: map[string]interface{}{
+				Params: map[string]any{
 					"role": "test-role",
 					"jwt":  "test-jwt",
 				},
@@ -43,7 +43,7 @@ func TestVaultCAProvider_GCPAuthClient(t *testing.T) {
 		"derived iam auth": {
 			authMethod: &structs.VaultAuthMethod{
 				Type: "gcp",
-				Params: map[string]interface{}{
+				Params: map[string]any{
 					"type":                  "iam",
 					"role":                  "test-role",
 					"service_account_email": "test@google.cloud",
@@ -53,7 +53,7 @@ func TestVaultCAProvider_GCPAuthClient(t *testing.T) {
 		"derived gce auth": {
 			authMethod: &structs.VaultAuthMethod{
 				Type: "gcp",
-				Params: map[string]interface{}{
+				Params: map[string]any{
 					"type": "gce",
 					"role": "test-role",
 				},
@@ -62,7 +62,7 @@ func TestVaultCAProvider_GCPAuthClient(t *testing.T) {
 		"derived without role": {
 			authMethod: &structs.VaultAuthMethod{
 				Type: "gcp",
-				Params: map[string]interface{}{
+				Params: map[string]any{
 					"type": "gce",
 				},
 			},
@@ -71,7 +71,7 @@ func TestVaultCAProvider_GCPAuthClient(t *testing.T) {
 		"invalid config": {
 			authMethod: &structs.VaultAuthMethod{
 				Type: "gcp",
-				Params: map[string]interface{}{
+				Params: map[string]any{
 					"invalid": true,
 				},
 			},
@@ -111,7 +111,7 @@ func TestVaultCAProvider_AWSAuthClient(t *testing.T) {
 		"explicit aws ec2 identity": {
 			authMethod: &structs.VaultAuthMethod{
 				Type: "aws",
-				Params: map[string]interface{}{
+				Params: map[string]any{
 					"role":      "test-role",
 					"identity":  "test-identity",
 					"signature": "test-signature",
@@ -123,7 +123,7 @@ func TestVaultCAProvider_AWSAuthClient(t *testing.T) {
 			authMethod: &structs.VaultAuthMethod{
 				Type:      "aws",
 				MountPath: "custom-aws",
-				Params: map[string]interface{}{
+				Params: map[string]any{
 					"role":  "test-role",
 					"pkcs7": "test-pkcs7",
 				},
@@ -133,7 +133,7 @@ func TestVaultCAProvider_AWSAuthClient(t *testing.T) {
 		"derived aws login data": {
 			authMethod: &structs.VaultAuthMethod{
 				Type: "aws",
-				Params: map[string]interface{}{
+				Params: map[string]any{
 					"role":   "test-role",
 					"type":   "ec2",
 					"region": "test-region",
@@ -163,13 +163,13 @@ func TestVaultCAProvider_AWSAuthClient(t *testing.T) {
 
 func TestVaultCAProvider_AWSCredentialsConfig(t *testing.T) {
 	cases := map[string]struct {
-		params    map[string]interface{}
+		params    map[string]any
 		envVars   map[string]string
 		expRegion string
 		expErr    error
 	}{
 		"valid config": {
-			params: map[string]interface{}{
+			params: map[string]any{
 				"access_key":              "access key",
 				"secret_key":              "secret key",
 				"region":                  "custom-region",
@@ -182,21 +182,21 @@ func TestVaultCAProvider_AWSCredentialsConfig(t *testing.T) {
 			expRegion: "custom-region",
 		},
 		"default region": {
-			params:    map[string]interface{}{},
+			params:    map[string]any{},
 			expRegion: "us-east-1",
 		},
 		"env AWS_REGION": {
-			params:    map[string]interface{}{},
+			params:    map[string]any{},
 			envVars:   map[string]string{"AWS_REGION": "us-west-1"},
 			expRegion: "us-west-1",
 		},
 		"env AWS_DEFAULT_REGION": {
-			params:    map[string]interface{}{},
+			params:    map[string]any{},
 			envVars:   map[string]string{"AWS_DEFAULT_REGION": "us-west-2"},
 			expRegion: "us-west-2",
 		},
 		"both AWS_REGION and AWS_DEFAULT_REGION": {
-			params: map[string]interface{}{},
+			params: map[string]any{},
 			envVars: map[string]string{
 				"AWS_REGION":         "us-west-1",
 				"AWS_DEFAULT_REGION": "us-west-2",
@@ -204,7 +204,7 @@ func TestVaultCAProvider_AWSCredentialsConfig(t *testing.T) {
 			expRegion: "us-west-1",
 		},
 		"with role_external_id": {
-			params: map[string]interface{}{
+			params: map[string]any{
 				"access_key":       "access key",
 				"secret_key":       "secret key",
 				"region":           "eu-west-1",
@@ -214,7 +214,7 @@ func TestVaultCAProvider_AWSCredentialsConfig(t *testing.T) {
 			expRegion: "eu-west-1",
 		},
 		"with web_identity_token": {
-			params: map[string]interface{}{
+			params: map[string]any{
 				"region":             "ap-southeast-1",
 				"role_arn":           "arn:aws:iam::123456789012:role/web-identity-role",
 				"web_identity_token": "mock-web-identity-token",
@@ -223,7 +223,7 @@ func TestVaultCAProvider_AWSCredentialsConfig(t *testing.T) {
 			expRegion: "ap-southeast-1",
 		},
 		"invalid config": {
-			params: map[string]interface{}{
+			params: map[string]any{
 				"invalid": true,
 			},
 			expErr: fmt.Errorf("misconfiguration of AWS auth parameters: invalid type for field"),
@@ -280,13 +280,13 @@ func TestVaultCAProvider_AWSLoginDataGenerator(t *testing.T) {
 		},
 		"with role": {
 			expErr:     nil,
-			authMethod: structs.VaultAuthMethod{Type: "aws", MountPath: "", Params: map[string]interface{}{"role": "test-role"}},
+			authMethod: structs.VaultAuthMethod{Type: "aws", MountPath: "", Params: map[string]any{"role": "test-role"}},
 		},
 		"with header_value": {
 			authMethod: structs.VaultAuthMethod{
 				Type:      "aws",
 				MountPath: "",
-				Params: map[string]interface{}{
+				Params: map[string]any{
 					"access_key":   "AKIAIOSFODNN7EXAMPLE",
 					"secret_key":   "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
 					"region":       "us-west-2",
@@ -300,7 +300,7 @@ func TestVaultCAProvider_AWSLoginDataGenerator(t *testing.T) {
 			authMethod: structs.VaultAuthMethod{
 				Type:      "aws",
 				MountPath: "",
-				Params: map[string]interface{}{
+				Params: map[string]any{
 					"access_key": "AKIAIOSFODNN7EXAMPLE",
 					"secret_key": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
 					"region":     "eu-central-1",
@@ -312,7 +312,7 @@ func TestVaultCAProvider_AWSLoginDataGenerator(t *testing.T) {
 			authMethod: structs.VaultAuthMethod{
 				Type:      "aws",
 				MountPath: "",
-				Params: map[string]interface{}{
+				Params: map[string]any{
 					"invalid": true,
 				},
 			},
@@ -374,12 +374,12 @@ func TestVaultCAProvider_AWSLoginDataGenerator(t *testing.T) {
 // are properly extracted from auth method params and passed to consul-awsauth.
 func TestVaultCAProvider_AWSEndpointConfiguration(t *testing.T) {
 	cases := map[string]struct {
-		params              map[string]interface{}
+		params              map[string]any
 		expectLoginDataKeys []string
 		expectRole          string
 	}{
 		"with custom iam_endpoint": {
-			params: map[string]interface{}{
+			params: map[string]any{
 				"access_key":   "AKIAIOSFODNN7EXAMPLE",
 				"secret_key":   "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
 				"region":       "us-east-1",
@@ -393,7 +393,7 @@ func TestVaultCAProvider_AWSEndpointConfiguration(t *testing.T) {
 			},
 		},
 		"with custom sts_endpoint": {
-			params: map[string]interface{}{
+			params: map[string]any{
 				"access_key":   "AKIAIOSFODNN7EXAMPLE",
 				"secret_key":   "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
 				"region":       "us-west-2",
@@ -407,7 +407,7 @@ func TestVaultCAProvider_AWSEndpointConfiguration(t *testing.T) {
 			},
 		},
 		"with both iam_endpoint and sts_endpoint": {
-			params: map[string]interface{}{
+			params: map[string]any{
 				"access_key":   "AKIAIOSFODNN7EXAMPLE",
 				"secret_key":   "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
 				"region":       "eu-west-1",
@@ -422,7 +422,7 @@ func TestVaultCAProvider_AWSEndpointConfiguration(t *testing.T) {
 			},
 		},
 		"without custom endpoints (default behavior)": {
-			params: map[string]interface{}{
+			params: map[string]any{
 				"access_key": "AKIAIOSFODNN7EXAMPLE",
 				"secret_key": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
 				"region":     "ap-southeast-1",
@@ -435,7 +435,7 @@ func TestVaultCAProvider_AWSEndpointConfiguration(t *testing.T) {
 			},
 		},
 		"with role and custom endpoints": {
-			params: map[string]interface{}{
+			params: map[string]any{
 				"access_key":   "AKIAIOSFODNN7EXAMPLE",
 				"secret_key":   "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
 				"region":       "us-east-1",
@@ -553,7 +553,7 @@ func TestVaultCAProvider_AzureAuthClient(t *testing.T) {
 		"legacy-case": {
 			authMethod: &structs.VaultAuthMethod{
 				Type: "azure",
-				Params: map[string]interface{}{
+				Params: map[string]any{
 					"role":                "a",
 					"vm_name":             "b",
 					"vmss_name":           "c",
@@ -574,7 +574,7 @@ func TestVaultCAProvider_AzureAuthClient(t *testing.T) {
 		"base-case": {
 			authMethod: &structs.VaultAuthMethod{
 				Type: "azure",
-				Params: map[string]interface{}{
+				Params: map[string]any{
 					"role":     "a-role",
 					"resource": "b-resource",
 				},
@@ -587,7 +587,7 @@ func TestVaultCAProvider_AzureAuthClient(t *testing.T) {
 		"no-role": {
 			authMethod: &structs.VaultAuthMethod{
 				Type: "azure",
-				Params: map[string]interface{}{
+				Params: map[string]any{
 					"resource": "b-resource",
 				},
 			},
@@ -596,7 +596,7 @@ func TestVaultCAProvider_AzureAuthClient(t *testing.T) {
 		"no-resource": {
 			authMethod: &structs.VaultAuthMethod{
 				Type: "azure",
-				Params: map[string]interface{}{
+				Params: map[string]any{
 					"role": "a-role",
 				},
 			},
@@ -903,7 +903,7 @@ func TestVaultCAProvider_AliCloudAuthClient(t *testing.T) {
 		"base-case": {
 			authMethod: &structs.VaultAuthMethod{
 				Type: VaultAuthMethodTypeAliCloud,
-				Params: map[string]interface{}{
+				Params: map[string]any{
 					"role":   "test-role",
 					"region": "test-region",
 				},
@@ -917,7 +917,7 @@ func TestVaultCAProvider_AliCloudAuthClient(t *testing.T) {
 		"no-role": {
 			authMethod: &structs.VaultAuthMethod{
 				Type: VaultAuthMethodTypeAliCloud,
-				Params: map[string]interface{}{
+				Params: map[string]any{
 					"region": "test-region",
 				},
 			},
@@ -926,7 +926,7 @@ func TestVaultCAProvider_AliCloudAuthClient(t *testing.T) {
 		"no-region": {
 			authMethod: &structs.VaultAuthMethod{
 				Type: VaultAuthMethodTypeAliCloud,
-				Params: map[string]interface{}{
+				Params: map[string]any{
 					"role": "test-role",
 				},
 			},
@@ -935,7 +935,7 @@ func TestVaultCAProvider_AliCloudAuthClient(t *testing.T) {
 		"legacy-case": {
 			authMethod: &structs.VaultAuthMethod{
 				Type: VaultAuthMethodTypeAliCloud,
-				Params: map[string]interface{}{
+				Params: map[string]any{
 					"access_key":   "test-key",
 					"access_token": "test-token",
 					"secret_key":   "test-secret-key",

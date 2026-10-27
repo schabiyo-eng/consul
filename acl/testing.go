@@ -25,7 +25,7 @@ func RequirePermissionDeniedError(t testing.TB, err error, authz Authorizer, _ *
 	}
 }
 
-func RequirePermissionDeniedMessage(t testing.TB, msg string, authz interface{}, _ *AuthorizerContext, resource Resource, accessLevel AccessLevel, resourceID string) {
+func RequirePermissionDeniedMessage(t testing.TB, msg string, authz any, _ *AuthorizerContext, resource Resource, accessLevel AccessLevel, resourceID string) {
 	require.NotEmpty(t, msg, "expected non-empty error message")
 
 	baseRegex := ` lacks permission '(\S*):(\S*)' on \"([^\"]*)\"(?: in partition \"([^\"]*)\" in namespace \"([^\"]*)\")?\s*$`

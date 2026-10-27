@@ -650,7 +650,7 @@ func (r *DCSpecificRequest) CacheInfo() cache.RequestInfo {
 	// To calculate the cache key we only hash the node meta filters and the bexpr filter.
 	// The datacenter is handled by the cache framework. The other fields are
 	// not, but should not be used in any cache types.
-	v, err := hashstructure.Hash([]interface{}{
+	v, err := hashstructure.Hash([]any{
 		r.NodeMetaFilters,
 		r.Filter,
 		r.EnterpriseMeta,
@@ -709,7 +709,7 @@ func (r *ServiceDumpRequest) CacheInfo() cache.RequestInfo {
 	// To calculate the cache key we only hash the node meta filters and the bexpr filter.
 	// The datacenter is handled by the cache framework. The other fields are
 	// not, but should not be used in any cache types.
-	v, err := hashstructure.Hash([]interface{}{
+	v, err := hashstructure.Hash([]any{
 		keyKind,
 		r.UseServiceKind,
 		r.NodesOnly,
@@ -822,7 +822,7 @@ func (r *ServiceSpecificRequest) CacheInfo() cache.RequestInfo {
 	// here. We could alternatively use `hash:set` struct tag on an anonymous
 	// struct to make it more robust if it becomes significant.
 	sort.Strings(r.ServiceTags)
-	v, err := hashstructure.Hash([]interface{}{
+	v, err := hashstructure.Hash([]any{
 		r.NodeMetaFilters,
 		strings.ToLower(r.ServiceName),
 		r.PortName,
@@ -891,7 +891,7 @@ func (r *NodeSpecificRequest) CacheInfo() cache.RequestInfo {
 		MustRevalidate: r.MustRevalidate,
 	}
 
-	v, err := hashstructure.Hash([]interface{}{
+	v, err := hashstructure.Hash([]any{
 		r.Node,
 		r.Filter,
 		r.EnterpriseMeta,
@@ -2111,10 +2111,10 @@ func (d *HealthCheckDefinition) MarshalJSON() ([]byte, error) {
 func (t *HealthCheckDefinition) UnmarshalJSON(data []byte) (err error) {
 	type Alias HealthCheckDefinition
 	aux := &struct {
-		Interval                       interface{}
-		Timeout                        interface{}
-		DeregisterCriticalServiceAfter interface{}
-		TTL                            interface{}
+		Interval                       any
+		Timeout                        any
+		DeregisterCriticalServiceAfter any
+		TTL                            any
 		*Alias
 	}{
 		Alias: (*Alias)(t),
@@ -2988,7 +2988,7 @@ func (s *Session) IDValue() string {
 func (s *Session) UnmarshalJSON(data []byte) (err error) {
 	type Alias Session
 	aux := &struct {
-		LockDelay interface{}
+		LockDelay any
 		*Alias
 	}{
 		Alias: (*Alias)(s),
@@ -3156,25 +3156,25 @@ var MsgpackHandle = &codec.MsgpackHandle{
 	RawToString: true,
 	BasicHandle: codec.BasicHandle{
 		DecodeOptions: codec.DecodeOptions{
-			MapType: reflect.TypeOf(map[string]interface{}{}),
+			MapType: reflect.TypeOf(map[string]any{}),
 		},
 	},
 }
 
 // Decode is used to decode a MsgPack encoded object
-func Decode(buf []byte, out interface{}) error {
+func Decode(buf []byte, out any) error {
 	return codec.NewDecoder(bytes.NewReader(buf), MsgpackHandle).Decode(out)
 }
 
 // Encode is used to encode a MsgPack object with type prefix
-func Encode(t MessageType, msg interface{}) ([]byte, error) {
+func Encode(t MessageType, msg any) ([]byte, error) {
 	var buf bytes.Buffer
 	buf.WriteByte(uint8(t))
 	err := codec.NewEncoder(&buf, MsgpackHandle).Encode(msg)
 	return buf.Bytes(), err
 }
 
-func EncodeProtoInterface(t MessageType, message interface{}) ([]byte, error) {
+func EncodeProtoInterface(t MessageType, message any) ([]byte, error) {
 	if marshaller, ok := message.(proto.Message); ok {
 		return EncodeProto(t, marshaller)
 	}
@@ -3205,11 +3205,11 @@ func DecodeProto(buf []byte, pb proto.Message) error {
 // expected to reply.
 type CompoundResponse interface {
 	// Add adds a new response to the compound response
-	Add(interface{})
+	Add(any)
 
 	// New returns an empty response object which can be passed around by
 	// reference, and then passed to Add() later on.
-	New() interface{}
+	New() any
 }
 
 type KeyringOp string
@@ -3263,12 +3263,12 @@ type KeyringResponses struct {
 	QueryMeta
 }
 
-func (r *KeyringResponses) Add(v interface{}) {
+func (r *KeyringResponses) Add(v any) {
 	val := v.(*KeyringResponses)
 	r.Responses = append(r.Responses, val.Responses...)
 }
 
-func (r *KeyringResponses) New() interface{} {
+func (r *KeyringResponses) New() any {
 	return new(KeyringResponses)
 }
 

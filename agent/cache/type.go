@@ -74,13 +74,13 @@ type FetchOptions struct {
 // data along with metadata gathered from that operation.
 type FetchResult struct {
 	// Value is the result of the fetch.
-	Value interface{}
+	Value any
 
 	// State is opaque data stored in the cache but not returned to clients. It
 	// can be used by Types to maintain any bookkeeping they need between fetches
 	// (using FetchOptions.LastResult) in a way that gets automatically cleaned up
 	// by TTL expiry etc.
-	State interface{}
+	State any
 
 	// Index is the corresponding index value for this data.
 	Index uint64

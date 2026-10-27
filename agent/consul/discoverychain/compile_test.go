@@ -1145,7 +1145,7 @@ func testcase_PeerRedirectProxyDefHTTP() compileTestCase {
 		Kind:     structs.ProxyDefaults,
 		Name:     structs.ProxyConfigGlobal,
 		Protocol: "http",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"Protocol": "http",
 		},
 	})
@@ -3265,7 +3265,7 @@ func setGlobalProxyProtocol(entries *configentry.DiscoveryChainSet, protocol str
 		Kind:     structs.ProxyDefaults,
 		Name:     structs.ProxyConfigGlobal,
 		Protocol: protocol,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": protocol,
 		},
 	})

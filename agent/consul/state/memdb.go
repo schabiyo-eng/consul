@@ -14,9 +14,9 @@ import (
 
 // ReadTxn is implemented by memdb.Txn to perform read operations.
 type ReadTxn interface {
-	Get(table, index string, args ...interface{}) (memdb.ResultIterator, error)
-	First(table, index string, args ...interface{}) (interface{}, error)
-	FirstWatch(table, index string, args ...interface{}) (<-chan struct{}, interface{}, error)
+	Get(table, index string, args ...any) (memdb.ResultIterator, error)
+	First(table, index string, args ...any) (any, error)
+	FirstWatch(table, index string, args ...any) (<-chan struct{}, any, error)
 }
 
 // AbortTxn is a ReadTxn that can also be aborted to end the transaction.
@@ -34,10 +34,10 @@ type ReadDB interface {
 type WriteTxn interface {
 	ReadTxn
 	Defer(func())
-	Delete(table string, obj interface{}) error
-	DeleteAll(table, index string, args ...interface{}) (int, error)
+	Delete(table string, obj any) error
+	DeleteAll(table, index string, args ...any) (int, error)
 	DeletePrefix(table string, index string, prefix string) (bool, error)
-	Insert(table string, obj interface{}) error
+	Insert(table string, obj any) error
 }
 
 // Changes wraps a memdb.Changes to include the index at which these changes

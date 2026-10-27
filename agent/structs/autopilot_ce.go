@@ -5,6 +5,6 @@
 
 package structs
 
-func (c *AutopilotConfig) autopilotConfigExt() interface{} {
+func (c *AutopilotConfig) autopilotConfigExt() any {
 	return nil
 }

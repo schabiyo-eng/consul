@@ -75,7 +75,7 @@ func TestManager_BasicLifecycle(t *testing.T) {
 			Kind:     structs.ProxyDefaults,
 			Name:     structs.ProxyConfigGlobal,
 			Protocol: "http",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"protocol": "http",
 			},
 		}, &structs.ServiceResolverConfigEntry{
@@ -120,7 +120,7 @@ func TestManager_BasicLifecycle(t *testing.T) {
 			DestinationServiceName: "web",
 			LocalServiceAddress:    "127.0.0.1",
 			LocalServicePort:       8080,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": "bar",
 			},
 			Upstreams: upstreams,
@@ -577,7 +577,7 @@ func TestManager_SyncState_No_Notify(t *testing.T) {
 			DestinationServiceName: "web",
 			LocalServiceAddress:    "127.0.0.1",
 			LocalServicePort:       8080,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": "bar",
 			},
 		},

@@ -24,8 +24,8 @@ const (
 )
 
 // decodeValue decodes the value member of the given operation.
-func decodeValue(rawKV interface{}) error {
-	rawMap, ok := rawKV.(map[string]interface{})
+func decodeValue(rawKV any) error {
+	rawMap, ok := rawKV.(map[string]any)
 	if !ok {
 		return fmt.Errorf("unexpected raw KV type: %T", rawKV)
 	}
@@ -362,7 +362,7 @@ func (s *HTTPHandlers) convertOps(resp http.ResponseWriter, req *http.Request) (
 // transaction. A transaction consisting of only read operations will be fast-
 // pathed to an endpoint that supports consistency modes (but not blocking),
 // and everything else will be routed through Raft like a normal write.
-func (s *HTTPHandlers) Txn(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) Txn(resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Convert the ops from the API format to the internal format.
 	ops, writes, err := s.convertOps(resp, req)
 	if err != nil {
@@ -372,7 +372,7 @@ func (s *HTTPHandlers) Txn(resp http.ResponseWriter, req *http.Request) (interfa
 	// Fast-path a transaction with only writes to the read-only endpoint,
 	// which bypasses Raft, and allows for staleness.
 	conflict := false
-	var ret interface{}
+	var ret any
 	if writes == 0 {
 		args := structs.TxnReadRequest{Ops: ops}
 		if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {

@@ -7142,7 +7142,7 @@ func TestStateStore_GatewayServices_IngressProtocolFiltering(t *testing.T) {
 		proxyDefaults := &structs.ProxyConfigEntry{
 			Name: structs.ProxyConfigGlobal,
 			Kind: structs.ProxyDefaults,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"protocol": "http",
 			},
 		}
@@ -7259,7 +7259,7 @@ func setupIngressState(t *testing.T, s *Store) memdb.WatchSet {
 	proxyDefaults := &structs.ProxyConfigEntry{
 		Name: structs.ProxyConfigGlobal,
 		Kind: structs.ProxyDefaults,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "http",
 		},
 	}
@@ -8510,7 +8510,7 @@ func TestCatalog_upstreamsFromRegistration_Ingress(t *testing.T) {
 	require.NoError(t, s.EnsureConfigEntry(1, &structs.ProxyConfigEntry{
 		Kind: structs.ProxyDefaults,
 		Name: structs.ProxyConfigGlobal,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "http",
 		},
 	}))
@@ -8718,7 +8718,7 @@ func TestCatalog_cleanupGatewayWildcards_panic(t *testing.T) {
 	require.NoError(t, s.EnsureConfigEntry(1, &structs.ProxyConfigEntry{
 		Kind: structs.ProxyDefaults,
 		Name: structs.ProxyConfigGlobal,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "http",
 		},
 	}))
@@ -8787,7 +8787,7 @@ func TestCatalog_cleanupGatewayWildcards_proxy(t *testing.T) {
 	require.NoError(t, s.EnsureConfigEntry(1, &structs.ProxyConfigEntry{
 		Kind: structs.ProxyDefaults,
 		Name: structs.ProxyConfigGlobal,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "http",
 		},
 	}))
@@ -8918,7 +8918,7 @@ func TestCatalog_DownstreamsForService(t *testing.T) {
 				&structs.ProxyConfigEntry{
 					Kind: structs.ProxyDefaults,
 					Name: structs.ProxyConfigGlobal,
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"protocol": "http",
 					},
 				},
@@ -9074,7 +9074,7 @@ func TestCatalog_DownstreamsForService_Updates(t *testing.T) {
 	defaults := structs.ProxyConfigEntry{
 		Kind: structs.ProxyDefaults,
 		Name: structs.ProxyConfigGlobal,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "http",
 		},
 	}
@@ -9549,7 +9549,7 @@ func setVirtualIPFlags(t *testing.T, s *Store) {
 	}))
 }
 
-func assertDeepEqual(t *testing.T, x, y interface{}, opts ...cmp.Option) {
+func assertDeepEqual(t *testing.T, x, y any, opts ...cmp.Option) {
 	t.Helper()
 	if diff := cmp.Diff(x, y, opts...); diff != "" {
 		t.Fatalf("assertion failed: values are not equal\n--- expected\n+++ actual\n%v", diff)

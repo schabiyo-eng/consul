@@ -158,7 +158,7 @@ func (c *Cache) notifyPollingQuery(ctx context.Context, r getOptions, correlatio
 	index := uint64(0)
 	failures := uint(0)
 
-	var lastValue interface{} = nil
+	var lastValue any = nil
 
 	for {
 		// Check context hasn't been canceled
@@ -251,7 +251,7 @@ func (c *Cache) notifyPollingQuery(ctx context.Context, r getOptions, correlatio
 // require us to use a special comparison because cloned structs
 // may have non-exported fields that differ. For non-protobuf objects,
 // we use reflect.DeepEqual().
-func isEqual(a, b interface{}) bool {
+func isEqual(a, b any) bool {
 	// TODO move this logic into an interface so that each type can determine
 	// its own logic for equality, rather than a centralized type-cast like this.
 	if a != nil && b != nil {

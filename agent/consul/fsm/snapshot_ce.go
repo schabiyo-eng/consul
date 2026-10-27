@@ -892,7 +892,7 @@ func restoreServiceVirtualIP(header *SnapshotHeader, restore *state.Restore, dec
 	// We attempt to reconcile the older type by decoding to a map then decoding that map into
 	// structs.PeeredServiceName first, and then structs.ServiceName.
 	var req struct {
-		Service map[string]interface{}
+		Service map[string]any
 		IP      net.IP
 
 		structs.RaftIndex

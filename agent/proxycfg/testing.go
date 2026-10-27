@@ -925,7 +925,7 @@ func NewControllableCacheType(t testing.T) *ControllableCacheType {
 
 // Set sets the response value to be returned from subsequent cache gets for the
 // type.
-func (ct *ControllableCacheType) Set(key string, value interface{}) {
+func (ct *ControllableCacheType) Set(key string, value any) {
 	atomic.AddUint64(&ct.index, 1)
 	ct.value.Store(key, value)
 	ct.triggerMu.Lock()

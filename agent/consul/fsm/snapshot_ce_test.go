@@ -112,7 +112,7 @@ func TestRestoreFromEnterprise_CEDowngrade(t *testing.T) {
 		Entry: &structs.ProxyConfigEntry{
 			Kind: structs.ProxyDefaults,
 			Name: "global",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": "bar",
 			},
 			EnterpriseMeta: *structs.DefaultEnterpriseMetaInDefaultPartition(),

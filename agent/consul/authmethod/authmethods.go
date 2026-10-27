@@ -61,7 +61,7 @@ type Validator interface {
 type Identity struct {
 	// SelectableFields is the format of this Identity suitable for selection
 	// with a binding rule.
-	SelectableFields interface{}
+	SelectableFields any
 
 	// ProjectedVars is the format of this Identity suitable for interpolation
 	// in a bind name within a binding rule.
@@ -188,7 +188,7 @@ func Types() []string {
 }
 
 // ParseConfig parses the config block for a auth method.
-func ParseConfig(rawConfig map[string]interface{}, out interface{}) error {
+func ParseConfig(rawConfig map[string]any, out any) error {
 	decodeConf := &mapstructure.DecoderConfig{
 		Result:           out,
 		WeaklyTypedInput: true,

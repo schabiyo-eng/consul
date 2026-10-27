@@ -122,7 +122,7 @@ func (s *HealthView) skipFilter(csn *structs.CheckServiceNode) bool {
 }
 
 type filterEvaluator interface {
-	Evaluate(datum interface{}) (bool, error)
+	Evaluate(datum any) (bool, error)
 }
 
 func newFilterEvaluator(req structs.ServiceSpecificRequest) (filterEvaluator, error) {
@@ -169,7 +169,7 @@ func newFilterEvaluator(req structs.ServiceSpecificRequest) (filterEvaluator, er
 // method always return true, so no items will be filtered out.
 type noopFilterEvaluator struct{}
 
-func (noopFilterEvaluator) Evaluate(_ interface{}) (bool, error) {
+func (noopFilterEvaluator) Evaluate(_ any) (bool, error) {
 	return true, nil
 }
 
@@ -177,7 +177,7 @@ type multiFilterEvaluator struct {
 	evaluators []filterEvaluator
 }
 
-func (m multiFilterEvaluator) Evaluate(data interface{}) (bool, error) {
+func (m multiFilterEvaluator) Evaluate(data any) (bool, error) {
 	for _, e := range m.evaluators {
 		match, err := e.Evaluate(data)
 		if !match || err != nil {
@@ -202,7 +202,7 @@ func sortCheckServiceNodes(serviceNodes *structs.IndexedCheckServiceNodes) {
 }
 
 // Result returns the structs.IndexedCheckServiceNodes stored by this view.
-func (s *HealthView) Result(index uint64) interface{} {
+func (s *HealthView) Result(index uint64) any {
 	result := structs.IndexedCheckServiceNodes{
 		Nodes: make(structs.CheckServiceNodes, 0, len(s.state)),
 		QueryMeta: structs.QueryMeta{
@@ -230,7 +230,7 @@ type serviceTagEvaluator struct {
 	tags []string
 }
 
-func (m serviceTagEvaluator) Evaluate(data interface{}) (bool, error) {
+func (m serviceTagEvaluator) Evaluate(data any) (bool, error) {
 	csn, ok := data.(structs.CheckServiceNode)
 	if !ok {
 		return false, fmt.Errorf("unexpected type %T for structs.CheckServiceNode filter", data)

@@ -62,7 +62,7 @@ func aclChangeUnsubscribeEvent(tx ReadTxn, changes Changes) ([]stream.Event, err
 
 // changeObject returns the object before it was deleted if the change was a delete,
 // otherwise returns the object after the change.
-func changeObject(change memdb.Change) interface{} {
+func changeObject(change memdb.Change) any {
 	if change.Deleted() {
 		return change.Before
 	}

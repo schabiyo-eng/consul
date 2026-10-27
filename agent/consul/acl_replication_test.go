@@ -357,7 +357,7 @@ func TestACLReplication_Tokens(t *testing.T) {
 	testauth.InstallSessionToken(testSessionID, "fake-token", "default", "demo", "abc123")
 	method1, err := upsertTestCustomizedAuthMethod(client, "root", "dc1", func(method *structs.ACLAuthMethod) {
 		method.TokenLocality = "global"
-		method.Config = map[string]interface{}{
+		method.Config = map[string]any{
 			"SessionID": testSessionID,
 		}
 	})

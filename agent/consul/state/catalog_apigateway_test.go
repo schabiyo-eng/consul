@@ -30,7 +30,7 @@ func TestStateStore_GatewayServices_APIGateway(t *testing.T) {
 	proxyDefaults := &structs.ProxyConfigEntry{
 		Name: structs.ProxyConfigGlobal,
 		Kind: structs.ProxyDefaults,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "http",
 		},
 	}
@@ -129,7 +129,7 @@ func TestStateStore_GatewayServices_APIGateway_MultiRoute(t *testing.T) {
 	proxyDefaults := &structs.ProxyConfigEntry{
 		Name: structs.ProxyConfigGlobal,
 		Kind: structs.ProxyDefaults,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "http",
 		},
 	}
@@ -241,7 +241,7 @@ func TestStateStore_CheckAPIGatewayServiceNodes_ListenerPort(t *testing.T) {
 			require.NoError(t, s.EnsureConfigEntry(3, &structs.ProxyConfigEntry{
 				Name:   structs.ProxyConfigGlobal,
 				Kind:   structs.ProxyDefaults,
-				Config: map[string]interface{}{"protocol": "http"},
+				Config: map[string]any{"protocol": "http"},
 			}))
 			require.NoError(t, s.EnsureConfigEntry(4, &structs.APIGatewayConfigEntry{
 				Kind: structs.APIGateway,
@@ -298,7 +298,7 @@ func TestStateStore_CheckAPIGatewayServiceNodes_MultipleListenerPorts(t *testing
 	require.NoError(t, s.EnsureConfigEntry(3, &structs.ProxyConfigEntry{
 		Name:   structs.ProxyConfigGlobal,
 		Kind:   structs.ProxyDefaults,
-		Config: map[string]interface{}{"protocol": "http"},
+		Config: map[string]any{"protocol": "http"},
 	}))
 	require.NoError(t, s.EnsureConfigEntry(4, &structs.APIGatewayConfigEntry{
 		Kind: structs.APIGateway,

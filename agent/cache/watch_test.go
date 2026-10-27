@@ -426,8 +426,8 @@ func Test_isEqual(t *testing.T) {
 
 	tests := []struct {
 		equal bool
-		v1    interface{}
-		v2    interface{}
+		v1    any
+		v2    any
 	}{
 		// Test protobuf message comparisons work.
 		{true, nil, nil},

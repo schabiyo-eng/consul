@@ -37,7 +37,7 @@ func (a *Authenticator) ClaimsFromJWT(ctx context.Context, jwt string) (*Claims,
 	// otherwise validate against the locally configured or JWKS keys. Once things are
 	// validated, we re-unify the request path when evaluating the claims.
 	var (
-		allClaims map[string]interface{}
+		allClaims map[string]any
 		err       error
 	)
 	switch a.config.authType() {
@@ -69,9 +69,9 @@ func (a *Authenticator) ClaimsFromJWT(ctx context.Context, jwt string) (*Claims,
 	return c, nil
 }
 
-func (a *Authenticator) verifyVanillaJWT(ctx context.Context, loginToken string) (map[string]interface{}, error) {
+func (a *Authenticator) verifyVanillaJWT(ctx context.Context, loginToken string) (map[string]any, error) {
 	var (
-		allClaims = map[string]interface{}{}
+		allClaims = map[string]any{}
 		claims    = jwt.Claims{}
 	)
 	// TODO(sso): handle JWTSupportedAlgs
@@ -183,10 +183,10 @@ func (a *Authenticator) verifyVanillaJWT(ctx context.Context, loginToken string)
 // Extracted from "github.com/hashicorp/vault/sdk/helper/certutil"
 //
 // go-sso added support for ed25519 (EdDSA)
-func parsePublicKeyPEM(data []byte) (interface{}, error) {
+func parsePublicKeyPEM(data []byte) (any, error) {
 	block, _ := pem.Decode(data)
 	if block != nil {
-		var rawKey interface{}
+		var rawKey any
 		var err error
 		if rawKey, err = x509.ParsePKIXPublicKey(block.Bytes); err != nil {
 			if cert, err := x509.ParseCertificate(block.Bytes); err == nil {

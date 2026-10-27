@@ -151,7 +151,7 @@ func (c *cmd) Run(args []string) int {
 		}()
 	}
 
-	err = c.encoder.Encode(map[string]interface{}{
+	err = c.encoder.Encode(map[string]any{
 		"Type": "SnapshotHeader",
 		"Data": meta,
 	})
@@ -174,7 +174,7 @@ func (c *cmd) Run(args []string) int {
 func (c *cmd) decodeStream(file io.Reader) error {
 	handler := func(header *fsm.SnapshotHeader, msg structs.MessageType, dec *codec.Decoder) error {
 		name := structs.MessageType.String(msg)
-		var val interface{}
+		var val any
 
 		if zeroVal, ok := requestTypeZeroValues[msg]; ok {
 			val = zeroVal()
@@ -185,7 +185,7 @@ func (c *cmd) decodeStream(file io.Reader) error {
 			return fmt.Errorf("failed to decode msg type %v, error %v", name, err)
 		}
 
-		err = c.encoder.Encode(map[string]interface{}{
+		err = c.encoder.Encode(map[string]any{
 			"Type": name,
 			"Data": val,
 		})

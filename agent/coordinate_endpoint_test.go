@@ -32,7 +32,7 @@ func TestCoordinate_Disabled_Response(t *testing.T) {
 	defer a.Shutdown()
 	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
 
-	tests := []func(resp http.ResponseWriter, req *http.Request) (interface{}, error){
+	tests := []func(resp http.ResponseWriter, req *http.Request) (any, error){
 		a.srv.CoordinateDatacenters,
 		a.srv.CoordinateNodes,
 		a.srv.CoordinateNode,

@@ -135,7 +135,7 @@ func indexSessionCheckFromSession(e *sessionCheck) ([]byte, error) {
 type CheckIDIndex struct {
 }
 
-func (index *CheckIDIndex) FromObject(obj interface{}) (bool, []byte, error) {
+func (index *CheckIDIndex) FromObject(obj any) (bool, []byte, error) {
 	v := reflect.ValueOf(obj)
 	v = reflect.Indirect(v) // Dereference the pointer if any
 
@@ -158,7 +158,7 @@ func (index *CheckIDIndex) FromObject(obj interface{}) (bool, []byte, error) {
 	return true, []byte(id), nil
 }
 
-func (index *CheckIDIndex) FromArgs(args ...interface{}) ([]byte, error) {
+func (index *CheckIDIndex) FromArgs(args ...any) ([]byte, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("must provide only a single argument")
 	}
@@ -174,7 +174,7 @@ func (index *CheckIDIndex) FromArgs(args ...interface{}) ([]byte, error) {
 	return []byte(arg), nil
 }
 
-func (index *CheckIDIndex) PrefixFromArgs(args ...interface{}) ([]byte, error) {
+func (index *CheckIDIndex) PrefixFromArgs(args ...any) ([]byte, error) {
 	val, err := index.FromArgs(args...)
 	if err != nil {
 		return nil, err
@@ -369,7 +369,7 @@ func (s *Store) deleteSessionTxn(tx WriteTxn, idx uint64, sessionID string, entM
 	if err != nil {
 		return fmt.Errorf("failed kvs lookup: %s", err)
 	}
-	var kvs []interface{}
+	var kvs []any
 	for entry := entries.Next(); entry != nil; entry = entries.Next() {
 		kvs = append(kvs, entry)
 	}
@@ -417,7 +417,7 @@ func (s *Store) deleteSessionTxn(tx WriteTxn, idx uint64, sessionID string, entM
 		return fmt.Errorf("failed session checks lookup: %s", err)
 	}
 	{
-		var objs []interface{}
+		var objs []any
 		for mapping := mappings.Next(); mapping != nil; mapping = mappings.Next() {
 			objs = append(objs, mapping)
 		}

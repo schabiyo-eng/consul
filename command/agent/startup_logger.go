@@ -45,21 +45,21 @@ func (l *startupLogger) SetLogger(logger hclog.Logger) {
 	l.logger = logger
 }
 
-func (l *startupLogger) Info(msg string, args ...interface{}) {
+func (l *startupLogger) Info(msg string, args ...any) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 
 	l.logger.Info(msg, args...)
 }
 
-func (l *startupLogger) Warn(msg string, args ...interface{}) {
+func (l *startupLogger) Warn(msg string, args ...any) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 
 	l.logger.Warn(msg, args...)
 }
 
-func (l *startupLogger) Error(msg string, args ...interface{}) {
+func (l *startupLogger) Error(msg string, args ...any) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 

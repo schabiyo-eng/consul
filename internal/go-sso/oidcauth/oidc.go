@@ -29,7 +29,7 @@ var (
 // ClaimsFromAuthCode.
 //
 // Requires the authenticator's config type be set to 'oidc'.
-func (a *Authenticator) GetAuthCodeURL(ctx context.Context, redirectURI string, statePayload interface{}) (string, error) {
+func (a *Authenticator) GetAuthCodeURL(ctx context.Context, redirectURI string, statePayload any) (string, error) {
 	if a.config.authType() != authOIDCFlow {
 		return "", fmt.Errorf("GetAuthCodeURL is incompatible with type %q", TypeJWT)
 	}
@@ -69,7 +69,7 @@ func (a *Authenticator) GetAuthCodeURL(ctx context.Context, redirectURI string, 
 // *TokenVerificationFailedError which can be detected via errors.As().
 //
 // Requires the authenticator's config type be set to 'oidc'.
-func (a *Authenticator) ClaimsFromAuthCode(ctx context.Context, stateParam, code string) (*Claims, interface{}, error) {
+func (a *Authenticator) ClaimsFromAuthCode(ctx context.Context, stateParam, code string) (*Claims, any, error) {
 	claims, payload, _, err := a.claimsFromAuthCode(ctx, stateParam, code)
 	return claims, payload, err
 }
@@ -81,11 +81,11 @@ func (a *Authenticator) ClaimsFromAuthCode(ctx context.Context, stateParam, code
 // provider's end_session_endpoint.
 //
 // Requires the authenticator's config type be set to 'oidc'.
-func (a *Authenticator) ClaimsFromAuthCodeWithIDToken(ctx context.Context, stateParam, code string) (*Claims, interface{}, string, error) {
+func (a *Authenticator) ClaimsFromAuthCodeWithIDToken(ctx context.Context, stateParam, code string) (*Claims, any, string, error) {
 	return a.claimsFromAuthCode(ctx, stateParam, code)
 }
 
-func (a *Authenticator) claimsFromAuthCode(ctx context.Context, stateParam, code string) (*Claims, interface{}, string, error) {
+func (a *Authenticator) claimsFromAuthCode(ctx context.Context, stateParam, code string) (*Claims, any, string, error) {
 	if a.config.authType() != authOIDCFlow {
 		return nil, nil, "", fmt.Errorf("auth code claims are incompatible with type %q", TypeJWT)
 	}
@@ -274,7 +274,7 @@ func (a *Authenticator) verifyOIDCState(stateID string) *oidcState {
 // createOIDCState make an expiring state object, associated with a random state ID
 // that is passed throughout the OAuth process. A nonce is also included in the
 // auth process, and for simplicity will be identical in length/format as the state ID.
-func (a *Authenticator) createOIDCState(redirectURI string, payload interface{}) (*oidc.Req, error) {
+func (a *Authenticator) createOIDCState(redirectURI string, payload any) (*oidc.Req, error) {
 	// Get enough bytes for 2 160-bit IDs (per rfc6749#section-10.10)
 	bytes, err := uuid.GenerateRandomBytes(2 * 20)
 	if err != nil {
@@ -306,7 +306,7 @@ func (a *Authenticator) createOIDCState(redirectURI string, payload interface{})
 type oidcState struct {
 	nonce       string
 	redirectURI string
-	payload     interface{}
+	payload     any
 	request     *oidc.Req // Store the request object for later use in exchange
 }
 

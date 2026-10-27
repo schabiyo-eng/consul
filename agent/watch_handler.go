@@ -30,7 +30,7 @@ const (
 )
 
 // makeWatchHandler returns a handler for the given watch
-func makeWatchHandler(logger hclog.Logger, handler interface{}) watch.HandlerFunc {
+func makeWatchHandler(logger hclog.Logger, handler any) watch.HandlerFunc {
 	var args []string
 	var script string
 
@@ -44,7 +44,7 @@ func makeWatchHandler(logger hclog.Logger, handler interface{}) watch.HandlerFun
 		panic(fmt.Errorf("unknown handler type %T", handler))
 	}
 
-	fn := func(idx uint64, data interface{}) {
+	fn := func(idx uint64, data any) {
 		// Create the command
 		var cmd *osexec.Cmd
 		var err error
@@ -105,7 +105,7 @@ func makeWatchHandler(logger hclog.Logger, handler interface{}) watch.HandlerFun
 }
 
 func makeHTTPWatchHandler(logger hclog.Logger, config *watch.HttpHandlerConfig) watch.HandlerFunc {
-	fn := func(idx uint64, data interface{}) {
+	fn := func(idx uint64, data any) {
 		trans := cleanhttp.DefaultTransport()
 
 		// Skip SSL certificate verification if TLSSkipVerify is true
@@ -190,7 +190,7 @@ func makeHTTPWatchHandler(logger hclog.Logger, config *watch.HttpHandlerConfig) 
 
 // TODO: return a fully constructed watch.Plan with a Plan.Handler, so that Exempt
 // can be ignored by the caller.
-func makeWatchPlan(logger hclog.Logger, params map[string]interface{}) (*watch.Plan, error) {
+func makeWatchPlan(logger hclog.Logger, params map[string]any) (*watch.Plan, error) {
 	wp, err := watch.ParseExempt(params, []string{"handler", "args"})
 	if err != nil {
 		return nil, fmt.Errorf("Failed to parse watch (%#v): %v", params, err)
@@ -222,13 +222,13 @@ func makeWatchPlan(logger hclog.Logger, params map[string]interface{}) (*watch.P
 	return wp, nil
 }
 
-func parseWatchArgs(args interface{}) ([]string, error) {
+func parseWatchArgs(args any) ([]string, error) {
 	switch args := args.(type) {
 	case string:
 		return []string{args}, nil
 	case []string:
 		return args, nil
-	case []interface{}:
+	case []any:
 		result := make([]string, 0, len(args))
 		for _, arg := range args {
 			v, ok := arg.(string)

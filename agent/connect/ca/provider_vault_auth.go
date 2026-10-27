@@ -70,7 +70,7 @@ func (c *VaultAuthClient) Login(ctx context.Context, client *api.Client) (*api.S
 	return client.Logical().WriteWithContext(ctx, c.LoginPath, loginData)
 }
 
-func toMapStringString(in map[string]interface{}) (map[string]string, error) {
+func toMapStringString(in map[string]any) (map[string]string, error) {
 	out := make(map[string]string, len(in))
 	for k, v := range in {
 		if s, ok := v.(string); ok {

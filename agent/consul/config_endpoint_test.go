@@ -259,7 +259,7 @@ operator = "write"
 	proxyArgs := structs.ConfigEntryRequest{
 		Datacenter: "dc1",
 		Entry: &structs.ProxyConfigEntry{
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": 1,
 			},
 		},
@@ -1214,7 +1214,7 @@ func TestConfigEntry_ResolveServiceConfig(t *testing.T) {
 		Kind:        structs.ProxyDefaults,
 		Name:        structs.ProxyConfigGlobal,
 		MeshGateway: structs.MeshGatewayConfig{Mode: structs.MeshGatewayModeLocal},
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"foo": 1,
 		},
 	}))
@@ -1242,7 +1242,7 @@ func TestConfigEntry_ResolveServiceConfig(t *testing.T) {
 	require.NoError(t, msgpackrpc.CallWithCodec(codec, "ConfigEntry.ResolveServiceConfig", &args, &out))
 
 	expected := structs.ServiceConfigResponse{
-		ProxyConfig: map[string]interface{}{
+		ProxyConfig: map[string]any{
 			"foo":      int64(1),
 			"protocol": "http",
 		},
@@ -1254,8 +1254,8 @@ func TestConfigEntry_ResolveServiceConfig(t *testing.T) {
 				Upstream: structs.PeeredServiceName{
 					ServiceName: structs.NewServiceName("*", acl.DefaultEnterpriseMeta().WithWildcardNamespace()),
 				},
-				Config: map[string]interface{}{
-					"mesh_gateway": map[string]interface{}{
+				Config: map[string]any{
+					"mesh_gateway": map[string]any{
 						"Mode": "local",
 					},
 				},
@@ -1264,9 +1264,9 @@ func TestConfigEntry_ResolveServiceConfig(t *testing.T) {
 				Upstream: structs.PeeredServiceName{
 					ServiceName: structs.NewServiceName("bar", nil),
 				},
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"protocol": "grpc",
-					"mesh_gateway": map[string]interface{}{
+					"mesh_gateway": map[string]any{
 						"Mode": "local",
 					},
 				},
@@ -1275,8 +1275,8 @@ func TestConfigEntry_ResolveServiceConfig(t *testing.T) {
 				Upstream: structs.PeeredServiceName{
 					ServiceName: structs.NewServiceName("baz", nil),
 				},
-				Config: map[string]interface{}{
-					"mesh_gateway": map[string]interface{}{
+				Config: map[string]any{
+					"mesh_gateway": map[string]any{
 						"Mode": "local",
 					},
 				},
@@ -1294,7 +1294,7 @@ func TestConfigEntry_ResolveServiceConfig(t *testing.T) {
 	require.NotNil(t, entry)
 	proxyConf, ok := entry.(*structs.ProxyConfigEntry)
 	require.True(t, ok)
-	require.Equal(t, map[string]interface{}{"foo": 1}, proxyConf.Config)
+	require.Equal(t, map[string]any{"foo": 1}, proxyConf.Config)
 }
 
 func TestConfigEntry_ResolveServiceConfig_TransparentProxy(t *testing.T) {
@@ -1475,7 +1475,7 @@ func TestConfigEntry_ResolveServiceConfig_Upstreams(t *testing.T) {
 				&structs.ProxyConfigEntry{
 					Kind: structs.ProxyDefaults,
 					Name: structs.ProxyConfigGlobal,
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"protocol": "grpc",
 					},
 				},
@@ -1498,19 +1498,19 @@ func TestConfigEntry_ResolveServiceConfig_Upstreams(t *testing.T) {
 				UpstreamServiceNames: []structs.PeeredServiceName{cache},
 			},
 			expect: structs.ServiceConfigResponse{
-				ProxyConfig: map[string]interface{}{
+				ProxyConfig: map[string]any{
 					"protocol": "grpc",
 				},
 				UpstreamConfigs: structs.OpaqueUpstreamConfigs{
 					{
 						Upstream: cache,
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"protocol": "grpc",
 						},
 					},
 					{
 						Upstream: mysql,
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"protocol": "http",
 						},
 					},
@@ -1523,7 +1523,7 @@ func TestConfigEntry_ResolveServiceConfig_Upstreams(t *testing.T) {
 				&structs.ProxyConfigEntry{
 					Kind: structs.ProxyDefaults,
 					Name: structs.ProxyConfigGlobal,
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"protocol": "grpc",
 					},
 				},
@@ -1554,26 +1554,26 @@ func TestConfigEntry_ResolveServiceConfig_Upstreams(t *testing.T) {
 				},
 			},
 			expect: structs.ServiceConfigResponse{
-				ProxyConfig: map[string]interface{}{
+				ProxyConfig: map[string]any{
 					"protocol": "grpc",
 				},
 				UpstreamConfigs: structs.OpaqueUpstreamConfigs{
 					{
 						Upstream: cache,
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"protocol": "grpc",
 						},
 					},
 					{
 						Upstream: mysql,
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"protocol":           "http",
 							"connect_timeout_ms": uint64(1111),
 						},
 					},
 					{
 						Upstream: mysqlPeered,
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"protocol":           "grpc",
 							"connect_timeout_ms": uint64(2222),
 						},
@@ -1608,16 +1608,16 @@ func TestConfigEntry_ResolveServiceConfig_Upstreams(t *testing.T) {
 				UpstreamConfigs: structs.OpaqueUpstreamConfigs{
 					{
 						Upstream: wildcard,
-						Config: map[string]interface{}{
-							"mesh_gateway": map[string]interface{}{
+						Config: map[string]any{
+							"mesh_gateway": map[string]any{
 								"Mode": "none",
 							},
 						},
 					},
 					{
 						Upstream: mysql,
-						Config: map[string]interface{}{
-							"mesh_gateway": map[string]interface{}{
+						Config: map[string]any{
+							"mesh_gateway": map[string]any{
 								"Mode": "none",
 							},
 						},
@@ -1631,7 +1631,7 @@ func TestConfigEntry_ResolveServiceConfig_Upstreams(t *testing.T) {
 				&structs.ProxyConfigEntry{
 					Kind: structs.ProxyDefaults,
 					Name: structs.ProxyConfigGlobal,
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"protocol": "udp",
 					},
 				},
@@ -1676,24 +1676,24 @@ func TestConfigEntry_ResolveServiceConfig_Upstreams(t *testing.T) {
 				},
 			},
 			expect: structs.ServiceConfigResponse{
-				ProxyConfig: map[string]interface{}{
+				ProxyConfig: map[string]any{
 					"protocol": "udp",
 				},
 				UpstreamConfigs: structs.OpaqueUpstreamConfigs{
 					{
 						Upstream: wildcard,
-						Config: map[string]interface{}{
-							"passive_health_check": map[string]interface{}{
+						Config: map[string]any{
+							"passive_health_check": map[string]any{
 								"Interval":                           int64(10),
 								"MaxFailures":                        int64(2),
 								"EnforcingConsecutive5xx":            int64(60),
-								"EnforcingConsecutiveGatewayFailure": interface{}(nil),
-								"Consecutive5xx":                     interface{}(nil),
-								"ConsecutiveGatewayFailure":          interface{}(nil),
+								"EnforcingConsecutiveGatewayFailure": any(nil),
+								"Consecutive5xx":                     any(nil),
+								"ConsecutiveGatewayFailure":          any(nil),
 								"MaxEjectionPercent":                 int64(61),
 								"BaseEjectionTime":                   uint64(62 * time.Second),
 							},
-							"mesh_gateway": map[string]interface{}{
+							"mesh_gateway": map[string]any{
 								"Mode": "none",
 							},
 							"protocol": "http",
@@ -1701,18 +1701,18 @@ func TestConfigEntry_ResolveServiceConfig_Upstreams(t *testing.T) {
 					},
 					{
 						Upstream: mysql,
-						Config: map[string]interface{}{
-							"passive_health_check": map[string]interface{}{
+						Config: map[string]any{
+							"passive_health_check": map[string]any{
 								"Interval":                           int64(10),
 								"MaxFailures":                        int64(2),
 								"EnforcingConsecutive5xx":            int64(60),
-								"EnforcingConsecutiveGatewayFailure": interface{}(nil),
-								"Consecutive5xx":                     interface{}(nil),
-								"ConsecutiveGatewayFailure":          interface{}(nil),
+								"EnforcingConsecutiveGatewayFailure": any(nil),
+								"Consecutive5xx":                     any(nil),
+								"ConsecutiveGatewayFailure":          any(nil),
 								"MaxEjectionPercent":                 int64(61),
 								"BaseEjectionTime":                   uint64(62 * time.Second),
 							},
-							"mesh_gateway": map[string]interface{}{
+							"mesh_gateway": map[string]any{
 								"Mode": "local",
 							},
 							"protocol": "grpc",
@@ -1750,17 +1750,17 @@ func TestConfigEntry_ResolveServiceConfig_Upstreams(t *testing.T) {
 				UpstreamConfigs: structs.OpaqueUpstreamConfigs{
 					{
 						Upstream: wildcard,
-						Config: map[string]interface{}{
-							"mesh_gateway": map[string]interface{}{
+						Config: map[string]any{
+							"mesh_gateway": map[string]any{
 								"Mode": "remote",
 							},
 						},
 					},
 					{
 						Upstream: mysql,
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"protocol": "grpc",
-							"mesh_gateway": map[string]interface{}{
+							"mesh_gateway": map[string]any{
 								"Mode": "remote",
 							},
 						},
@@ -1808,17 +1808,17 @@ func TestConfigEntry_ResolveServiceConfig_Upstreams(t *testing.T) {
 				UpstreamConfigs: structs.OpaqueUpstreamConfigs{
 					{
 						Upstream: wildcard,
-						Config: map[string]interface{}{
-							"mesh_gateway": map[string]interface{}{
+						Config: map[string]any{
+							"mesh_gateway": map[string]any{
 								"Mode": "remote",
 							},
 						},
 					},
 					{
 						Upstream: mysql,
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"protocol": "grpc",
-							"mesh_gateway": map[string]interface{}{
+							"mesh_gateway": map[string]any{
 								"Mode": "remote",
 							},
 						},
@@ -1914,7 +1914,7 @@ func TestConfigEntry_ResolveServiceConfig_Blocking(t *testing.T) {
 	require.NoError(t, state.EnsureConfigEntry(1, &structs.ProxyConfigEntry{
 		Kind: structs.ProxyDefaults,
 		Name: structs.ProxyConfigGlobal,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"global": 1,
 		},
 	}))
@@ -1942,7 +1942,7 @@ func TestConfigEntry_ResolveServiceConfig_Blocking(t *testing.T) {
 		))
 
 		expected := structs.ServiceConfigResponse{
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				"global":   int64(1),
 				"protocol": "grpc",
 			},
@@ -1986,7 +1986,7 @@ func TestConfigEntry_ResolveServiceConfig_Blocking(t *testing.T) {
 		require.Equal(t, out.Index, index+1)
 
 		expected := structs.ServiceConfigResponse{
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				"global": int64(1),
 			},
 			QueryMeta: out.QueryMeta,
@@ -2007,7 +2007,7 @@ func TestConfigEntry_ResolveServiceConfig_Blocking(t *testing.T) {
 		))
 
 		expected := structs.ServiceConfigResponse{
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				"global":   int64(1),
 				"protocol": "http",
 			},
@@ -2051,7 +2051,7 @@ func TestConfigEntry_ResolveServiceConfig_Blocking(t *testing.T) {
 		require.Equal(t, out.Index, index+1)
 
 		expected := structs.ServiceConfigResponse{
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				"protocol": "http",
 			},
 			QueryMeta: out.QueryMeta,
@@ -2109,7 +2109,7 @@ func TestConfigEntry_ResolveServiceConfig_Upstreams_Blocking(t *testing.T) {
 		))
 
 		expected := structs.ServiceConfigResponse{
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				"protocol": "http",
 			},
 			UpstreamConfigs: []structs.OpaqueUpstreamConfig{
@@ -2117,7 +2117,7 @@ func TestConfigEntry_ResolveServiceConfig_Upstreams_Blocking(t *testing.T) {
 					Upstream: structs.PeeredServiceName{
 						ServiceName: structs.NewServiceName("bar", nil),
 					},
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"protocol": "http",
 					},
 				},
@@ -2172,7 +2172,7 @@ func TestConfigEntry_ResolveServiceConfig_Upstreams_Blocking(t *testing.T) {
 		require.Equal(t, out.Index, index+1)
 
 		expected := structs.ServiceConfigResponse{
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				"protocol": "http",
 			},
 			QueryMeta: out.QueryMeta, // don't care
@@ -2198,7 +2198,7 @@ func TestConfigEntry_ResolveServiceConfig_Upstreams_Blocking(t *testing.T) {
 		))
 
 		expected := structs.ServiceConfigResponse{
-			ProxyConfig: map[string]interface{}{
+			ProxyConfig: map[string]any{
 				"protocol": "http",
 			},
 			QueryMeta: out.QueryMeta, // don't care
@@ -2277,7 +2277,7 @@ func TestConfigEntry_ResolveServiceConfig_UpstreamProxyDefaultsProtocol(t *testi
 	require.NoError(t, state.EnsureConfigEntry(1, &structs.ProxyConfigEntry{
 		Kind: structs.ProxyDefaults,
 		Name: structs.ProxyConfigGlobal,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "http",
 		},
 	}))
@@ -2317,31 +2317,31 @@ func TestConfigEntry_ResolveServiceConfig_UpstreamProxyDefaultsProtocol(t *testi
 	expected := structs.OpaqueUpstreamConfigs{
 		{
 			Upstream: id("bar"),
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"protocol": "http",
 			},
 		},
 		{
 			Upstream: id("other"),
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"protocol": "http",
 			},
 		},
 		{
 			Upstream: id("dne"),
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"protocol": "http",
 			},
 		},
 		{
 			Upstream: id("alreadyprotocol"),
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"protocol": "grpc",
 			},
 		},
 	}
 	require.ElementsMatch(t, expected, out.UpstreamConfigs)
-	require.Equal(t, map[string]interface{}{"protocol": "http"}, out.ProxyConfig)
+	require.Equal(t, map[string]any{"protocol": "http"}, out.ProxyConfig)
 }
 
 func TestConfigEntry_ResolveServiceConfig_ProxyDefaultsProtocol_UsedForAllUpstreams(t *testing.T) {
@@ -2362,7 +2362,7 @@ func TestConfigEntry_ResolveServiceConfig_ProxyDefaultsProtocol_UsedForAllUpstre
 	require.NoError(t, state.EnsureConfigEntry(1, &structs.ProxyConfigEntry{
 		Kind: structs.ProxyDefaults,
 		Name: structs.ProxyConfigGlobal,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "http",
 		},
 	}))
@@ -2379,13 +2379,13 @@ func TestConfigEntry_ResolveServiceConfig_ProxyDefaultsProtocol_UsedForAllUpstre
 	require.NoError(t, msgpackrpc.CallWithCodec(codec, "ConfigEntry.ResolveServiceConfig", &args, &out))
 
 	expected := structs.ServiceConfigResponse{
-		ProxyConfig: map[string]interface{}{
+		ProxyConfig: map[string]any{
 			"protocol": "http",
 		},
 		UpstreamConfigs: structs.OpaqueUpstreamConfigs{
 			{
 				Upstream: psn,
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"protocol": "http",
 				},
 			},
@@ -2418,7 +2418,7 @@ func BenchmarkConfigEntry_ResolveServiceConfig_Hash(b *testing.B) {
 	res.AddProxyDefaults(&structs.ProxyConfigEntry{
 		Kind: structs.ProxyDefaults,
 		Name: structs.ProxyConfigGlobal,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "grpc",
 		},
 	})

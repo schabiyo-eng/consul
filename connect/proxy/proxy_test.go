@@ -183,12 +183,12 @@ func TestPublicListenerConfig_Defaults(t *testing.T) {
 func TestUpstreamConfig_ConnectTimeout(t *testing.T) {
 	testCases := []struct {
 		name     string
-		config   map[string]interface{}
+		config   map[string]any
 		expected time.Duration
 	}{
 		{
 			name:     "no config uses default",
-			config:   map[string]interface{}{},
+			config:   map[string]any{},
 			expected: 10000 * time.Millisecond, // 10s default
 		},
 		{
@@ -198,28 +198,28 @@ func TestUpstreamConfig_ConnectTimeout(t *testing.T) {
 		},
 		{
 			name: "custom timeout",
-			config: map[string]interface{}{
+			config: map[string]any{
 				"connect_timeout_ms": 5000,
 			},
 			expected: 5000 * time.Millisecond,
 		},
 		{
 			name: "zero timeout",
-			config: map[string]interface{}{
+			config: map[string]any{
 				"connect_timeout_ms": 0,
 			},
 			expected: 0,
 		},
 		{
 			name: "very large timeout",
-			config: map[string]interface{}{
+			config: map[string]any{
 				"connect_timeout_ms": 300000, // 5 minutes
 			},
 			expected: 300000 * time.Millisecond,
 		},
 		{
 			name: "invalid type falls back to default",
-			config: map[string]interface{}{
+			config: map[string]any{
 				"connect_timeout_ms": "invalid",
 			},
 			expected: 10000 * time.Millisecond,

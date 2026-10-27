@@ -133,7 +133,7 @@ func (s *TestAPIServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(http.StatusNotFound)
 }
 
-func writeJSON(w http.ResponseWriter, out interface{}) error {
+func writeJSON(w http.ResponseWriter, out any) error {
 	enc := json.NewEncoder(w)
 	return enc.Encode(out)
 }
@@ -145,7 +145,7 @@ func (s *TestAPIServer) handleTokenReview(w http.ResponseWriter, req *http.Reque
 	}
 
 	if auth, anon := s.isAuthenticated(req); !auth {
-		var out interface{}
+		var out any
 		if anon {
 			out = createTokenReviewForbidden_NoAuthz()
 		} else {
@@ -178,7 +178,7 @@ func (s *TestAPIServer) handleTokenReview(w http.ResponseWriter, req *http.Reque
 	}
 	reviewingJWT := trReq.Spec.Token
 
-	var out interface{}
+	var out any
 	if s.replyStatus == nil || reviewingJWT != s.allowedServiceAccountJWT {
 		out = createTokenReviewNotFound(reviewingJWT)
 	} else {
@@ -202,7 +202,7 @@ func (s *TestAPIServer) handleReadServiceAccount(
 		return
 	}
 
-	var out interface{}
+	var out any
 	if auth, anon := s.isAuthenticated(req); !auth {
 		if anon {
 			out = createReadServiceAccountForbidden_NoAuthz()

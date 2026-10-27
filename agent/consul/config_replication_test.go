@@ -75,7 +75,7 @@ func TestReplication_ConfigEntries(t *testing.T) {
 		Entry: &structs.ProxyConfigEntry{
 			Kind: structs.ProxyDefaults,
 			Name: "global",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": "bar",
 				"bar": 1,
 			},
@@ -145,7 +145,7 @@ func TestReplication_ConfigEntries(t *testing.T) {
 		Entry: &structs.ProxyConfigEntry{
 			Kind: structs.ProxyDefaults,
 			Name: "global",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": "baz",
 				"baz": 2,
 			},

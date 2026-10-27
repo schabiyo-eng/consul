@@ -141,12 +141,12 @@ func (h *entryHeap) Less(i, j int) bool {
 }
 
 // heap.Interface, this isn't expected to be called directly.
-func (h *entryHeap) Push(x interface{}) {
+func (h *entryHeap) Push(x any) {
 	h.entries = append(h.entries, x.(*Entry))
 }
 
 // heap.Interface, this isn't expected to be called directly.
-func (h *entryHeap) Pop() interface{} {
+func (h *entryHeap) Pop() any {
 	n := len(h.entries)
 	entries := h.entries
 	last := entries[n-1]

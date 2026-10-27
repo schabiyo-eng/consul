@@ -33,7 +33,7 @@ type discoveryChainConfigEntry interface {
 	ListRelatedServices() []structs.ServiceID
 }
 
-func (s *ConfigEntryLinkIndex) FromObject(obj interface{}) (bool, [][]byte, error) {
+func (s *ConfigEntryLinkIndex) FromObject(obj any) (bool, [][]byte, error) {
 	entry, ok := obj.(structs.ConfigEntry)
 	if !ok {
 		return false, nil, fmt.Errorf("object is not a ConfigEntry")
@@ -59,7 +59,7 @@ func (s *ConfigEntryLinkIndex) FromObject(obj interface{}) (bool, [][]byte, erro
 	return true, vals, nil
 }
 
-func (s *ConfigEntryLinkIndex) FromArgs(args ...interface{}) ([]byte, error) {
+func (s *ConfigEntryLinkIndex) FromArgs(args ...any) ([]byte, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("must provide only a single argument")
 	}
@@ -71,7 +71,7 @@ func (s *ConfigEntryLinkIndex) FromArgs(args ...interface{}) ([]byte, error) {
 	return []byte(arg.String() + "\x00"), nil
 }
 
-func (s *ConfigEntryLinkIndex) PrefixFromArgs(args ...interface{}) ([]byte, error) {
+func (s *ConfigEntryLinkIndex) PrefixFromArgs(args ...any) ([]byte, error) {
 	val, err := s.FromArgs(args...)
 	if err != nil {
 		return nil, err

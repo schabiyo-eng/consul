@@ -138,7 +138,7 @@ func (s *exportedServicesView) Update(events []*pbsubscribe.Event) error {
 
 // Result returns the CheckServiceNodes stored by this view.
 // Result implements submatview.View
-func (s *exportedServicesView) Result(index uint64) interface{} {
+func (s *exportedServicesView) Result(index uint64) any {
 	result := pbservice.IndexedCheckServiceNodes{
 		Nodes: make([]*pbservice.CheckServiceNode, 0, len(s.state)),
 		Index: index,

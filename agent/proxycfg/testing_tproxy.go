@@ -134,7 +134,7 @@ func TestConfigSnapshotTransparentProxyHTTPUpstream(t testing.T, nsFn func(*stru
 		Kind:     structs.ProxyDefaults,
 		Name:     structs.ProxyConfigGlobal,
 		Protocol: "http",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"protocol": "http",
 		},
 	})

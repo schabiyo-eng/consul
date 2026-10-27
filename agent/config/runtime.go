@@ -519,7 +519,7 @@ type RuntimeConfig struct {
 	ConnectCAProvider string
 
 	// ConnectCAConfig is the config to use for the CA provider.
-	ConnectCAConfig map[string]interface{}
+	ConnectCAConfig map[string]any
 
 	// ConnectMeshGatewayWANFederationEnabled determines if wan federation of
 	// datacenters should exclusively traverse mesh gateways.
@@ -1586,7 +1586,7 @@ type RuntimeConfig struct {
 	//   ...
 	// ]
 	//
-	Watches []map[string]interface{}
+	Watches []map[string]any
 
 	// XDSUpdateRateLimit controls the maximum rate at which proxy config updates
 	// will be delivered, across all connected xDS streams. This is used to stop
@@ -1766,7 +1766,7 @@ func (c *RuntimeConfig) ClientAddress() (unixAddr, httpAddr, httpsAddr string) {
 func (c *RuntimeConfig) ConnectCAConfiguration() (*structs.CAConfiguration, error) {
 	ca := &structs.CAConfiguration{
 		Provider: "consul",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"LeafCertTTL":         structs.DefaultLeafCertTTL,
 			"IntermediateCertTTL": structs.DefaultIntermediateCertTTL,
 			"RootCertTTL":         structs.DefaultRootCertTTL,
@@ -1870,8 +1870,8 @@ func (c *RuntimeConfig) StructLocality() *structs.Locality {
 // configuration where all fields with potential secrets had their
 // values replaced by 'hidden'. In addition, network addresses and
 // time.Duration values are formatted to improve readability.
-func (c *RuntimeConfig) Sanitized() map[string]interface{} {
-	return sanitize("rt", reflect.ValueOf(c)).Interface().(map[string]interface{})
+func (c *RuntimeConfig) Sanitized() map[string]any {
+	return sanitize("rt", reflect.ValueOf(c)).Interface().(map[string]any)
 }
 
 // isSecret determines whether a field name represents a field which
@@ -1952,7 +1952,7 @@ func sanitize(name string, v reflect.Value) reflect.Value {
 		return sanitize(name, v.Elem())
 
 	case isStruct(typ):
-		m := map[string]interface{}{}
+		m := map[string]any{}
 		for i := 0; i < typ.NumField(); i++ {
 			key := typ.Field(i).Name
 			m[key] = sanitize(key, v.Field(i)).Interface()
@@ -1960,14 +1960,14 @@ func sanitize(name string, v reflect.Value) reflect.Value {
 		return reflect.ValueOf(m)
 
 	case isArray(typ) || isSlice(typ):
-		ma := make([]interface{}, 0, v.Len())
+		ma := make([]any, 0, v.Len())
 
 		if name == "AddHeaders" {
 			// must be UIConfig.MetricsProxy.AddHeaders
 			for i := 0; i < v.Len(); i++ {
 				addr := v.Index(i).Addr()
 				hdr := addr.Interface().(*UIMetricsProxyAddHeader)
-				hm := map[string]interface{}{
+				hm := map[string]any{
 					"Name":  hdr.Name,
 					"Value": "hidden",
 				}
@@ -1990,7 +1990,7 @@ func sanitize(name string, v reflect.Value) reflect.Value {
 		return reflect.ValueOf(ma)
 
 	case isMap(typ):
-		m := map[string]interface{}{}
+		m := map[string]any{}
 		for _, k := range v.MapKeys() {
 			key := k.String()
 			m[key] = sanitize(key, v.MapIndex(k)).Interface()

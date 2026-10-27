@@ -79,7 +79,7 @@ type policyAuthorizerRadixLeaf struct {
 func getPolicy(segment string, tree *radix.Tree) (policy *policyAuthorizerRule, found bool) {
 	found = false
 
-	tree.WalkPath(segment, func(path string, leaf interface{}) bool {
+	tree.WalkPath(segment, func(path string, leaf any) bool {
 		policies := leaf.(*policyAuthorizerRadixLeaf)
 		if policies.exact != nil && path == segment {
 			found = true
@@ -376,7 +376,7 @@ func newPolicyAuthorizerFromRules(rules *PolicyRules, ent *Config) (*policyAutho
 // prefixOnly indicates that only we only want to consider the prefix matching rule
 // if any. The return value indicates whether this one leaf node in the tree would
 // allow, deny or make no decision regarding some authorization.
-type enforceCallback func(raw interface{}, prefixOnly bool) EnforcementDecision
+type enforceCallback func(raw any, prefixOnly bool) EnforcementDecision
 
 func anyAllowed(tree *radix.Tree, enforceFn enforceCallback) EnforcementDecision {
 	decision := Default
@@ -390,7 +390,7 @@ func anyAllowed(tree *radix.Tree, enforceFn enforceCallback) EnforcementDecision
 		}
 	}
 
-	tree.Walk(func(path string, raw interface{}) bool {
+	tree.Walk(func(path string, raw any) bool {
 		if enforceFn(raw, false) == Allow {
 			decision = Allow
 			return true
@@ -419,7 +419,7 @@ func allAllowed(tree *radix.Tree, enforceFn enforceCallback) EnforcementDecision
 		}
 	}
 
-	tree.Walk(func(path string, raw interface{}) bool {
+	tree.Walk(func(path string, raw any) bool {
 		if enforceFn(raw, false) == Deny {
 			decision = Deny
 			return true
@@ -431,7 +431,7 @@ func allAllowed(tree *radix.Tree, enforceFn enforceCallback) EnforcementDecision
 }
 
 func (authz *policyAuthorizer) anyAllowed(tree *radix.Tree, requiredPermission AccessLevel) EnforcementDecision {
-	return anyAllowed(tree, func(raw interface{}, prefixOnly bool) EnforcementDecision {
+	return anyAllowed(tree, func(raw any, prefixOnly bool) EnforcementDecision {
 		leaf := raw.(*policyAuthorizerRadixLeaf)
 		decision := Default
 
@@ -448,7 +448,7 @@ func (authz *policyAuthorizer) anyAllowed(tree *radix.Tree, requiredPermission A
 }
 
 func (authz *policyAuthorizer) allAllowed(tree *radix.Tree, requiredPermission AccessLevel) EnforcementDecision {
-	return allAllowed(tree, func(raw interface{}, prefixOnly bool) EnforcementDecision {
+	return allAllowed(tree, func(raw any, prefixOnly bool) EnforcementDecision {
 		leaf := raw.(*policyAuthorizerRadixLeaf)
 		prefixDecision := Default
 
@@ -649,7 +649,7 @@ func (p *policyAuthorizer) KeyWritePrefix(prefix string, _ *AuthorizerContext) E
 	// Look for a prefix rule that would apply to the prefix we are checking
 	// WalkPath starts at the root and walks down to the given prefix.
 	// Therefore the last prefix rule we see is the one that matters
-	p.keyRules.WalkPath(prefix, func(path string, leaf interface{}) bool {
+	p.keyRules.WalkPath(prefix, func(path string, leaf any) bool {
 		rule := leaf.(*policyAuthorizerRadixLeaf)
 
 		if rule.prefix != nil {
@@ -672,7 +672,7 @@ func (p *policyAuthorizer) KeyWritePrefix(prefix string, _ *AuthorizerContext) E
 	// Look if any of our children do not allow write access. This loop takes
 	// into account both prefix and exact match rules.
 	withinPrefixAccess := Default
-	p.keyRules.WalkPrefix(prefix, func(path string, leaf interface{}) bool {
+	p.keyRules.WalkPrefix(prefix, func(path string, leaf any) bool {
 		rule := leaf.(*policyAuthorizerRadixLeaf)
 
 		if rule.prefix != nil && rule.prefix.access != AccessWrite {
@@ -855,7 +855,7 @@ func (p *policyAuthorizer) ServiceReadPrefix(prefix string, _ *AuthorizerContext
 	// 1. Walk the prefix tree from root to the given prefix. Find the longest prefix matching ours,
 	//    and use that policy to determine our access as that is the most specific prefix, and it
 	//    should take precedence.
-	p.serviceRules.WalkPath(prefix, func(path string, leaf interface{}) bool {
+	p.serviceRules.WalkPath(prefix, func(path string, leaf any) bool {
 		rule := leaf.(*policyAuthorizerRadixLeaf)
 
 		if rule.prefix != nil {
@@ -874,7 +874,7 @@ func (p *policyAuthorizer) ServiceReadPrefix(prefix string, _ *AuthorizerContext
 
 	// 2. Check rules "below" the given prefix. Access is allowed if there's no deny policy
 	//    for any prefix longer than ours or for any exact match that's within the prefix.
-	p.serviceRules.WalkPrefix(prefix, func(path string, leaf interface{}) bool {
+	p.serviceRules.WalkPrefix(prefix, func(path string, leaf any) bool {
 		rule := leaf.(*policyAuthorizerRadixLeaf)
 
 		if rule.prefix != nil && (rule.prefix.access != AccessRead && rule.prefix.access != AccessWrite) {

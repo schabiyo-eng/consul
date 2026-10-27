@@ -97,7 +97,7 @@ func translateAddressAccept(accept dnsutil.TranslateAddressAccept, def, v4, v6 s
 // TranslateAddresses translates addresses in the given structure into the
 // final, translated address, depending on how the agent and the other node are
 // configured. The dc parameter is the datacenter this structure is from.
-func (a *Agent) TranslateAddresses(dc string, subj interface{}, accept dnsutil.TranslateAddressAccept) {
+func (a *Agent) TranslateAddresses(dc string, subj any, accept dnsutil.TranslateAddressAccept) {
 	// CAUTION - SUBTLE! An agent running on a server can, in some cases,
 	// return pointers directly into the immutable state store for
 	// performance (it's via the in-memory RPC mechanism). It's never safe

@@ -44,7 +44,7 @@ func TestAWSBootstrapAndSignPrimary(t *testing.T) {
 	for _, tc := range KeyTestCases {
 		tc := tc
 		t.Run(tc.Desc, func(t *testing.T) {
-			cfg := map[string]interface{}{
+			cfg := map[string]any{
 				"PrivateKeyType": tc.KeyType,
 				"PrivateKeyBits": tc.KeyBits,
 				"RootCertTTL":    "8761h",
@@ -169,14 +169,14 @@ func TestAWSBootstrapAndSignSecondary(t *testing.T) {
 		t.Log("Starting up Providers with ExistingARNs")
 
 		// Create new provider instances with config
-		cfg1 := testProviderConfigPrimary(map[string]interface{}{
+		cfg1 := testProviderConfigPrimary(map[string]any{
 			"ExistingARN": p1State[AWSStateCAARNKey],
 		})
 		p1 = testAWSProvider(t, cfg1)
 		newRootPEM, err := p1.GenerateCAChain()
 		require.NoError(t, err)
 
-		cfg2 := testProviderConfigPrimary(map[string]interface{}{
+		cfg2 := testProviderConfigPrimary(map[string]any{
 			"ExistingARN": p2State[AWSStateCAARNKey],
 		})
 		cfg1.RawConfig["ExistingARN"] = p2State[AWSStateCAARNKey]
@@ -205,7 +205,7 @@ func TestAWSBootstrapAndSignSecondary(t *testing.T) {
 		newIntPEM := strings.TrimSuffix(intPEM, "\n")
 		newRootPEM := strings.TrimSuffix(rootPEM, "\n")
 
-		cfg2 := testProviderConfigSecondary(map[string]interface{}{
+		cfg2 := testProviderConfigSecondary(map[string]any{
 			"ExistingARN": p2State[AWSStateCAARNKey],
 		})
 		p2 = testAWSProvider(t, cfg2)
@@ -341,7 +341,7 @@ func TestAWSProvider_Cleanup(t *testing.T) {
 		state, err := p1.State()
 		require.NoError(t, err)
 
-		p2Conf := testProviderConfigPrimary(map[string]interface{}{
+		p2Conf := testProviderConfigPrimary(map[string]any{
 			"ExistingARN": state[AWSStateCAARNKey],
 		})
 		p2 := testAWSProvider(t, p2Conf)
@@ -375,13 +375,13 @@ func TestAWSProvider_Cleanup(t *testing.T) {
 		state, err := p1.State()
 		require.NoError(t, err)
 
-		p2Conf := testProviderConfigPrimary(map[string]interface{}{
+		p2Conf := testProviderConfigPrimary(map[string]any{
 			"ExistingARN": state[AWSStateCAARNKey],
 		})
 		p2 := testAWSProvider(t, p2Conf)
 
 		// changing the ARN should cause the other CA to be deleted
-		p2ConfAltARN := testProviderConfigPrimary(map[string]interface{}{
+		p2ConfAltARN := testProviderConfigPrimary(map[string]any{
 			"ExistingARN": "doesnt-need-to-be-real",
 		})
 		require.NoError(t, p2.Cleanup(false, p2ConfAltARN.RawConfig))
@@ -407,7 +407,7 @@ func TestAWSProvider_Cleanup(t *testing.T) {
 		state, err := p1.State()
 		require.NoError(t, err)
 
-		p2Conf := testProviderConfigPrimary(map[string]interface{}{
+		p2Conf := testProviderConfigPrimary(map[string]any{
 			"ExistingARN": state[AWSStateCAARNKey],
 		})
 		p2 := testAWSProvider(t, p2Conf)
@@ -425,8 +425,8 @@ func testAWSProvider(t *testing.T, cfg ProviderConfig) *AWSProvider {
 	return p
 }
 
-func testProviderConfigPrimary(cfg map[string]interface{}) ProviderConfig {
-	rawCfg := make(map[string]interface{})
+func testProviderConfigPrimary(cfg map[string]any) ProviderConfig {
+	rawCfg := make(map[string]any)
 	for k, v := range cfg {
 		rawCfg[k] = v
 	}
@@ -439,7 +439,7 @@ func testProviderConfigPrimary(cfg map[string]interface{}) ProviderConfig {
 	}
 }
 
-func testProviderConfigSecondary(cfg map[string]interface{}) ProviderConfig {
+func testProviderConfigSecondary(cfg map[string]any) ProviderConfig {
 	c := testProviderConfigPrimary(cfg)
 	c.IsPrimary = false
 	c.Datacenter = "dc2"
@@ -681,14 +681,14 @@ func TestPollWait(t *testing.T) {
 func TestParseAWSCAConfig(t *testing.T) {
 	tests := []struct {
 		name        string
-		raw         map[string]interface{}
+		raw         map[string]any
 		wantErr     bool
 		errContains string
 		validate    func(t *testing.T, cfg *structs.AWSCAProviderConfig)
 	}{
 		{
 			name: "valid minimal config uses defaults",
-			raw:  map[string]interface{}{},
+			raw:  map[string]any{},
 			validate: func(t *testing.T, cfg *structs.AWSCAProviderConfig) {
 				require.NotNil(t, cfg)
 				require.Equal(t, "ec", cfg.PrivateKeyType)
@@ -698,7 +698,7 @@ func TestParseAWSCAConfig(t *testing.T) {
 		},
 		{
 			name: "valid config with ExistingARN",
-			raw: map[string]interface{}{
+			raw: map[string]any{
 				"ExistingARN": "arn:aws:acm-pca:us-east-1:123456789012:certificate-authority/abc123",
 			},
 			validate: func(t *testing.T, cfg *structs.AWSCAProviderConfig) {
@@ -707,7 +707,7 @@ func TestParseAWSCAConfig(t *testing.T) {
 		},
 		{
 			name: "valid config with DeleteOnExit true",
-			raw: map[string]interface{}{
+			raw: map[string]any{
 				"DeleteOnExit": true,
 			},
 			validate: func(t *testing.T, cfg *structs.AWSCAProviderConfig) {
@@ -716,7 +716,7 @@ func TestParseAWSCAConfig(t *testing.T) {
 		},
 		{
 			name: "valid config with DeleteOnExit false",
-			raw: map[string]interface{}{
+			raw: map[string]any{
 				"DeleteOnExit": false,
 			},
 			validate: func(t *testing.T, cfg *structs.AWSCAProviderConfig) {
@@ -725,7 +725,7 @@ func TestParseAWSCAConfig(t *testing.T) {
 		},
 		{
 			name: "valid RSA 2048",
-			raw: map[string]interface{}{
+			raw: map[string]any{
 				"PrivateKeyType": "rsa",
 				"PrivateKeyBits": 2048,
 			},
@@ -736,7 +736,7 @@ func TestParseAWSCAConfig(t *testing.T) {
 		},
 		{
 			name: "valid RSA 4096",
-			raw: map[string]interface{}{
+			raw: map[string]any{
 				"PrivateKeyType": "rsa",
 				"PrivateKeyBits": 4096,
 			},
@@ -747,7 +747,7 @@ func TestParseAWSCAConfig(t *testing.T) {
 		},
 		{
 			name: "valid EC 256",
-			raw: map[string]interface{}{
+			raw: map[string]any{
 				"PrivateKeyType": "ec",
 				"PrivateKeyBits": 256,
 			},
@@ -758,7 +758,7 @@ func TestParseAWSCAConfig(t *testing.T) {
 		},
 		{
 			name: "invalid RSA key bits",
-			raw: map[string]interface{}{
+			raw: map[string]any{
 				"PrivateKeyType": "rsa",
 				"PrivateKeyBits": 1024,
 			},
@@ -767,7 +767,7 @@ func TestParseAWSCAConfig(t *testing.T) {
 		},
 		{
 			name: "invalid EC key bits",
-			raw: map[string]interface{}{
+			raw: map[string]any{
 				"PrivateKeyType": "ec",
 				"PrivateKeyBits": 384,
 			},
@@ -776,7 +776,7 @@ func TestParseAWSCAConfig(t *testing.T) {
 		},
 		{
 			name: "unsupported key type",
-			raw: map[string]interface{}{
+			raw: map[string]any{
 				"PrivateKeyType": "ed25519",
 				"PrivateKeyBits": 256,
 			},
@@ -785,7 +785,7 @@ func TestParseAWSCAConfig(t *testing.T) {
 		},
 		{
 			name: "LeafCertTTL less than 24 hours",
-			raw: map[string]interface{}{
+			raw: map[string]any{
 				"LeafCertTTL": "12h",
 			},
 			wantErr:     true,
@@ -793,7 +793,7 @@ func TestParseAWSCAConfig(t *testing.T) {
 		},
 		{
 			name: "LeafCertTTL exactly 24 hours is valid",
-			raw: map[string]interface{}{
+			raw: map[string]any{
 				"LeafCertTTL": "24h",
 			},
 			validate: func(t *testing.T, cfg *structs.AWSCAProviderConfig) {
@@ -802,7 +802,7 @@ func TestParseAWSCAConfig(t *testing.T) {
 		},
 		{
 			name: "LeafCertTTL more than 24 hours is valid",
-			raw: map[string]interface{}{
+			raw: map[string]any{
 				"LeafCertTTL": "72h",
 			},
 			validate: func(t *testing.T, cfg *structs.AWSCAProviderConfig) {
@@ -811,7 +811,7 @@ func TestParseAWSCAConfig(t *testing.T) {
 		},
 		{
 			name: "RootCertTTL can be specified",
-			raw: map[string]interface{}{
+			raw: map[string]any{
 				"RootCertTTL": "87600h",
 			},
 			validate: func(t *testing.T, cfg *structs.AWSCAProviderConfig) {
@@ -820,7 +820,7 @@ func TestParseAWSCAConfig(t *testing.T) {
 		},
 		{
 			name: "IntermediateCertTTL can be specified",
-			raw: map[string]interface{}{
+			raw: map[string]any{
 				"IntermediateCertTTL": "43800h",
 			},
 			validate: func(t *testing.T, cfg *structs.AWSCAProviderConfig) {
@@ -829,7 +829,7 @@ func TestParseAWSCAConfig(t *testing.T) {
 		},
 		{
 			name: "all valid options together",
-			raw: map[string]interface{}{
+			raw: map[string]any{
 				"ExistingARN":         "arn:aws:acm-pca:us-east-1:123456789012:certificate-authority/test",
 				"DeleteOnExit":        true,
 				"PrivateKeyType":      "rsa",

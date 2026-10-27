@@ -48,7 +48,7 @@ func TestGetRuntimeConfigurations_TerminatingGateway(t *testing.T) {
 			{
 				EnvoyExtension: api.EnvoyExtension{
 					Name: api.BuiltinAWSLambdaExtension,
-					Arguments: map[string]interface{}{
+					Arguments: map[string]any{
 						"ARN":                "arn:aws:lambda:us-east-1:111111111111:function:lambda-1234",
 						"PayloadPassthrough": true,
 					},
@@ -116,14 +116,14 @@ func TestGetRuntimeConfigurations_ConnectProxy(t *testing.T) {
 	envoyExtensions := []structs.EnvoyExtension{
 		{
 			Name: api.BuiltinAWSLambdaExtension,
-			Arguments: map[string]interface{}{
+			Arguments: map[string]any{
 				"ARN":                "arn:aws:lambda:us-east-1:111111111111:function:lambda-1234",
 				"PayloadPassthrough": true,
 			},
 		},
 		{
 			Name: "ext2",
-			Arguments: map[string]interface{}{
+			Arguments: map[string]any{
 				"arg1": 1,
 				"arg2": "val2",
 			},
@@ -173,7 +173,7 @@ func TestGetRuntimeConfigurations_ConnectProxy(t *testing.T) {
 					{
 						EnvoyExtension: api.EnvoyExtension{
 							Name: api.BuiltinAWSLambdaExtension,
-							Arguments: map[string]interface{}{
+							Arguments: map[string]any{
 								"ARN":                "arn:aws:lambda:us-east-1:111111111111:function:lambda-1234",
 								"PayloadPassthrough": true,
 							},
@@ -204,7 +204,7 @@ func TestGetRuntimeConfigurations_ConnectProxy(t *testing.T) {
 					{
 						EnvoyExtension: api.EnvoyExtension{
 							Name: api.BuiltinAWSLambdaExtension,
-							Arguments: map[string]interface{}{
+							Arguments: map[string]any{
 								"ARN":                "arn:aws:lambda:us-east-1:111111111111:function:lambda-1234",
 								"PayloadPassthrough": true,
 							},
@@ -236,7 +236,7 @@ func TestGetRuntimeConfigurations_ConnectProxy(t *testing.T) {
 					{
 						EnvoyExtension: api.EnvoyExtension{
 							Name: api.BuiltinAWSLambdaExtension,
-							Arguments: map[string]interface{}{
+							Arguments: map[string]any{
 								"ARN":                "arn:aws:lambda:us-east-1:111111111111:function:lambda-1234",
 								"PayloadPassthrough": true,
 							},
@@ -258,7 +258,7 @@ func TestGetRuntimeConfigurations_ConnectProxy(t *testing.T) {
 					{
 						EnvoyExtension: api.EnvoyExtension{
 							Name: "ext2",
-							Arguments: map[string]interface{}{
+							Arguments: map[string]any{
 								"arg1": 1,
 								"arg2": "val2",
 							},

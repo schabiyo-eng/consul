@@ -17,7 +17,7 @@ var TestingOldPre1dot7MsgpackHandle = &codec.MsgpackHandle{}
 
 // TestMsgpackEncodeDecode is a test helper to easily write a test to verify
 // msgpack encoding and decoding using two handles is identical.
-func TestMsgpackEncodeDecode(t *testing.T, in interface{}, requireEncoderEquality bool) {
+func TestMsgpackEncodeDecode(t *testing.T, in any, requireEncoderEquality bool) {
 	t.Helper()
 	var (
 		// This is the common configuration pre-1.7.0

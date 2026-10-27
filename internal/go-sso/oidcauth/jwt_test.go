@@ -647,7 +647,7 @@ func TestParsePublicKeyPEM(t *testing.T) {
 		t.Skip("too slow for testing.Short")
 	}
 
-	getPublicPEM := func(t *testing.T, pub interface{}) string {
+	getPublicPEM := func(t *testing.T, pub any) string {
 		derBytes, err := x509.MarshalPKIXPublicKey(pub)
 		require.NoError(t, err)
 		pemBlock := &pem.Block{

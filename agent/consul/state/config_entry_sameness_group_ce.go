@@ -19,11 +19,11 @@ type SamenessGroupDefaultIndex struct{}
 var _ memdb.Indexer = (*SamenessGroupDefaultIndex)(nil)
 var _ memdb.MultiIndexer = (*SamenessGroupDefaultIndex)(nil)
 
-func (*SamenessGroupDefaultIndex) FromObject(obj interface{}) (bool, [][]byte, error) {
+func (*SamenessGroupDefaultIndex) FromObject(obj any) (bool, [][]byte, error) {
 	return false, nil, nil
 }
 
-func (*SamenessGroupDefaultIndex) FromArgs(args ...interface{}) ([]byte, error) {
+func (*SamenessGroupDefaultIndex) FromArgs(args ...any) ([]byte, error) {
 	return nil, nil
 }
 

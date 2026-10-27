@@ -183,7 +183,7 @@ type fakeCache struct {
 	calls []string
 }
 
-func (f *fakeCache) Get(_ context.Context, t string, _ cache.Request) (interface{}, cache.ResultMeta, error) {
+func (f *fakeCache) Get(_ context.Context, t string, _ cache.Request) (any, cache.ResultMeta, error) {
 	f.calls = append(f.calls, t)
 	result := &structs.IndexedCheckServiceNodes{}
 	return result, cache.ResultMeta{}, nil
@@ -198,7 +198,7 @@ type fakeNetRPC struct {
 	calls []string
 }
 
-func (f *fakeNetRPC) RPC(ctx context.Context, method string, _ interface{}, _ interface{}) error {
+func (f *fakeNetRPC) RPC(ctx context.Context, method string, _ any, _ any) error {
 	f.calls = append(f.calls, method)
 	return nil
 }

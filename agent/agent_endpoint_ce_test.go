@@ -43,7 +43,7 @@ func TestAgent_Self_VersionLacksEnt(t *testing.T) {
 			a.srv.h.ServeHTTP(resp, req)
 
 			dec := json.NewDecoder(resp.Body)
-			var out map[string]map[string]interface{}
+			var out map[string]map[string]any
 			require.NoError(t, dec.Decode(&out))
 			require.NotContains(t, out["Config"]["Version"], "ent")
 		})

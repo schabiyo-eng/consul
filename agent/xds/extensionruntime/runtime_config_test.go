@@ -47,7 +47,7 @@ func TestGetRuntimeConfigurations_APIGateway(t *testing.T) {
 					EnvoyExtensions: []structs.EnvoyExtension{
 						{
 							Name: "builtin/lua",
-							Arguments: map[string]interface{}{
+							Arguments: map[string]any{
 								"Script": "function envoy_on_response(response_handle) response_handle:headers():add('x-test', 'test') end",
 							},
 						},
@@ -68,7 +68,7 @@ func TestGetRuntimeConfigurations_APIGateway(t *testing.T) {
 					{
 						EnvoyExtension: api.EnvoyExtension{
 							Name: "builtin/lua",
-							Arguments: map[string]interface{}{
+							Arguments: map[string]any{
 								"Script": "function envoy_on_response(response_handle) response_handle:headers():add('x-test', 'test') end",
 							},
 						},

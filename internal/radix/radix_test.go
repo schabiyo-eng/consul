@@ -14,7 +14,7 @@ import (
 
 func TestRadix(t *testing.T) {
 	var min, max string
-	inp := make(map[string]interface{})
+	inp := make(map[string]any)
 	for i := 0; i < 1000; i++ {
 		gen := generateUUID()
 		inp[gen] = i
@@ -31,7 +31,7 @@ func TestRadix(t *testing.T) {
 		t.Fatalf("bad length: %v %v", r.Len(), len(inp))
 	}
 
-	r.Walk(func(k string, v interface{}) bool {
+	r.Walk(func(k string, v any) bool {
 		println(k)
 		return false
 	})
@@ -149,7 +149,7 @@ func TestDeletePrefix(t *testing.T) {
 }
 
 func TestLongestPrefix(t *testing.T) {
-	r := New[interface{}]()
+	r := New[any]()
 
 	keys := []string{
 		"",
@@ -197,7 +197,7 @@ func TestLongestPrefix(t *testing.T) {
 }
 
 func TestWalkPrefix(t *testing.T) {
-	r := New[interface{}]()
+	r := New[any]()
 
 	keys := []string{
 		"foobar",
@@ -262,7 +262,7 @@ func TestWalkPrefix(t *testing.T) {
 
 	for _, test := range cases {
 		out := []string{}
-		fn := func(s string, v interface{}) bool {
+		fn := func(s string, v any) bool {
 			out = append(out, s)
 			return false
 		}
@@ -276,7 +276,7 @@ func TestWalkPrefix(t *testing.T) {
 }
 
 func TestWalkPath(t *testing.T) {
-	r := New[interface{}]()
+	r := New[any]()
 
 	keys := []string{
 		"foo",
@@ -334,7 +334,7 @@ func TestWalkPath(t *testing.T) {
 
 	for _, test := range cases {
 		out := []string{}
-		fn := func(s string, v interface{}) bool {
+		fn := func(s string, v any) bool {
 			out = append(out, s)
 			return false
 		}
@@ -348,7 +348,7 @@ func TestWalkPath(t *testing.T) {
 }
 
 func TestWalkDelete(t *testing.T) {
-	r := New[interface{}]()
+	r := New[any]()
 	r.Insert("init0/0", nil)
 	r.Insert("init0/1", nil)
 	r.Insert("init0/2", nil)
@@ -359,7 +359,7 @@ func TestWalkDelete(t *testing.T) {
 	r.Insert("init1/3", nil)
 	r.Insert("init2", nil)
 
-	deleteFn := func(s string, v interface{}) bool {
+	deleteFn := func(s string, v any) bool {
 		r.Delete(s)
 		return false
 	}

@@ -23,7 +23,7 @@ func TestStructs_ACLAuthMethod_GetClaimMappings(t *testing.T) {
 
 	t.Run("nil ClaimMappings key", func(t *testing.T) {
 		m := &ACLAuthMethod{
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"OtherKey": "value",
 			},
 		}
@@ -32,7 +32,7 @@ func TestStructs_ACLAuthMethod_GetClaimMappings(t *testing.T) {
 
 	t.Run("ClaimMappings wrong type", func(t *testing.T) {
 		m := &ACLAuthMethod{
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"ClaimMappings": "not-a-map",
 			},
 		}
@@ -41,8 +41,8 @@ func TestStructs_ACLAuthMethod_GetClaimMappings(t *testing.T) {
 
 	t.Run("valid ClaimMappings", func(t *testing.T) {
 		m := &ACLAuthMethod{
-			Config: map[string]interface{}{
-				"ClaimMappings": map[string]interface{}{
+			Config: map[string]any{
+				"ClaimMappings": map[string]any{
 					"/oid":   "name",
 					"/email": "email",
 				},
@@ -57,8 +57,8 @@ func TestStructs_ACLAuthMethod_GetClaimMappings(t *testing.T) {
 
 	t.Run("empty ClaimMappings", func(t *testing.T) {
 		m := &ACLAuthMethod{
-			Config: map[string]interface{}{
-				"ClaimMappings": map[string]interface{}{},
+			Config: map[string]any{
+				"ClaimMappings": map[string]any{},
 			},
 		}
 		result := m.GetClaimMappings()

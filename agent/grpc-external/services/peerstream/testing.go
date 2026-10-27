@@ -111,12 +111,12 @@ func (s *MockStream) Context() context.Context {
 }
 
 // SendMsg implements grpc.ServerStream and grpc.ClientStream
-func (s *MockStream) SendMsg(m interface{}) error {
+func (s *MockStream) SendMsg(m any) error {
 	return nil
 }
 
 // RecvMsg implements grpc.ServerStream and grpc.ClientStream
-func (s *MockStream) RecvMsg(m interface{}) error {
+func (s *MockStream) RecvMsg(m any) error {
 	return nil
 }
 

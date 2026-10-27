@@ -272,7 +272,7 @@ func computeBindVars(bindVars *structs.ACLTemplatedPolicyVariables, projectedVar
 }
 
 // doesSelectorMatch checks that a single selector matches the provided vars.
-func doesSelectorMatch(selector string, selectableVars interface{}) bool {
+func doesSelectorMatch(selector string, selectableVars any) bool {
 	if selector == "" {
 		return true // catch-all
 	}

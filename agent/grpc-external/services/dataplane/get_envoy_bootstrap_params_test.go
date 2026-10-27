@@ -60,7 +60,7 @@ func testRegisterRequestProxy() *structs.RegisterRequest {
 			Port:    2222,
 			Proxy: structs.ConnectProxyConfig{
 				DestinationServiceName: testServiceName,
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					proxyConfigKey: proxyConfigValue,
 				},
 			},
@@ -73,7 +73,7 @@ func testRegisterIngressGateway(t *testing.T) *structs.RegisterRequest {
 	registerReq := structs.TestRegisterIngressGateway(t)
 	registerReq.ID = "2980b72b-bd9d-9d7b-d4f9-951bf7508d95"
 	registerReq.Service.ID = registerReq.Service.Service
-	registerReq.Service.Proxy.Config = map[string]interface{}{
+	registerReq.Service.Proxy.Config = map[string]any{
 		proxyConfigKey: proxyConfigValue,
 	}
 	return registerReq
@@ -83,7 +83,7 @@ func testProxyDefaults(accesslogs bool) structs.ConfigEntry {
 	pd := &structs.ProxyConfigEntry{
 		Kind: structs.ProxyDefaults,
 		Name: structs.ProxyConfigGlobal,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			protocolKey:       proxyDefaultsProtocol,
 			requestTimeoutKey: proxyDefaultsRequestTimeout,
 		},
@@ -104,7 +104,7 @@ func testServiceDefaults() structs.ConfigEntry {
 	}
 }
 
-func requireConfigField(t *testing.T, resp *pbdataplane.GetEnvoyBootstrapParamsResponse, key string, value interface{}) {
+func requireConfigField(t *testing.T, resp *pbdataplane.GetEnvoyBootstrapParamsResponse, key string, value any) {
 	require.Contains(t, resp.Config.Fields, key)
 	require.Equal(t, value, resp.Config.Fields[key])
 }

@@ -84,7 +84,7 @@ func (g *Graveyard) ReapTxn(tx WriteTxn, idx uint64) error {
 	}
 
 	// Find eligible tombstones.
-	var objs []interface{}
+	var objs []any
 	for stone := stones.Next(); stone != nil; stone = stones.Next() {
 		if stone.(*Tombstone).Index <= idx {
 			objs = append(objs, stone)

@@ -537,7 +537,7 @@ func (c *cmd) proxyRegistration(svcForSidecar *api.AgentService) (*api.AgentServ
 	if len(c.bindAddresses.value) > 0 {
 		// override all default binding rules and just bind to the user-supplied addresses
 		proxyConf = &api.AgentServiceConnectProxyConfig{
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"envoy_gateway_no_default_bind": true,
 				"envoy_gateway_bind_addresses":  c.bindAddresses.value,
 			},
@@ -546,7 +546,7 @@ func (c *cmd) proxyRegistration(svcForSidecar *api.AgentService) (*api.AgentServ
 		// when both addresses are bindable then we bind to the tagged addresses
 		// for creating the envoy listeners
 		proxyConf = &api.AgentServiceConnectProxyConfig{
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"envoy_gateway_no_default_bind":       true,
 				"envoy_gateway_bind_tagged_addresses": true,
 			},

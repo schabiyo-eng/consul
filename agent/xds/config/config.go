@@ -45,7 +45,7 @@ type XDSCommonConfig struct {
 // ParseXDSCommonConfig returns the XDSCommonConfig parsed from an opaque map. If an
 // error occurs during parsing, it is returned along with the default config. This
 // allows the caller to choose whether and how to report the error
-func ParseXDSCommonConfig(m map[string]interface{}) (XDSCommonConfig, error) {
+func ParseXDSCommonConfig(m map[string]any) (XDSCommonConfig, error) {
 	var cfg XDSCommonConfig
 	err := parseConfig(m, &cfg)
 	return cfg, err
@@ -155,7 +155,7 @@ type ProxyConfig struct {
 // ParseProxyConfig returns the ProxyConfig parsed from the an opaque map. If an
 // error occurs during parsing it is returned along with the default config this
 // allows caller to choose whether and how to report the error.
-func ParseProxyConfig(m map[string]interface{}) (ProxyConfig, error) {
+func ParseProxyConfig(m map[string]any) (ProxyConfig, error) {
 	var cfg ProxyConfig
 	if err := parseConfig(m, &cfg); err != nil {
 		return cfg, err
@@ -209,7 +209,7 @@ type GatewayConfig struct {
 // ParseGatewayConfig returns the GatewayConfig parsed from an opaque map. If an
 // error occurs during parsing, it is returned along with the default config. This
 // allows the caller to choose whether and how to report the error
-func ParseGatewayConfig(m map[string]interface{}) (GatewayConfig, error) {
+func ParseGatewayConfig(m map[string]any) (GatewayConfig, error) {
 	var cfg GatewayConfig
 	if err := parseConfig(m, &cfg); err != nil {
 		return cfg, err

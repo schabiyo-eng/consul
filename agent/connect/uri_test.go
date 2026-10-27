@@ -18,7 +18,7 @@ func TestParseCertURIFromString(t *testing.T) {
 	var cases = []struct {
 		Name       string
 		URI        string
-		Struct     interface{}
+		Struct     any
 		ParseError string
 	}{
 		{

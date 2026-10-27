@@ -16,13 +16,13 @@ import (
 func TestHookTranslateKeys(t *testing.T) {
 	var testcases = []struct {
 		name     string
-		data     interface{}
-		expected interface{}
+		data     any
+		expected any
 	}{
 		{
 			name: "target of type struct, with struct receiver",
-			data: map[string]interface{}{
-				"S": map[string]interface{}{
+			data: map[string]any{
+				"S": map[string]any{
 					"None":   "no translation",
 					"OldOne": "value1",
 					"oldtwo": "value2",
@@ -38,8 +38,8 @@ func TestHookTranslateKeys(t *testing.T) {
 		},
 		{
 			name: "target of type ptr, with struct receiver",
-			data: map[string]interface{}{
-				"PS": map[string]interface{}{
+			data: map[string]any{
+				"PS": map[string]any{
 					"None":   "no translation",
 					"OldOne": "value1",
 					"oldtwo": "value2",
@@ -55,8 +55,8 @@ func TestHookTranslateKeys(t *testing.T) {
 		},
 		{
 			name: "target of type ptr, with ptr receiver",
-			data: map[string]interface{}{
-				"PTR": map[string]interface{}{
+			data: map[string]any{
+				"PTR": map[string]any{
 					"None":      "no translation",
 					"old_THREE": "value3",
 					"oldfour":   "value4",
@@ -72,8 +72,8 @@ func TestHookTranslateKeys(t *testing.T) {
 		},
 		{
 			name: "target of type ptr, with struct receiver",
-			data: map[string]interface{}{
-				"PTRS": map[string]interface{}{
+			data: map[string]any{
+				"PTRS": map[string]any{
 					"None":      "no translation",
 					"old_THREE": "value3",
 					"old_four":  "value4",
@@ -89,14 +89,14 @@ func TestHookTranslateKeys(t *testing.T) {
 		},
 		{
 			name: "target of type map",
-			data: map[string]interface{}{
-				"Blob": map[string]interface{}{
+			data: map[string]any{
+				"Blob": map[string]any{
 					"one": 1,
 					"two": 2,
 				},
 			},
 			expected: Config{
-				Blob: map[string]interface{}{
+				Blob: map[string]any{
 					"one": 1,
 					"two": 2,
 				},
@@ -104,8 +104,8 @@ func TestHookTranslateKeys(t *testing.T) {
 		},
 		{
 			name: "value already exists for canonical key",
-			data: map[string]interface{}{
-				"PS": map[string]interface{}{
+			data: map[string]any{
+				"PS": map[string]any{
 					"OldOne": "value1",
 					"One":    "original1",
 					"oldTWO": "value2",
@@ -143,7 +143,7 @@ type Config struct {
 	PS   *TypeStruct
 	PTR  *TypePtrToStruct
 	PTRS TypePtrToStruct
-	Blob map[string]interface{}
+	Blob map[string]any
 }
 
 type TypeStruct struct {
@@ -168,7 +168,7 @@ func TestHookTranslateKeys_TargetStructHasPointerReceiver(t *testing.T) {
 	})
 	require.NoError(t, err)
 
-	data := map[string]interface{}{
+	data := map[string]any{
 		"None":      "no translation",
 		"Old_Three": "value3",
 		"OldFour":   "value4",
@@ -183,8 +183,8 @@ func TestHookTranslateKeys_TargetStructHasPointerReceiver(t *testing.T) {
 }
 
 func TestHookTranslateKeys_DoesNotModifySourceData(t *testing.T) {
-	raw := map[string]interface{}{
-		"S": map[string]interface{}{
+	raw := map[string]any{
+		"S": map[string]any{
 			"None":   "no translation",
 			"OldOne": "value1",
 			"oldtwo": "value2",
@@ -199,8 +199,8 @@ func TestHookTranslateKeys_DoesNotModifySourceData(t *testing.T) {
 	require.NoError(t, err)
 	require.NoError(t, decoder.Decode(raw))
 
-	expected := map[string]interface{}{
-		"S": map[string]interface{}{
+	expected := map[string]any{
+		"S": map[string]any{
 			"None":   "no translation",
 			"OldOne": "value1",
 			"oldtwo": "value2",
@@ -242,10 +242,10 @@ func TestTranslationsForType(t *testing.T) {
 }
 
 type nested struct {
-	O      map[string]interface{}
+	O      map[string]any
 	Slice  []Item
 	Item   Item
-	OSlice []map[string]interface{}
+	OSlice []map[string]any
 	Sub    *nested
 }
 
@@ -278,7 +278,7 @@ sub {
 		Slice: []Item{{Name: "first"}, {Name: "second"}},
 		Item:  Item{Name: "solo"},
 		Sub: &nested{
-			OSlice: []map[string]interface{}{
+			OSlice: []map[string]any{
 				{"something": "v1"},
 			},
 		},
@@ -286,8 +286,8 @@ sub {
 	require.Equal(t, target, expected)
 }
 
-func decodeHCLToMapStructure(source string, target interface{}) error {
-	raw := map[string]interface{}{}
+func decodeHCLToMapStructure(source string, target any) error {
+	raw := map[string]any{}
 	err := hcl.Decode(&raw, source)
 	if err != nil {
 		return err
@@ -306,15 +306,15 @@ func decodeHCLToMapStructure(source string, target interface{}) error {
 }
 
 func TestHookWeakDecodeFromSlice_DoesNotModifySliceTargetsFromSliceInterface(t *testing.T) {
-	raw := map[string]interface{}{
-		"slice": []interface{}{map[string]interface{}{"name": "first"}},
-		"item":  []interface{}{map[string]interface{}{"name": "solo"}},
-		"sub": []interface{}{
-			map[string]interface{}{
-				"OSlice": []interface{}{
-					map[string]interface{}{"something": "v1"},
+	raw := map[string]any{
+		"slice": []any{map[string]any{"name": "first"}},
+		"item":  []any{map[string]any{"name": "solo"}},
+		"sub": []any{
+			map[string]any{
+				"OSlice": []any{
+					map[string]any{"something": "v1"},
 				},
-				"item": []interface{}{map[string]interface{}{"name": "subitem"}},
+				"item": []any{map[string]any{"name": "subitem"}},
 			},
 		},
 	}
@@ -331,7 +331,7 @@ func TestHookWeakDecodeFromSlice_DoesNotModifySliceTargetsFromSliceInterface(t *
 		Slice: []Item{{Name: "first"}},
 		Item:  Item{Name: "solo"},
 		Sub: &nested{
-			OSlice: []map[string]interface{}{
+			OSlice: []map[string]any{
 				{"something": "v1"},
 			},
 			Item: Item{Name: "subitem"},
@@ -386,16 +386,16 @@ service {
   }
 }`
 
-	target := map[string]interface{}{}
+	target := map[string]any{}
 	err := decodeHCLToMapStructure(source, &target)
 	require.NoError(t, err)
 
-	expected := map[string]interface{}{
-		"service": map[string]interface{}{
-			"proxy": map[string]interface{}{
-				"config": map[string]interface{}{
-					"envoy_gateway_bind_addresses": map[string]interface{}{
-						"all-interfaces": map[string]interface{}{
+	expected := map[string]any{
+		"service": map[string]any{
+			"proxy": map[string]any{
+				"config": map[string]any{
+					"envoy_gateway_bind_addresses": map[string]any{
+						"all-interfaces": map[string]any{
 							"address": "0.0.0.0",
 							"port":    8443,
 						},

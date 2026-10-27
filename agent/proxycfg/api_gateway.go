@@ -504,7 +504,7 @@ func (h *handlerAPIGateway) handleRouteConfigUpdate(ctx context.Context, u Updat
 						chainProtocol = listenerProtocol
 					}
 
-					upstreamCfg := map[string]interface{}{}
+					upstreamCfg := map[string]any{}
 					structs.UpstreamConfig{
 						Protocol: listenerProtocol,
 						Limits:   effectiveLimits,
@@ -574,7 +574,7 @@ func (h *handlerAPIGateway) handleRouteConfigUpdate(ctx context.Context, u Updat
 					continue
 				}
 
-				upstreamCfg := map[string]interface{}{}
+				upstreamCfg := map[string]any{}
 				structs.UpstreamConfig{
 					Protocol: "tcp",
 					Limits:   effectiveLimits,

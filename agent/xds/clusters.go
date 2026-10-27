@@ -1099,12 +1099,12 @@ func (s *ResourceGenerator) clustersFromSnapshotAPIGateway(cfgSnap *proxycfg.Con
 	return clusters, nil
 }
 
-func mergedAPIGatewayUpstreamConfig(configMap map[string]interface{}, limits *structs.UpstreamLimits) map[string]interface{} {
+func mergedAPIGatewayUpstreamConfig(configMap map[string]any, limits *structs.UpstreamLimits) map[string]any {
 	if limits == nil {
 		return configMap
 	}
 
-	merged := make(map[string]interface{}, len(configMap)+1)
+	merged := make(map[string]any, len(configMap)+1)
 	for k, v := range configMap {
 		merged[k] = v
 	}
@@ -1619,7 +1619,7 @@ func (s *ResourceGenerator) makeUpstreamClustersForDiscoveryChain(
 		return nil, fmt.Errorf("impossible to get a peer discovery chain in a mesh gateway")
 	}
 
-	upstreamConfigMap := make(map[string]interface{})
+	upstreamConfigMap := make(map[string]any)
 	if upstream != nil {
 		upstreamConfigMap = upstream.Config
 	}

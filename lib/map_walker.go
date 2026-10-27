@@ -18,13 +18,13 @@ import (
 // with all internal values coerced to JSON compatible types. i.e. a []uint8
 // can be converted (in most cases) to a string so it will not be base64 encoded
 // when output in JSON
-func MapWalk(input interface{}) (map[string]interface{}, error) {
+func MapWalk(input any) (map[string]any, error) {
 	mapCopyRaw, err := copystructure.Copy(input)
 	if err != nil {
 		return nil, err
 	}
 
-	mapCopy, ok := mapCopyRaw.(map[string]interface{})
+	mapCopy, ok := mapCopyRaw.(map[string]any)
 	if !ok {
 		return nil, fmt.Errorf("internal error: input to MapWalk is not a map[string]interface{}")
 	}
@@ -36,7 +36,7 @@ func MapWalk(input interface{}) (map[string]interface{}, error) {
 	return mapCopy, nil
 }
 
-var typMapIfaceIface = reflect.TypeOf(map[interface{}]interface{}{})
+var typMapIfaceIface = reflect.TypeOf(map[any]any{})
 var typByteSlice = reflect.TypeOf([]byte{})
 
 // mapWalker implements interfaces for the reflectwalk package
@@ -60,7 +60,7 @@ type mapWalker struct {
 	loc, lastLoc reflectwalk.Location // locations
 	cs           []reflect.Value      // container stack
 	csKey        []reflect.Value      // container keys (maps) stack
-	csData       interface{}          // current container data
+	csData       any                  // current container data
 	sliceIndex   []int                // slice index stack (one for each slice in cs)
 }
 
@@ -115,7 +115,7 @@ func (w *mapWalker) MapElem(m, k, v reflect.Value) error {
 
 	if inner := v.Elem(); inner.IsValid() && inner.Type() == typMapIfaceIface {
 		// map[interface{}]interface{}, attempt to weakly decode into string keys
-		var target map[string]interface{}
+		var target map[string]any
 		if err := mapstructure.WeakDecode(v.Interface(), &target); err != nil {
 			return err
 		}
@@ -182,7 +182,7 @@ func (w *mapWalker) SliceElem(i int, elem reflect.Value) error {
 
 	if inner := elem.Elem(); inner.Type() == typMapIfaceIface {
 		// map[interface{}]interface{}, attempt to weakly decode into string keys
-		var target map[string]interface{}
+		var target map[string]any
 		if err := mapstructure.WeakDecode(inner.Interface(), &target); err != nil {
 			return err
 		}

@@ -204,7 +204,7 @@ func catalogServicesMaxIndex(tx ReadTxn, _ *acl.EnterpriseMeta, peerName string)
 	return maxIndexTxn(tx, peeredIndexEntryName(tableServices, peerName))
 }
 
-func catalogServiceMaxIndex(tx ReadTxn, serviceName string, _ *acl.EnterpriseMeta, peerName string) (<-chan struct{}, interface{}, error) {
+func catalogServiceMaxIndex(tx ReadTxn, serviceName string, _ *acl.EnterpriseMeta, peerName string) (<-chan struct{}, any, error) {
 	return tx.FirstWatch(tableIndex, indexID, serviceIndexName(serviceName, nil, peerName))
 }
 
@@ -223,7 +223,7 @@ func catalogServiceListByNode(tx ReadTxn, node string, _ *acl.EnterpriseMeta, pe
 	return tx.Get(tableServices, indexNode, Query{Value: node, PeerName: peerName})
 }
 
-func catalogServiceLastExtinctionIndex(tx ReadTxn, _ *acl.EnterpriseMeta, peerName string) (interface{}, error) {
+func catalogServiceLastExtinctionIndex(tx ReadTxn, _ *acl.EnterpriseMeta, peerName string) (any, error) {
 	return tx.First(tableIndex, indexID, peeredIndexEntryName(indexServiceExtinction, peerName))
 }
 
@@ -296,7 +296,7 @@ func (s *Store) ValidateRegisterRequest(_ *structs.RegisterRequest) (*acl.Enterp
 	return nil, nil
 }
 
-func indexFromKindServiceName(arg interface{}) ([]byte, error) {
+func indexFromKindServiceName(arg any) ([]byte, error) {
 	var b indexBuilder
 
 	switch n := arg.(type) {

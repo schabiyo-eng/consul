@@ -82,7 +82,7 @@ type queryWrapper struct {
 
 // toPreparedQuery unwraps the internal form of a prepared query and returns
 // the regular struct.
-func toPreparedQuery(wrapped interface{}) *structs.PreparedQuery {
+func toPreparedQuery(wrapped any) *structs.PreparedQuery {
 	if wrapped == nil {
 		return nil
 	}
@@ -333,7 +333,7 @@ func (s *Store) PreparedQueryResolve(queryIDOrName string, source structs.QueryS
 
 	// prep will check to see if the query is a template and render it
 	// first, otherwise it will just return a regular query.
-	prep := func(wrapped interface{}) (uint64, *structs.PreparedQuery, error) {
+	prep := func(wrapped any) (uint64, *structs.PreparedQuery, error) {
 		wrapper := wrapped.(*queryWrapper)
 		if prepared_query.IsTemplate(wrapper.PreparedQuery) {
 			render, err := wrapper.ct.Render(queryIDOrName, source)

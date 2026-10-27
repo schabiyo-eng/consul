@@ -117,7 +117,7 @@ func (e PermissionDeniedError) Error() string {
 	return message.String()
 }
 
-func PermissionDenied(msg string, args ...interface{}) PermissionDeniedError {
+func PermissionDenied(msg string, args ...any) PermissionDeniedError {
 	cause := fmt.Sprintf(msg, args...)
 	return PermissionDeniedError{Cause: cause}
 }
@@ -133,7 +133,7 @@ func PermissionDeniedByACLUnnamed(authz Authorizer, context *AuthorizerContext, 
 	return PermissionDeniedError{Accessor: extractAccessorID(authz), Resource: resource, AccessLevel: accessLevel, ResourceID: desc}
 }
 
-func extractAccessorID(authz interface{}) string {
+func extractAccessorID(authz any) string {
 	var accessor string
 	switch v := authz.(type) {
 	case AllowAuthorizer:

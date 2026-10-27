@@ -13,7 +13,7 @@ import (
 )
 
 // GET /v1/connect/ca/roots
-func (s *HTTPHandlers) ConnectCARoots(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) ConnectCARoots(resp http.ResponseWriter, req *http.Request) (any, error) {
 	var args structs.DCSpecificRequest
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
 		return nil, nil
@@ -55,7 +55,7 @@ func (s *HTTPHandlers) ConnectCARoots(resp http.ResponseWriter, req *http.Reques
 }
 
 // /v1/connect/ca/configuration
-func (s *HTTPHandlers) ConnectCAConfiguration(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) ConnectCAConfiguration(resp http.ResponseWriter, req *http.Request) (any, error) {
 	switch req.Method {
 	case "GET":
 		return s.ConnectCAConfigurationGet(resp, req)
@@ -69,7 +69,7 @@ func (s *HTTPHandlers) ConnectCAConfiguration(resp http.ResponseWriter, req *htt
 }
 
 // GET /v1/connect/ca/configuration
-func (s *HTTPHandlers) ConnectCAConfigurationGet(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) ConnectCAConfigurationGet(resp http.ResponseWriter, req *http.Request) (any, error) {
 	// Method is tested in ConnectCAConfiguration
 	var args structs.DCSpecificRequest
 	if done := s.parse(resp, req, &args.Datacenter, &args.QueryOptions); done {
@@ -86,7 +86,7 @@ func (s *HTTPHandlers) ConnectCAConfigurationGet(resp http.ResponseWriter, req *
 }
 
 // PUT /v1/connect/ca/configuration
-func (s *HTTPHandlers) ConnectCAConfigurationSet(req *http.Request) (interface{}, error) {
+func (s *HTTPHandlers) ConnectCAConfigurationSet(req *http.Request) (any, error) {
 	// Method is tested in ConnectCAConfiguration
 
 	var args structs.CARequest
@@ -96,7 +96,7 @@ func (s *HTTPHandlers) ConnectCAConfigurationSet(req *http.Request) (interface{}
 		return nil, HTTPError{StatusCode: http.StatusBadRequest, Reason: fmt.Sprintf("Request decode failed: %v", err)}
 	}
 
-	var reply interface{}
+	var reply any
 	err := s.agent.RPC(req.Context(), "ConnectCA.ConfigurationSet", &args, &reply)
 	if err != nil && err.Error() == consul.ErrStateReadOnly.Error() {
 		return nil, HTTPError{

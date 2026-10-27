@@ -78,7 +78,7 @@ func prefixIndexFromQueryWithPeerWildcardable(v Query) ([]byte, error) {
 	return b.Bytes(), nil
 }
 
-func prefixIndexFromQueryNoNamespace(arg interface{}) ([]byte, error) {
+func prefixIndexFromQueryNoNamespace(arg any) ([]byte, error) {
 	return prefixIndexFromQuery(arg)
 }
 

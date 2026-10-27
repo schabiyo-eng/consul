@@ -60,35 +60,35 @@ func TestInferenceGatewayConfigEntry_CE_Normalize(t *testing.T) {
 // and survives the JSON the HTTP API returns, so CE and ENT expose the same shape to API
 // consumers.
 func TestInferenceGatewayConfigEntry_CE_DecodeAndJSONRoundTrip(t *testing.T) {
-	raw := map[string]interface{}{
+	raw := map[string]any{
 		"Kind": InferenceGateway,
 		"Name": "gw",
-		"Meta": map[string]interface{}{"owner": "platform"},
-		"Processor": map[string]interface{}{
+		"Meta": map[string]any{"owner": "platform"},
+		"Processor": map[string]any{
 			"FailureMode":      "open",
 			"BodyModelRouting": true,
 		},
 		"RequestTimeout": "10m",
-		"Failover": map[string]interface{}{
-			"RetryOn":       []interface{}{"401", "5xx"},
+		"Failover": map[string]any{
+			"RetryOn":       []any{"401", "5xx"},
 			"MaxTiers":      2,
 			"PerTryTimeout": "30s",
 		},
-		"PII": map[string]interface{}{
+		"PII": map[string]any{
 			"Scope":         "both",
 			"DefaultAction": "mask",
-			"Mask":          map[string]interface{}{"Char": "#", "KeepLast": 4},
-			"Detectors":     []interface{}{map[string]interface{}{"Name": "ssn", "Action": "block"}},
+			"Mask":          map[string]any{"Char": "#", "KeepLast": 4},
+			"Detectors":     []any{map[string]any{"Name": "ssn", "Action": "block"}},
 		},
-		"Observability": map[string]interface{}{
-			"Metrics": map[string]interface{}{
+		"Observability": map[string]any{
+			"Metrics": map[string]any{
 				"Enabled":    true,
-				"Prometheus": map[string]interface{}{"Port": 0},
+				"Prometheus": map[string]any{"Port": 0},
 			},
-			"Tracing": map[string]interface{}{
+			"Tracing": map[string]any{
 				"Enabled":     true,
 				"SampleRatio": 0.05,
-				"OTLP":        map[string]interface{}{"Endpoint": "collector:4317"},
+				"OTLP":        map[string]any{"Endpoint": "collector:4317"},
 			},
 		},
 	}

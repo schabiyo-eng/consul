@@ -192,7 +192,7 @@ func (s *Store) Snapshot() *Snapshot {
 // WalkAllTables basically lets you dump memdb generically and exists primarily
 // for very specific types of unit tests and should not be executed in
 // production code.
-func (s *Store) WalkAllTables(fn func(table string, item interface{}) bool) error {
+func (s *Store) WalkAllTables(fn func(table string, item any) bool) error {
 	snap := s.Snapshot()
 	defer snap.Close()
 

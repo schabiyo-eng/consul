@@ -25,7 +25,7 @@ func TestUpstreams(t testing.T, enterprise bool) Upstreams {
 		// We rely on this one having default type in a few tests...
 		DestinationName: "db",
 		LocalBindPort:   9191,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			// Float because this is how it is decoded by JSON decoder so this
 			// enables the value returned to be compared directly to a decoded JSON
 			// response without spurious type loss.

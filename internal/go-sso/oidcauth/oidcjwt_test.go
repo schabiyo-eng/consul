@@ -16,14 +16,14 @@ func TestExtractStringMetadata(t *testing.T) {
 	emptyMap := make(map[string]string)
 
 	tests := map[string]struct {
-		allClaims     map[string]interface{}
+		allClaims     map[string]any
 		claimMappings map[string]string
 		expected      map[string]string
 		errExpected   bool
 	}{
 		"empty": {nil, nil, emptyMap, false},
 		"all": {
-			map[string]interface{}{
+			map[string]any{
 				"data1": "foo",
 				"data2": "bar",
 			},
@@ -38,7 +38,7 @@ func TestExtractStringMetadata(t *testing.T) {
 			false,
 		},
 		"some": {
-			map[string]interface{}{
+			map[string]any{
 				"data1": "foo",
 				"data2": "bar",
 			},
@@ -52,7 +52,7 @@ func TestExtractStringMetadata(t *testing.T) {
 			false,
 		},
 		"none": {
-			map[string]interface{}{
+			map[string]any{
 				"data1": "foo",
 				"data2": "bar",
 			},
@@ -65,9 +65,9 @@ func TestExtractStringMetadata(t *testing.T) {
 		},
 
 		"nested data": {
-			map[string]interface{}{
+			map[string]any{
 				"data1": "foo",
-				"data2": map[string]interface{}{
+				"data2": map[string]any{
 					"child": "bar",
 				},
 				"data3": true,
@@ -98,8 +98,8 @@ func TestExtractStringMetadata(t *testing.T) {
 		},
 
 		"error: a struct isn't stringifiable": {
-			map[string]interface{}{
-				"data1": map[string]interface{}{
+			map[string]any{
+				"data1": map[string]any{
 					"child": "bar",
 				},
 			},
@@ -110,8 +110,8 @@ func TestExtractStringMetadata(t *testing.T) {
 			true,
 		},
 		"error: a slice isn't stringifiable": {
-			map[string]interface{}{
-				"data1": []interface{}{
+			map[string]any{
+				"data1": []any{
 					"child", "bar",
 				},
 			},
@@ -141,14 +141,14 @@ func TestExtractListMetadata(t *testing.T) {
 	emptyMap := make(map[string][]string)
 
 	tests := map[string]struct {
-		allClaims     map[string]interface{}
+		allClaims     map[string]any
 		claimMappings map[string]string
 		expected      map[string][]string
 		errExpected   bool
 	}{
 		"empty": {nil, nil, emptyMap, false},
 		"all - singular": {
-			map[string]interface{}{
+			map[string]any{
 				"data1": "foo",
 				"data2": "bar",
 			},
@@ -163,7 +163,7 @@ func TestExtractListMetadata(t *testing.T) {
 			false,
 		},
 		"some - singular": {
-			map[string]interface{}{
+			map[string]any{
 				"data1": "foo",
 				"data2": "bar",
 			},
@@ -177,7 +177,7 @@ func TestExtractListMetadata(t *testing.T) {
 			false,
 		},
 		"none - singular": {
-			map[string]interface{}{
+			map[string]any{
 				"data1": "foo",
 				"data2": "bar",
 			},
@@ -190,9 +190,9 @@ func TestExtractListMetadata(t *testing.T) {
 		},
 
 		"nested data - singular": {
-			map[string]interface{}{
+			map[string]any{
 				"data1": "foo",
-				"data2": map[string]interface{}{
+				"data2": map[string]any{
 					"child": "bar",
 				},
 				"data3": true,
@@ -200,7 +200,7 @@ func TestExtractListMetadata(t *testing.T) {
 				"data5": float64(7.9),
 				"data6": json.Number("-12345"),
 				"data7": int(42),
-				"data8": []interface{}{ // mixed
+				"data8": []any{ // mixed
 					"foo", true, float64(7.9), json.Number("-12345"), int(42),
 				},
 			},
@@ -230,9 +230,9 @@ func TestExtractListMetadata(t *testing.T) {
 		},
 
 		"error: a struct isn't stringifiable (singular)": {
-			map[string]interface{}{
-				"data1": map[string]interface{}{
-					"child": map[string]interface{}{
+			map[string]any{
+				"data1": map[string]any{
+					"child": map[string]any{
 						"inner": "bar",
 					},
 				},
@@ -244,9 +244,9 @@ func TestExtractListMetadata(t *testing.T) {
 			true,
 		},
 		"error: a slice isn't stringifiable (singular)": {
-			map[string]interface{}{
-				"data1": []interface{}{
-					"child", []interface{}{"bar"},
+			map[string]any{
+				"data1": []any{
+					"child", []any{"bar"},
 				},
 			},
 			map[string]string{
@@ -257,7 +257,7 @@ func TestExtractListMetadata(t *testing.T) {
 		},
 
 		"non-string-slice data (string)": {
-			map[string]interface{}{
+			map[string]any{
 				"data1": "foo",
 			},
 			map[string]string{
@@ -270,9 +270,9 @@ func TestExtractListMetadata(t *testing.T) {
 		},
 
 		"all - list": {
-			map[string]interface{}{
-				"data1": []interface{}{"foo", "otherFoo"},
-				"data2": []interface{}{"bar", "otherBar"},
+			map[string]any{
+				"data1": []any{"foo", "otherFoo"},
+				"data2": []any{"bar", "otherBar"},
 			},
 			map[string]string{
 				"data1": "val1",
@@ -285,10 +285,10 @@ func TestExtractListMetadata(t *testing.T) {
 			false,
 		},
 		"some - list": {
-			map[string]interface{}{
-				"data1": []interface{}{"foo", "otherFoo"},
-				"data2": map[string]interface{}{
-					"child": []interface{}{"bar", "otherBar"},
+			map[string]any{
+				"data1": []any{"foo", "otherFoo"},
+				"data2": map[string]any{
+					"child": []any{"bar", "otherBar"},
 				},
 			},
 			map[string]string{
@@ -302,9 +302,9 @@ func TestExtractListMetadata(t *testing.T) {
 			false,
 		},
 		"none - list": {
-			map[string]interface{}{
-				"data1": []interface{}{"foo"},
-				"data2": []interface{}{"bar"},
+			map[string]any{
+				"data1": []any{"foo"},
+				"data2": []any{"bar"},
 			},
 			map[string]string{
 				"data8": "val1",
@@ -314,8 +314,8 @@ func TestExtractListMetadata(t *testing.T) {
 			false,
 		},
 		"list omits empty strings": {
-			map[string]interface{}{
-				"data1": []interface{}{"foo", "", "otherFoo", ""},
+			map[string]any{
+				"data1": []any{"foo", "", "otherFoo", ""},
 				"data2": "",
 			},
 			map[string]string{
@@ -330,17 +330,17 @@ func TestExtractListMetadata(t *testing.T) {
 		},
 
 		"nested data - list": {
-			map[string]interface{}{
-				"data1": []interface{}{"foo"},
-				"data2": map[string]interface{}{
-					"child": []interface{}{"bar"},
+			map[string]any{
+				"data1": []any{"foo"},
+				"data2": map[string]any{
+					"child": []any{"bar"},
 				},
-				"data3": []interface{}{true},
-				"data4": []interface{}{false},
-				"data5": []interface{}{float64(7.9)},
-				"data6": []interface{}{json.Number("-12345")},
-				"data7": []interface{}{int(42)},
-				"data8": []interface{}{ // mixed
+				"data3": []any{true},
+				"data4": []any{false},
+				"data5": []any{float64(7.9)},
+				"data6": []any{json.Number("-12345")},
+				"data7": []any{int(42)},
+				"data8": []any{ // mixed
 					"foo", true, float64(7.9), json.Number("-12345"), int(42),
 				},
 			},
@@ -370,9 +370,9 @@ func TestExtractListMetadata(t *testing.T) {
 		},
 
 		"JSONPointer": {
-			map[string]interface{}{
+			map[string]any{
 				"foo": "a",
-				"bar": map[string]interface{}{
+				"bar": map[string]any{
 					"baz": []string{"x", "y", "z"},
 				},
 			},
@@ -387,9 +387,9 @@ func TestExtractListMetadata(t *testing.T) {
 			false,
 		},
 		"JSONPointer not found": {
-			map[string]interface{}{
+			map[string]any{
 				"foo": "a",
-				"bar": map[string]interface{}{
+				"bar": map[string]any{
 					"baz": []string{"x", "y", "z"},
 				},
 			},
@@ -436,12 +436,12 @@ func TestGetClaim(t *testing.T) {
 		"h": true,
 		"i": false
 	}`
-	var claims map[string]interface{}
+	var claims map[string]any
 	require.NoError(t, json.Unmarshal([]byte(data), &claims))
 
 	tests := []struct {
 		claim string
-		value interface{}
+		value any
 	}{
 		{"a", float64(42)},
 		{"/a", float64(42)},
@@ -455,8 +455,8 @@ func TestGetClaim(t *testing.T) {
 		{"\\", nil},
 		{"h", true},
 		{"i", false},
-		{"/c/e", []interface{}{"dog", "cat", "bird"}},
-		{"/c/f", map[string]interface{}{"g": "zebra"}},
+		{"/c/e", []any{"dog", "cat", "bird"}},
+		{"/c/f", map[string]any{"g": "zebra"}},
 	}
 
 	for _, test := range tests {
@@ -469,38 +469,38 @@ func TestGetClaim(t *testing.T) {
 
 func TestNormalizeList(t *testing.T) {
 	tests := []struct {
-		raw        interface{}
-		normalized []interface{}
+		raw        any
+		normalized []any
 		ok         bool
 	}{
 		{
-			raw:        []interface{}{"green", 42},
-			normalized: []interface{}{"green", 42},
+			raw:        []any{"green", 42},
+			normalized: []any{"green", 42},
 			ok:         true,
 		},
 		{
-			raw:        []interface{}{"green"},
-			normalized: []interface{}{"green"},
+			raw:        []any{"green"},
+			normalized: []any{"green"},
 			ok:         true,
 		},
 		{
-			raw:        []interface{}{},
-			normalized: []interface{}{},
+			raw:        []any{},
+			normalized: []any{},
 			ok:         true,
 		},
 		{
 			raw:        "green",
-			normalized: []interface{}{"green"},
+			normalized: []any{"green"},
 			ok:         true,
 		},
 		{
 			raw:        "",
-			normalized: []interface{}{""},
+			normalized: []any{""},
 			ok:         true,
 		},
 		{
 			raw:        42,
-			normalized: []interface{}{42},
+			normalized: []any{42},
 			ok:         true,
 		},
 		{
@@ -526,7 +526,7 @@ func TestNormalizeList(t *testing.T) {
 
 func TestStringifyMetadataValue(t *testing.T) {
 	cases := map[string]struct {
-		value         interface{}
+		value         any
 		expect        string
 		expectFailure bool
 	}{

@@ -346,14 +346,14 @@ func TestAuthMethodCreateCommand_JSON(t *testing.T) {
 		}
 		require.Equal(t, expect, got)
 
-		var raw map[string]interface{}
+		var raw map[string]any
 		require.NoError(t, json.Unmarshal([]byte(out), &raw))
 		delete(raw, "CreateIndex")
 		delete(raw, "ModifyIndex")
 		delete(raw, "Namespace")
 		delete(raw, "Partition")
 
-		require.Equal(t, map[string]interface{}{
+		require.Equal(t, map[string]any{
 			"Name":            name,
 			"Type":            "testing",
 			"DisplayName":     "display",
@@ -398,14 +398,14 @@ func TestAuthMethodCreateCommand_JSON(t *testing.T) {
 		}
 		require.Equal(t, expect, got)
 
-		var raw map[string]interface{}
+		var raw map[string]any
 		require.NoError(t, json.Unmarshal([]byte(out), &raw))
 		delete(raw, "CreateIndex")
 		delete(raw, "ModifyIndex")
 		delete(raw, "Namespace")
 		delete(raw, "Partition")
 
-		require.Equal(t, map[string]interface{}{
+		require.Equal(t, map[string]any{
 			"Name":            name,
 			"Type":            "testing",
 			"DisplayName":     "display",
@@ -436,7 +436,7 @@ func TestAuthMethodCreateCommand_JSON(t *testing.T) {
 
 		require.Equal(t, 0, code)
 
-		var raw map[string]interface{}
+		var raw map[string]any
 		require.NoError(t, json.Unmarshal([]byte(out), &raw))
 		require.Equal(t, tokenFormat, raw["TokenNameFormat"])
 	})
@@ -544,7 +544,7 @@ func TestAuthMethodCreateCommand_k8s(t *testing.T) {
 			Name:            name,
 			Type:            "kubernetes",
 			TokenNameFormat: structs.DefaultACLAuthMethodTokenNameFormat,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"Host":              "https://foo.internal:8443",
 				"CACert":            ca.RootCert,
 				"ServiceAccountJWT": acl.TestKubernetesJWT_A,
@@ -580,7 +580,7 @@ func TestAuthMethodCreateCommand_k8s(t *testing.T) {
 			Name:            name,
 			Type:            "kubernetes",
 			TokenNameFormat: structs.DefaultACLAuthMethodTokenNameFormat,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"Host":              "https://foo.internal:8443",
 				"CACert":            ca.RootCert,
 				"ServiceAccountJWT": acl.TestKubernetesJWT_A,

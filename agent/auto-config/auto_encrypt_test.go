@@ -129,7 +129,7 @@ func TestAutoEncrypt_generateCSR_RSA(t *testing.T) {
 	for _, tcase := range testCases {
 		t.Run(tcase.name, func(t *testing.T) {
 			ac := AutoConfig{config: &config.RuntimeConfig{
-				ConnectCAConfig: map[string]interface{}{
+				ConnectCAConfig: map[string]any{
 					"PrivateKeyType": "rsa",
 					"PrivateKeyBits": tcase.keySize,
 				},

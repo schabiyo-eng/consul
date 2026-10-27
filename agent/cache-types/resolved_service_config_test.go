@@ -32,7 +32,7 @@ func TestResolvedServiceConfig(t *testing.T) {
 			require.True(t, req.AllowStale)
 
 			reply := args.Get(3).(*structs.ServiceConfigResponse)
-			reply.ProxyConfig = map[string]interface{}{
+			reply.ProxyConfig = map[string]any{
 				"protocol": "http",
 			}
 			reply.UpstreamConfigs = structs.OpaqueUpstreamConfigs{
@@ -40,7 +40,7 @@ func TestResolvedServiceConfig(t *testing.T) {
 					Upstream: structs.PeeredServiceName{
 						ServiceName: structs.NewServiceName("a", acl.DefaultEnterpriseMeta()),
 					},
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"protocol": "http",
 					},
 				},

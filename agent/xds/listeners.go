@@ -365,7 +365,7 @@ func (s *ResourceGenerator) listenersFromSnapshotConnectProxy(cfgSnap *proxycfg.
 	requiresTLSInspector := false
 	requiresHTTPInspector := false
 
-	configuredPorts := make(map[int]interface{})
+	configuredPorts := make(map[int]any)
 	err = cfgSnap.ConnectProxy.DestinationsUpstream.ForEachKeyE(func(uid proxycfg.UpstreamID) error {
 		svcConfig, ok := cfgSnap.ConnectProxy.DestinationsUpstream.Get(uid)
 		if !ok || svcConfig == nil {
@@ -2702,7 +2702,7 @@ func (s *ResourceGenerator) getAndModifyUpstreamConfigForListener(
 		err error
 	)
 
-	configMap := make(map[string]interface{})
+	configMap := make(map[string]any)
 	if u != nil {
 		configMap = u.Config
 	}
@@ -2759,7 +2759,7 @@ func (s *ResourceGenerator) getAndModifyUpstreamConfigForPeeredListener(
 		err error
 	)
 
-	configMap := make(map[string]interface{})
+	configMap := make(map[string]any)
 	if u != nil {
 		configMap = u.Config
 	}

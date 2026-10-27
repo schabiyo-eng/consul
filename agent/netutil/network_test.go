@@ -23,15 +23,15 @@ func TestGetAgentConfig(t *testing.T) {
 		handler       http.HandlerFunc
 		expectError   bool
 		expectedError string
-		expectedData  map[string]interface{}
+		expectedData  map[string]any
 	}{
 		{
 			name: "successful config retrieval",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				require.Equal(t, "/v1/agent/self", r.URL.Path)
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(map[string]interface{}{
-					"Config": map[string]interface{}{
+				json.NewEncoder(w).Encode(map[string]any{
+					"Config": map[string]any{
 						"NodeName":    "test-node",
 						"Datacenter":  "dc1",
 						"Server":      true,
@@ -42,16 +42,16 @@ func TestGetAgentConfig(t *testing.T) {
 						"BindAddr":    "127.0.0.1",
 						"ClientAddr":  "127.0.0.1",
 						"HTTPPort":    8500,
-						"DNS":         map[string]interface{}{"Port": 8600},
+						"DNS":         map[string]any{"Port": 8600},
 						"ServerName":  "test-server",
 						"PidFile":     "/tmp/consul/consul.pid",
-						"Performance": map[string]interface{}{"RaftMultiplier": 1},
+						"Performance": map[string]any{"RaftMultiplier": 1},
 					},
 				})
 			},
 			expectError: false,
-			expectedData: map[string]interface{}{
-				"Config": map[string]interface{}{
+			expectedData: map[string]any{
+				"Config": map[string]any{
 					"NodeName": "test-node",
 				},
 			},
@@ -97,7 +97,7 @@ func TestGetAgentConfig(t *testing.T) {
 						require.True(t, ok, "expected key %s not found in result", key)
 
 						// For nested maps, check each key-value pair
-						if expectedMap, ok := expectedVal.(map[string]interface{}); ok {
+						if expectedMap, ok := expectedVal.(map[string]any); ok {
 							actualVal := result[key]
 							require.NotNil(t, actualVal, "expected %s to be a map, got nil", key)
 
@@ -206,7 +206,7 @@ func TestGetAgentBindAddr(t *testing.T) {
 
 	tests := []struct {
 		name          string
-		mockConfig    map[string]map[string]interface{}
+		mockConfig    map[string]map[string]any
 		expectError   bool
 		expectedError string
 		expectedIP    string
@@ -214,7 +214,7 @@ func TestGetAgentBindAddr(t *testing.T) {
 	}{
 		{
 			name: "successful bind address retrieval",
-			mockConfig: map[string]map[string]interface{}{
+			mockConfig: map[string]map[string]any{
 				"Config": {
 					"BindAddr": "192.168.1.100",
 				},
@@ -224,7 +224,7 @@ func TestGetAgentBindAddr(t *testing.T) {
 		},
 		{
 			name: "empty bind address",
-			mockConfig: map[string]map[string]interface{}{
+			mockConfig: map[string]map[string]any{
 				"Config": {
 					"BindAddr": "",
 				},
@@ -234,7 +234,7 @@ func TestGetAgentBindAddr(t *testing.T) {
 		},
 		{
 			name: "missing bind address",
-			mockConfig: map[string]map[string]interface{}{
+			mockConfig: map[string]map[string]any{
 				"Config": {
 					"OtherField": "value",
 				},
@@ -244,7 +244,7 @@ func TestGetAgentBindAddr(t *testing.T) {
 		},
 		{
 			name: "invalid bind address format",
-			mockConfig: map[string]map[string]interface{}{
+			mockConfig: map[string]map[string]any{
 				"Config": {
 					"BindAddr": "not.an.ip.address",
 				},
@@ -258,7 +258,7 @@ func TestGetAgentBindAddr(t *testing.T) {
 			expectError:   true,
 			expectedError: "failed to get agent config",
 			setupMock: func() {
-				GetAgentConfigFunc = func(config *api.Config) (map[string]map[string]interface{}, error) {
+				GetAgentConfigFunc = func(config *api.Config) (map[string]map[string]any, error) {
 					return nil, fmt.Errorf("failed to get agent config")
 				}
 				GetAgentBindAddrFunc = func(config *api.Config, cached bool) (net.IP, error) {
@@ -275,7 +275,7 @@ func TestGetAgentBindAddr(t *testing.T) {
 				tc.setupMock()
 			} else {
 				// Default mock setup if no setupMock provided
-				GetAgentConfigFunc = func(config *api.Config) (map[string]map[string]interface{}, error) {
+				GetAgentConfigFunc = func(config *api.Config) (map[string]map[string]any, error) {
 					if tc.mockConfig == nil {
 						return nil, fmt.Errorf("mock error")
 					}

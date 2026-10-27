@@ -2743,7 +2743,7 @@ func TestStateStore_ACLAuthMethod_SetGet(t *testing.T) {
 			Name:        "test",
 			Type:        "testing",
 			Description: "modified",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"Host": "https://localhost:8443",
 			},
 		}
@@ -2946,7 +2946,7 @@ func TestStateStore_ACLAuthMethods_UpsertBatchRead(t *testing.T) {
 				Name:        "test-1",
 				Type:        "testing",
 				Description: "test-1 modified",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"Host": "https://localhost:8443",
 				},
 			},
@@ -2954,7 +2954,7 @@ func TestStateStore_ACLAuthMethods_UpsertBatchRead(t *testing.T) {
 				Name:        "test-2",
 				Type:        "testing",
 				Description: "test-2 modified",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"Host": "https://localhost:8444",
 				},
 			},

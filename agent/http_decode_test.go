@@ -266,9 +266,9 @@ var checkTypeHeaderTestCases = []struct {
 type translateKeyTestCase struct {
 	jsonFmtStr string
 	desc       string
-	in         []interface{}
-	want       interface{}
-	equalityFn func(outStruct, wantVal interface{}) error
+	in         []any
+	want       any
+	equalityFn func(outStruct, wantVal any) error
 }
 
 // FixupCheckType's Translate Keys:
@@ -293,7 +293,7 @@ var translateCheckTypeTCs = [][]translateKeyTestCase{
 }
 
 // ScriptArgs: []string
-func scriptArgsEqFn(out interface{}, want interface{}) error {
+func scriptArgsEqFn(out any, want any) error {
 	var got []string
 	switch v := out.(type) {
 	case structs.CheckDefinition:
@@ -334,64 +334,64 @@ var scriptFields = []string{
 var translateScriptArgsTCs = []translateKeyTestCase{
 	{
 		desc:       "scriptArgs: all set",
-		in:         []interface{}{`["1"]`, `["2"]`, `["3"]`},
+		in:         []any{`["1"]`, `["2"]`, `["3"]`},
 		want:       []string{"1"},
 		jsonFmtStr: "{" + strings.Join(scriptFields, ",") + "}",
 		equalityFn: scriptArgsEqFn,
 	},
 	{
 		desc:       "scriptArgs: first and second set",
-		in:         []interface{}{`["1"]`, `["2"]`},
+		in:         []any{`["1"]`, `["2"]`},
 		want:       []string{"1"},
 		jsonFmtStr: "{" + scriptFields[0] + "," + scriptFields[1] + "}",
 		equalityFn: scriptArgsEqFn,
 	},
 	{
 		desc:       "scriptArgs: first and third set",
-		in:         []interface{}{`["1"]`, `["3"]`},
+		in:         []any{`["1"]`, `["3"]`},
 		want:       []string{"1"},
 		jsonFmtStr: "{" + scriptFields[0] + "," + scriptFields[2] + "}",
 		equalityFn: scriptArgsEqFn,
 	},
 	{
 		desc:       "scriptArgs: second and third set",
-		in:         []interface{}{`["2"]`, `["3"]`},
+		in:         []any{`["2"]`, `["3"]`},
 		want:       []string{"2"},
 		jsonFmtStr: "{" + scriptFields[1] + "," + scriptFields[2] + "}",
 		equalityFn: scriptArgsEqFn,
 	},
 	{
 		desc:       "scriptArgs: first set",
-		in:         []interface{}{`["1"]`},
+		in:         []any{`["1"]`},
 		want:       []string{"1"},
 		jsonFmtStr: "{" + scriptFields[0] + "}",
 		equalityFn: scriptArgsEqFn,
 	},
 	{
 		desc:       "scriptArgs: second set",
-		in:         []interface{}{`["2"]`},
+		in:         []any{`["2"]`},
 		want:       []string{"2"},
 		jsonFmtStr: "{" + scriptFields[1] + "}",
 		equalityFn: scriptArgsEqFn,
 	},
 	{
 		desc:       "scriptArgs: third set",
-		in:         []interface{}{`["3"]`},
+		in:         []any{`["3"]`},
 		want:       []string{"3"},
 		jsonFmtStr: "{" + scriptFields[2] + "}",
 		equalityFn: scriptArgsEqFn,
 	},
 	{
 		desc:       "scriptArgs: none set",
-		in:         []interface{}{},
+		in:         []any{},
 		want:       []string{},
 		jsonFmtStr: "{}",
 		equalityFn: scriptArgsEqFn,
 	},
 }
 
-func deregisterEqFn(out interface{}, want interface{}) error {
-	var got interface{}
+func deregisterEqFn(out any, want any) error {
+	var got any
 	switch v := out.(type) {
 	case structs.CheckDefinition:
 		got = v.DeregisterCriticalServiceAfter
@@ -423,28 +423,28 @@ var deregisterFields = []string{
 var translateDeregisterTCs = []translateKeyTestCase{
 	{
 		desc:       "deregister: both set",
-		in:         []interface{}{`"2h0m"`, `"3h0m"`},
+		in:         []any{`"2h0m"`, `"3h0m"`},
 		want:       2 * time.Hour,
 		jsonFmtStr: "{" + strings.Join(deregisterFields, ",") + "}",
 		equalityFn: deregisterEqFn,
 	},
 	{
 		desc:       "deregister: first set",
-		in:         []interface{}{`"2h0m"`},
+		in:         []any{`"2h0m"`},
 		want:       2 * time.Hour,
 		jsonFmtStr: "{" + deregisterFields[0] + "}",
 		equalityFn: deregisterEqFn,
 	},
 	{
 		desc:       "deregister: second set",
-		in:         []interface{}{`"3h0m"`},
+		in:         []any{`"3h0m"`},
 		want:       3 * time.Hour,
 		jsonFmtStr: "{" + deregisterFields[1] + "}",
 		equalityFn: deregisterEqFn,
 	},
 	{
 		desc:       "deregister: neither set",
-		in:         []interface{}{},
+		in:         []any{},
 		want:       time.Duration(0),
 		jsonFmtStr: "{}",
 		equalityFn: deregisterEqFn,
@@ -452,8 +452,8 @@ var translateDeregisterTCs = []translateKeyTestCase{
 }
 
 // DockerContainerID: string
-func dockerEqFn(out interface{}, want interface{}) error {
-	var got interface{}
+func dockerEqFn(out any, want any) error {
+	var got any
 	switch v := out.(type) {
 	case structs.CheckDefinition:
 		got = v.DockerContainerID
@@ -481,28 +481,28 @@ var dockerFields = []string{`"DockerContainerID": %s`, `"docker_container_id": %
 var translateDockerTCs = []translateKeyTestCase{
 	{
 		desc:       "dockerContainerID: both set",
-		in:         []interface{}{`"id-1"`, `"id-2"`},
+		in:         []any{`"id-1"`, `"id-2"`},
 		want:       "id-1",
 		jsonFmtStr: "{" + strings.Join(dockerFields, ",") + "}",
 		equalityFn: dockerEqFn,
 	},
 	{
 		desc:       "dockerContainerID: first set",
-		in:         []interface{}{`"id-1"`},
+		in:         []any{`"id-1"`},
 		want:       "id-1",
 		jsonFmtStr: "{" + dockerFields[0] + "}",
 		equalityFn: dockerEqFn,
 	},
 	{
 		desc:       "dockerContainerID: second set",
-		in:         []interface{}{`"id-2"`},
+		in:         []any{`"id-2"`},
 		want:       "id-2",
 		jsonFmtStr: "{" + dockerFields[1] + "}",
 		equalityFn: dockerEqFn,
 	},
 	{
 		desc:       "dockerContainerID: neither set",
-		in:         []interface{}{},
+		in:         []any{},
 		want:       "", // zero value
 		jsonFmtStr: "{}",
 		equalityFn: dockerEqFn,
@@ -510,8 +510,8 @@ var translateDockerTCs = []translateKeyTestCase{
 }
 
 // TLSServerName: string
-func tlsServerNameEqFn(out interface{}, want interface{}) error {
-	var got interface{}
+func tlsServerNameEqFn(out any, want any) error {
+	var got any
 	switch v := out.(type) {
 	case structs.CheckDefinition:
 		got = v.TLSServerName
@@ -538,28 +538,28 @@ var tlsServerNameFields = []string{`"TLSServerName": %s`, `"tls_server_name": %s
 var translateTLSServerNameTCs = []translateKeyTestCase{
 	{
 		desc:       "tlsServerName: both set",
-		in:         []interface{}{`"server1"`, `"server2"`},
+		in:         []any{`"server1"`, `"server2"`},
 		want:       "server1",
 		jsonFmtStr: "{" + strings.Join(tlsServerNameFields, ",") + "}",
 		equalityFn: tlsServerNameEqFn,
 	},
 	{
 		desc:       "tlsServerName: first set",
-		in:         []interface{}{`"server1"`},
+		in:         []any{`"server1"`},
 		want:       "server1",
 		jsonFmtStr: "{" + tlsServerNameFields[0] + "}",
 		equalityFn: tlsServerNameEqFn,
 	},
 	{
 		desc:       "tlsServerName: second set",
-		in:         []interface{}{`"server2"`},
+		in:         []any{`"server2"`},
 		want:       "server2",
 		jsonFmtStr: "{" + tlsServerNameFields[1] + "}",
 		equalityFn: tlsServerNameEqFn,
 	},
 	{
 		desc:       "tlsServerName: neither set",
-		in:         []interface{}{},
+		in:         []any{},
 		want:       "", // zero value
 		jsonFmtStr: "{}",
 		equalityFn: tlsServerNameEqFn,
@@ -567,8 +567,8 @@ var translateTLSServerNameTCs = []translateKeyTestCase{
 }
 
 // TLSSkipVerify: bool
-func tlsSkipVerifyEqFn(out interface{}, want interface{}) error {
-	var got interface{}
+func tlsSkipVerifyEqFn(out any, want any) error {
+	var got any
 	switch v := out.(type) {
 	case structs.CheckDefinition:
 		got = v.TLSSkipVerify
@@ -595,28 +595,28 @@ var tlsSkipVerifyFields = []string{`"TLSSkipVerify": %s`, `"tls_skip_verify": %s
 var translateTLSSkipVerifyTCs = []translateKeyTestCase{
 	{
 		desc:       "tlsSkipVerify: both set",
-		in:         []interface{}{`true`, `false`},
+		in:         []any{`true`, `false`},
 		want:       true,
 		jsonFmtStr: "{" + strings.Join(tlsSkipVerifyFields, ",") + "}",
 		equalityFn: tlsSkipVerifyEqFn,
 	},
 	{
 		desc:       "tlsSkipVerify: first set",
-		in:         []interface{}{`true`},
+		in:         []any{`true`},
 		want:       true,
 		jsonFmtStr: "{" + tlsSkipVerifyFields[0] + "}",
 		equalityFn: tlsSkipVerifyEqFn,
 	},
 	{
 		desc:       "tlsSkipVerify: second set",
-		in:         []interface{}{`true`},
+		in:         []any{`true`},
 		want:       true,
 		jsonFmtStr: "{" + tlsSkipVerifyFields[1] + "}",
 		equalityFn: tlsSkipVerifyEqFn,
 	},
 	{
 		desc:       "tlsSkipVerify: neither set",
-		in:         []interface{}{},
+		in:         []any{},
 		want:       false, // zero value
 		jsonFmtStr: "{}",
 		equalityFn: tlsSkipVerifyEqFn,
@@ -624,8 +624,8 @@ var translateTLSSkipVerifyTCs = []translateKeyTestCase{
 }
 
 // GRPCUseTLS: bool
-func grpcUseTLSEqFn(out interface{}, want interface{}) error {
-	var got interface{}
+func grpcUseTLSEqFn(out any, want any) error {
+	var got any
 	switch v := out.(type) {
 	case structs.CheckDefinition:
 		got = v.GRPCUseTLS
@@ -652,36 +652,36 @@ var grpcUseTLSFields = []string{`"GRPCUseTLS": %s`, `"grpc_use_tls": %s`}
 var translateGRPCUseTLSTCs = []translateKeyTestCase{
 	{
 		desc:       "GRPCUseTLS: both set",
-		in:         []interface{}{"true", "false"},
+		in:         []any{"true", "false"},
 		want:       true,
 		jsonFmtStr: "{" + strings.Join(grpcUseTLSFields, ",") + "}",
 		equalityFn: grpcUseTLSEqFn,
 	},
 	{
 		desc:       "GRPCUseTLS: first set",
-		in:         []interface{}{`true`},
+		in:         []any{`true`},
 		want:       true,
 		jsonFmtStr: "{" + grpcUseTLSFields[0] + "}",
 		equalityFn: grpcUseTLSEqFn,
 	},
 	{
 		desc:       "GRPCUseTLS: second set",
-		in:         []interface{}{`true`},
+		in:         []any{`true`},
 		want:       true,
 		jsonFmtStr: "{" + grpcUseTLSFields[1] + "}",
 		equalityFn: grpcUseTLSEqFn,
 	},
 	{
 		desc:       "GRPCUseTLS: neither set",
-		in:         []interface{}{},
+		in:         []any{},
 		want:       false, // zero value
 		jsonFmtStr: "{}",
 		equalityFn: grpcUseTLSEqFn,
 	},
 }
 
-func h2pingUseTLSEqFn(out interface{}, want interface{}) error {
-	var got interface{}
+func h2pingUseTLSEqFn(out any, want any) error {
+	var got any
 	switch v := out.(type) {
 	case structs.CheckDefinition:
 		got = v.H2PingUseTLS
@@ -708,28 +708,28 @@ var h2pingUseTLSFields = []string{`"H2PING": "testing"`, `"H2PingUseTLS": %s`, `
 var translateH2PingUseTLS = []translateKeyTestCase{
 	{
 		desc:       "H2PingUseTLS: both set",
-		in:         []interface{}{"false", "true"},
+		in:         []any{"false", "true"},
 		want:       false,
 		jsonFmtStr: "{" + strings.Join(h2pingUseTLSFields, ",") + "}",
 		equalityFn: h2pingUseTLSEqFn,
 	},
 	{
 		desc:       "H2PingUseTLS:: first set",
-		in:         []interface{}{`false`},
+		in:         []any{`false`},
 		want:       false,
 		jsonFmtStr: "{" + strings.Join(h2pingUseTLSFields[0:2], ",") + "}",
 		equalityFn: h2pingUseTLSEqFn,
 	},
 	{
 		desc:       "H2PingUseTLS: second set",
-		in:         []interface{}{`false`},
+		in:         []any{`false`},
 		want:       false,
 		jsonFmtStr: "{" + h2pingUseTLSFields[0] + "," + h2pingUseTLSFields[2] + "}",
 		equalityFn: h2pingUseTLSEqFn,
 	},
 	{
 		desc:       "H2PingUseTLS: neither set",
-		in:         []interface{}{},
+		in:         []any{},
 		want:       true, // zero value
 		jsonFmtStr: "{" + h2pingUseTLSFields[0] + "}",
 		equalityFn: h2pingUseTLSEqFn,
@@ -737,8 +737,8 @@ var translateH2PingUseTLS = []translateKeyTestCase{
 }
 
 // ServiceID: string
-func serviceIDEqFn(out interface{}, want interface{}) error {
-	var got interface{}
+func serviceIDEqFn(out any, want any) error {
+	var got any
 	switch v := out.(type) {
 	case structs.CheckDefinition:
 		got = v.ServiceID
@@ -765,28 +765,28 @@ var serviceIDFields = []string{`"ServiceID": %s`, `"service_id": %s`}
 var translateServiceIDTCs = []translateKeyTestCase{
 	{
 		desc:       "serviceID: both set",
-		in:         []interface{}{`"id-1"`, `"id-2"`},
+		in:         []any{`"id-1"`, `"id-2"`},
 		want:       "id-1",
 		jsonFmtStr: "{" + strings.Join(serviceIDFields, ",") + "}",
 		equalityFn: serviceIDEqFn,
 	},
 	{
 		desc:       "serviceID: first set",
-		in:         []interface{}{`"id-1"`},
+		in:         []any{`"id-1"`},
 		want:       "id-1",
 		jsonFmtStr: "{" + serviceIDFields[0] + "}",
 		equalityFn: serviceIDEqFn,
 	},
 	{
 		desc:       "serviceID: second set",
-		in:         []interface{}{`"id-2"`},
+		in:         []any{`"id-2"`},
 		want:       "id-2",
 		jsonFmtStr: "{" + serviceIDFields[1] + "}",
 		equalityFn: serviceIDEqFn,
 	},
 	{
 		desc:       "serviceID: neither set",
-		in:         []interface{}{},
+		in:         []any{},
 		want:       "", // zero value
 		jsonFmtStr: "{}",
 		equalityFn: serviceIDEqFn,
@@ -1065,7 +1065,7 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	// "tagged_addresses": "TaggedAddresses",
 
 	// EnableTagOverride: bool
-	enableTagOverrideEqFn := func(out interface{}, want interface{}) error {
+	enableTagOverrideEqFn := func(out any, want any) error {
 		got := out.(structs.ServiceDefinition).EnableTagOverride
 		if got != want {
 			return fmt.Errorf("expected EnableTagOverride to be %v, got %v", want, got)
@@ -1079,28 +1079,28 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	var translateEnableTagOverrideTCs = []translateKeyTestCase{
 		{
 			desc:       "translateEnableTagTCs: both set",
-			in:         []interface{}{`true`, `false`},
+			in:         []any{`true`, `false`},
 			want:       true,
 			jsonFmtStr: "{" + strings.Join(enableTagOverrideFields, ",") + "}",
 			equalityFn: enableTagOverrideEqFn,
 		},
 		{
 			desc:       "translateEnableTagTCs: first set",
-			in:         []interface{}{`true`},
+			in:         []any{`true`},
 			want:       true,
 			jsonFmtStr: "{" + enableTagOverrideFields[0] + "}",
 			equalityFn: enableTagOverrideEqFn,
 		},
 		{
 			desc:       "translateEnableTagTCs: second set",
-			in:         []interface{}{`true`},
+			in:         []any{`true`},
 			want:       true,
 			jsonFmtStr: "{" + enableTagOverrideFields[1] + "}",
 			equalityFn: enableTagOverrideEqFn,
 		},
 		{
 			desc:       "translateEnableTagTCs: neither set",
-			in:         []interface{}{},
+			in:         []any{},
 			want:       false, // zero value
 			jsonFmtStr: "{}",
 			equalityFn: enableTagOverrideEqFn,
@@ -1108,7 +1108,7 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	}
 
 	// DestinationName: string (Proxy.Upstreams)
-	destinationNameEqFn := func(out interface{}, want interface{}) error {
+	destinationNameEqFn := func(out any, want any) error {
 		got := out.(structs.ServiceDefinition).Proxy.Upstreams[0].DestinationName
 		if got != want {
 			return fmt.Errorf("expected DestinationName to be %s, got %s", want, got)
@@ -1123,28 +1123,28 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	var translateDestinationNameTCs = []translateKeyTestCase{
 		{
 			desc:       "DestinationName: both set",
-			in:         []interface{}{`"a"`, `"b"`},
+			in:         []any{`"a"`, `"b"`},
 			want:       "a",
 			jsonFmtStr: `{"Proxy": {"Upstreams": [{` + strings.Join(destinationNameFields, ",") + `}]}}`,
 			equalityFn: destinationNameEqFn,
 		},
 		{
 			desc:       "DestinationName: first set",
-			in:         []interface{}{`"a"`},
+			in:         []any{`"a"`},
 			want:       "a",
 			jsonFmtStr: `{"Proxy": {"Upstreams": [{` + destinationNameFields[0] + `}]}}`,
 			equalityFn: destinationNameEqFn,
 		},
 		{
 			desc:       "DestinationName: second set",
-			in:         []interface{}{`"b"`},
+			in:         []any{`"b"`},
 			want:       "b",
 			jsonFmtStr: `{"Proxy": {"Upstreams": [{` + destinationNameFields[1] + `}]}}`,
 			equalityFn: destinationNameEqFn,
 		},
 		{
 			desc:       "DestinationName: neither set",
-			in:         []interface{}{},
+			in:         []any{},
 			want:       "", // zero value
 			jsonFmtStr: `{"Proxy": {"Upstreams": [{}]}}`,
 			equalityFn: destinationNameEqFn,
@@ -1152,7 +1152,7 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	}
 
 	// DestinationType: string (Proxy.Upstreams)
-	destinationTypeEqFn := func(out interface{}, want interface{}) error {
+	destinationTypeEqFn := func(out any, want any) error {
 		got := out.(structs.ServiceDefinition).Proxy.Upstreams[0].DestinationType
 		if got != want {
 			return fmt.Errorf("expected DestinationType to be %s, got %s", want, got)
@@ -1167,28 +1167,28 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	var translateDestinationTypeTCs = []translateKeyTestCase{
 		{
 			desc:       "DestinationType: both set",
-			in:         []interface{}{`"a"`, `"b"`},
+			in:         []any{`"a"`, `"b"`},
 			want:       "a",
 			jsonFmtStr: `{"Proxy": {"Upstreams": [{` + strings.Join(destinationTypeFields, ",") + `}]}}`,
 			equalityFn: destinationTypeEqFn,
 		},
 		{
 			desc:       "DestinationType: first set",
-			in:         []interface{}{`"a"`},
+			in:         []any{`"a"`},
 			want:       "a",
 			jsonFmtStr: `{"Proxy": {"Upstreams": [{` + destinationTypeFields[0] + `}]}}`,
 			equalityFn: destinationTypeEqFn,
 		},
 		{
 			desc:       "DestinationType: second set",
-			in:         []interface{}{`"b"`},
+			in:         []any{`"b"`},
 			want:       "b",
 			jsonFmtStr: `{"Proxy": {"Upstreams": [{` + destinationTypeFields[1] + `}]}}`,
 			equalityFn: destinationTypeEqFn,
 		},
 		{
 			desc:       "DestinationType: neither set",
-			in:         []interface{}{},
+			in:         []any{},
 			want:       "", // zero value
 			jsonFmtStr: `{"Proxy": {"Upstreams": [{}]}}`,
 			equalityFn: destinationTypeEqFn,
@@ -1196,7 +1196,7 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	}
 
 	// DestinationNamespace: string (Proxy.Upstreams)
-	destinationNamespaceEqFn := func(out interface{}, want interface{}) error {
+	destinationNamespaceEqFn := func(out any, want any) error {
 		got := out.(structs.ServiceDefinition).Proxy.Upstreams[0].DestinationNamespace
 		if got != want {
 			return fmt.Errorf("expected DestinationNamespace to be %s, got %s", want, got)
@@ -1211,7 +1211,7 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	var translateDestinationNamespaceTCs = []translateKeyTestCase{
 		{
 			desc:       "DestinationNamespace: both set",
-			in:         []interface{}{`"a"`, `"b"`},
+			in:         []any{`"a"`, `"b"`},
 			want:       "a",
 			jsonFmtStr: `{"Proxy": {"Upstreams": [{` + strings.Join(destinationNamespaceFields, ",") + `}]}}`,
 
@@ -1219,21 +1219,21 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 		},
 		{
 			desc:       "DestinationNamespace: first set",
-			in:         []interface{}{`"a"`},
+			in:         []any{`"a"`},
 			want:       "a",
 			jsonFmtStr: `{"Proxy": {"Upstreams": [{` + destinationNamespaceFields[0] + `}]}}`,
 			equalityFn: destinationNamespaceEqFn,
 		},
 		{
 			desc:       "DestinationNamespace: second set",
-			in:         []interface{}{`"b"`},
+			in:         []any{`"b"`},
 			want:       "b",
 			jsonFmtStr: `{"Proxy": {"Upstreams": [{` + destinationNamespaceFields[1] + `}]}}`,
 			equalityFn: destinationNamespaceEqFn,
 		},
 		{
 			desc:       "DestinationNamespace: neither set",
-			in:         []interface{}{},
+			in:         []any{},
 			want:       "", // zero value
 			jsonFmtStr: `{"Proxy": {"Upstreams": [{}]}}`,
 			equalityFn: destinationNamespaceEqFn,
@@ -1241,7 +1241,7 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	}
 
 	// LocalBindPort: int (Proxy.Upstreams)
-	localBindPortEqFn := func(out interface{}, want interface{}) error {
+	localBindPortEqFn := func(out any, want any) error {
 		got := out.(structs.ServiceDefinition).Proxy.Upstreams[0].LocalBindPort
 		if got != want {
 			return fmt.Errorf("expected LocalBindPort to be %v, got %v", want, got)
@@ -1255,28 +1255,28 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	var translateLocalBindPortTCs = []translateKeyTestCase{
 		{
 			desc:       "LocalBindPort: both set",
-			in:         []interface{}{`1`, `2`},
+			in:         []any{`1`, `2`},
 			want:       1,
 			jsonFmtStr: `{"Proxy": {"Upstreams": [{` + strings.Join(localBindPortFields, ",") + `}]}}`,
 			equalityFn: localBindPortEqFn,
 		},
 		{
 			desc:       "LocalBindPort: first set",
-			in:         []interface{}{`1`},
+			in:         []any{`1`},
 			want:       1,
 			jsonFmtStr: `{"Proxy": {"Upstreams": [{` + localBindPortFields[0] + `}]}}`,
 			equalityFn: localBindPortEqFn,
 		},
 		{
 			desc:       "LocalBindPort: second set",
-			in:         []interface{}{`2`},
+			in:         []any{`2`},
 			want:       2,
 			jsonFmtStr: `{"Proxy": {"Upstreams": [{` + localBindPortFields[1] + `}]}}`,
 			equalityFn: localBindPortEqFn,
 		},
 		{
 			desc:       "LocalBindPort: neither set",
-			in:         []interface{}{},
+			in:         []any{},
 			want:       0, // zero value
 			jsonFmtStr: `{"Proxy": {"Upstreams": [{}]}}`,
 			equalityFn: localBindPortEqFn,
@@ -1284,7 +1284,7 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	}
 
 	// LocalBindAddress: string (Proxy.Upstreams)
-	localBindAddressEqFn := func(out interface{}, want interface{}) error {
+	localBindAddressEqFn := func(out any, want any) error {
 		got := out.(structs.ServiceDefinition).Proxy.Upstreams[0].LocalBindAddress
 		if got != want {
 			return fmt.Errorf("expected LocalBindAddress to be %s, got %s", want, got)
@@ -1299,28 +1299,28 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	var translateLocalBindAddressTCs = []translateKeyTestCase{
 		{
 			desc:       "LocalBindAddress: both set",
-			in:         []interface{}{`"one"`, `"two"`},
+			in:         []any{`"one"`, `"two"`},
 			want:       "one",
 			jsonFmtStr: `{"Proxy": {"Upstreams": [{` + strings.Join(localBindAddressFields, ",") + `}]}}`,
 			equalityFn: localBindAddressEqFn,
 		},
 		{
 			desc:       "LocalBindAddress: first set",
-			in:         []interface{}{`"one"`},
+			in:         []any{`"one"`},
 			want:       "one",
 			jsonFmtStr: `{"Proxy": {"Upstreams": [{` + localBindAddressFields[0] + `}]}}`,
 			equalityFn: localBindAddressEqFn,
 		},
 		{
 			desc:       "LocalBindAddress: second set",
-			in:         []interface{}{`"two"`},
+			in:         []any{`"two"`},
 			want:       "two",
 			jsonFmtStr: `{"Proxy": {"Upstreams": [{` + localBindAddressFields[1] + `}]}}`,
 			equalityFn: localBindAddressEqFn,
 		},
 		{
 			desc:       "LocalBindAddress: neither set",
-			in:         []interface{}{},
+			in:         []any{},
 			want:       "", // zero value
 			jsonFmtStr: `{"Proxy": {"Upstreams": [{}]}}`,
 			equalityFn: localBindAddressEqFn,
@@ -1328,7 +1328,7 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	}
 
 	// DestinationServiceName: string (Proxy)
-	destinationServiceNameEqFn := func(out interface{}, want interface{}) error {
+	destinationServiceNameEqFn := func(out any, want any) error {
 		got := out.(structs.ServiceDefinition).Proxy.DestinationServiceName
 		if got != want {
 			return fmt.Errorf("expected DestinationServiceName to be %s, got %s", want, got)
@@ -1343,28 +1343,28 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	var translateDestinationServiceNameTCs = []translateKeyTestCase{
 		{
 			desc:       "DestinationServiceName: both set",
-			in:         []interface{}{`"one"`, `"two"`},
+			in:         []any{`"one"`, `"two"`},
 			want:       "one",
 			jsonFmtStr: `{"Proxy": {` + strings.Join(destinationServiceNameFields, ",") + `}}`,
 			equalityFn: destinationServiceNameEqFn,
 		},
 		{
 			desc:       "DestinationServiceName: first set",
-			in:         []interface{}{`"one"`},
+			in:         []any{`"one"`},
 			want:       "one",
 			jsonFmtStr: `{"Proxy": {` + destinationServiceNameFields[0] + `}}`,
 			equalityFn: destinationServiceNameEqFn,
 		},
 		{
 			desc:       "DestinationServiceName: second set",
-			in:         []interface{}{`"two"`},
+			in:         []any{`"two"`},
 			want:       "two",
 			jsonFmtStr: `{"Proxy": {` + destinationServiceNameFields[1] + `}}`,
 			equalityFn: destinationServiceNameEqFn,
 		},
 		{
 			desc:       "DestinationServiceName: neither set",
-			in:         []interface{}{},
+			in:         []any{},
 			want:       "", // zero value
 			jsonFmtStr: `{"Proxy": {` + `}}`,
 			equalityFn: destinationServiceNameEqFn,
@@ -1372,7 +1372,7 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	}
 
 	// DestinationServiceID:  string (Proxy)
-	destinationServiceIDEqFn := func(out interface{}, want interface{}) error {
+	destinationServiceIDEqFn := func(out any, want any) error {
 		got := out.(structs.ServiceDefinition).Proxy.DestinationServiceID
 		if got != want {
 			return fmt.Errorf("expected DestinationServiceID to be %s, got %s", want, got)
@@ -1387,28 +1387,28 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	var translateDestinationServiceIDTCs = []translateKeyTestCase{
 		{
 			desc:       "DestinationServiceID: both set",
-			in:         []interface{}{`"one"`, `"two"`},
+			in:         []any{`"one"`, `"two"`},
 			want:       "one",
 			jsonFmtStr: `{"Proxy": {` + strings.Join(destinationServiceIDFields, ",") + `}}`,
 			equalityFn: destinationServiceIDEqFn,
 		},
 		{
 			desc:       "DestinationServiceID: first set",
-			in:         []interface{}{`"one"`},
+			in:         []any{`"one"`},
 			want:       "one",
 			jsonFmtStr: `{"Proxy": {` + destinationServiceIDFields[0] + `}}`,
 			equalityFn: destinationServiceIDEqFn,
 		},
 		{
 			desc:       "DestinationServiceID: second set",
-			in:         []interface{}{`"two"`},
+			in:         []any{`"two"`},
 			want:       "two",
 			jsonFmtStr: `{"Proxy": {` + destinationServiceIDFields[1] + `}}`,
 			equalityFn: destinationServiceIDEqFn,
 		},
 		{
 			desc:       "DestinationServiceID: neither set",
-			in:         []interface{}{},
+			in:         []any{},
 			want:       "", // zero value
 			jsonFmtStr: `{"Proxy": {}}`,
 			equalityFn: destinationServiceIDEqFn,
@@ -1416,7 +1416,7 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	}
 
 	// LocalServicePort: int (Proxy)
-	localServicePortEqFn := func(out interface{}, want interface{}) error {
+	localServicePortEqFn := func(out any, want any) error {
 		got := out.(structs.ServiceDefinition).Proxy.LocalServicePort
 		if got != want {
 			return fmt.Errorf("expected LocalServicePort to be %v, got %v", want, got)
@@ -1430,28 +1430,28 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	var translateLocalServicePortTCs = []translateKeyTestCase{
 		{
 			desc:       "LocalServicePort: both set",
-			in:         []interface{}{`1`, `2`},
+			in:         []any{`1`, `2`},
 			want:       1,
 			jsonFmtStr: `{"Proxy": {` + strings.Join(localServicePortFields, ",") + `}}`,
 			equalityFn: localServicePortEqFn,
 		},
 		{
 			desc:       "LocalServicePort: first set",
-			in:         []interface{}{`1`},
+			in:         []any{`1`},
 			want:       1,
 			jsonFmtStr: `{"Proxy": {` + localServicePortFields[0] + `}}`,
 			equalityFn: localServicePortEqFn,
 		},
 		{
 			desc:       "LocalServicePort: second set",
-			in:         []interface{}{`2`},
+			in:         []any{`2`},
 			want:       2,
 			jsonFmtStr: `{"Proxy": {` + localServicePortFields[1] + `}}`,
 			equalityFn: localServicePortEqFn,
 		},
 		{
 			desc:       "LocalServicePort: neither set",
-			in:         []interface{}{},
+			in:         []any{},
 			want:       0, // zero value
 			jsonFmtStr: `{"Proxy": {}}`,
 			equalityFn: localServicePortEqFn,
@@ -1459,7 +1459,7 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	}
 
 	// LocalServiceAddress: string (Proxy)
-	localServiceAddressEqFn := func(out interface{}, want interface{}) error {
+	localServiceAddressEqFn := func(out any, want any) error {
 		got := out.(structs.ServiceDefinition).Proxy.LocalServiceAddress
 		if got != want {
 			return fmt.Errorf("expected LocalServiceAddress to be %s, got %s", want, got)
@@ -1474,28 +1474,28 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	var translateLocalServiceAddressTCs = []translateKeyTestCase{
 		{
 			desc:       "LocalServiceAddress: both set",
-			in:         []interface{}{`"one"`, `"two"`},
+			in:         []any{`"one"`, `"two"`},
 			want:       "one",
 			jsonFmtStr: `{"Proxy": {` + strings.Join(localServiceAddressFields, ",") + `}}`,
 			equalityFn: localServiceAddressEqFn,
 		},
 		{
 			desc:       "LocalServiceAddress: first set",
-			in:         []interface{}{`"one"`},
+			in:         []any{`"one"`},
 			want:       "one",
 			jsonFmtStr: `{"Proxy": {` + localServiceAddressFields[0] + `}}`,
 			equalityFn: localServiceAddressEqFn,
 		},
 		{
 			desc:       "LocalServiceAddress: second set",
-			in:         []interface{}{`"two"`},
+			in:         []any{`"two"`},
 			want:       "two",
 			jsonFmtStr: `{"Proxy": {` + localServiceAddressFields[1] + `}}`,
 			equalityFn: localServiceAddressEqFn,
 		},
 		{
 			desc:       "LocalServiceAddress: neither set",
-			in:         []interface{}{},
+			in:         []any{},
 			want:       "", // zero value
 			jsonFmtStr: `{"Proxy": {}}`,
 			equalityFn: localServiceAddressEqFn,
@@ -1503,7 +1503,7 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	}
 
 	// SidecarService: ServiceDefinition (Connect)
-	sidecarServiceEqFn := func(out interface{}, want interface{}) error {
+	sidecarServiceEqFn := func(out any, want any) error {
 		scService := out.(structs.ServiceDefinition).Connect.SidecarService
 		if scService == nil {
 			if want != "" {
@@ -1524,28 +1524,28 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	var translateSidecarServiceTCs = []translateKeyTestCase{
 		{
 			desc:       "SidecarService: both set",
-			in:         []interface{}{`{"Name": "one"}`, `{"Name": "two"}`},
+			in:         []any{`{"Name": "one"}`, `{"Name": "two"}`},
 			want:       "one",
 			jsonFmtStr: `{"Connect": {` + strings.Join(sidecarServiceFields, ",") + `}}`,
 			equalityFn: sidecarServiceEqFn,
 		},
 		{
 			desc:       "SidecarService: first set",
-			in:         []interface{}{`{"Name": "one"}`},
+			in:         []any{`{"Name": "one"}`},
 			want:       "one",
 			jsonFmtStr: `{"Connect": {` + sidecarServiceFields[0] + `}}`,
 			equalityFn: sidecarServiceEqFn,
 		},
 		{
 			desc:       "SidecarService: second set",
-			in:         []interface{}{`{"Name": "two"}`},
+			in:         []any{`{"Name": "two"}`},
 			want:       "two",
 			jsonFmtStr: `{"Connect": {` + sidecarServiceFields[1] + `}}`,
 			equalityFn: sidecarServiceEqFn,
 		},
 		{
 			desc:       "SidecarService: neither set",
-			in:         []interface{}{},
+			in:         []any{},
 			want:       "", // zero value
 			jsonFmtStr: `{"Connect": {}}`,
 			equalityFn: sidecarServiceEqFn,
@@ -1553,7 +1553,7 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	}
 
 	// LocalPathPort: int (Proxy.Expose.Paths)
-	localPathPortEqFn := func(out interface{}, want interface{}) error {
+	localPathPortEqFn := func(out any, want any) error {
 		got := out.(structs.ServiceDefinition).Proxy.Expose.Paths[0].LocalPathPort
 		if got != want {
 			return fmt.Errorf("expected LocalPathPort to be %v, got %v", want, got)
@@ -1567,28 +1567,28 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	var translateLocalPathPortTCs = []translateKeyTestCase{
 		{
 			desc:       "LocalPathPort: both set",
-			in:         []interface{}{`1`, `2`},
+			in:         []any{`1`, `2`},
 			want:       1,
 			jsonFmtStr: `{"Proxy": {"Expose": {"Paths": [{` + strings.Join(localPathPortFields, ",") + `}]}}}`,
 			equalityFn: localPathPortEqFn,
 		},
 		{
 			desc:       "LocalPathPort: first set",
-			in:         []interface{}{`1`},
+			in:         []any{`1`},
 			want:       1,
 			jsonFmtStr: `{"Proxy": {"Expose": {"Paths": [{` + localPathPortFields[0] + `}]}}}`,
 			equalityFn: localPathPortEqFn,
 		},
 		{
 			desc:       "LocalPathPort: second set",
-			in:         []interface{}{`2`},
+			in:         []any{`2`},
 			want:       2,
 			jsonFmtStr: `{"Proxy": {"Expose": {"Paths": [{` + localPathPortFields[1] + `}]}}}`,
 			equalityFn: localPathPortEqFn,
 		},
 		{
 			desc:       "LocalPathPort: neither set",
-			in:         []interface{}{},
+			in:         []any{},
 			want:       0, // zero value
 			jsonFmtStr: `{"Proxy": {"Expose": {"Paths": [{}]}}}`,
 			equalityFn: localPathPortEqFn,
@@ -1596,7 +1596,7 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	}
 
 	// ListenerPort: int (Proxy.Expose.Paths)
-	listenerPortEqFn := func(out interface{}, want interface{}) error {
+	listenerPortEqFn := func(out any, want any) error {
 		got := out.(structs.ServiceDefinition).Proxy.Expose.Paths[0].ListenerPort
 		if got != want {
 			return fmt.Errorf("expected ListenerPort to be %v, got %v", want, got)
@@ -1610,28 +1610,28 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	var translateListenerPortTCs = []translateKeyTestCase{
 		{
 			desc:       "ListenerPort: both set",
-			in:         []interface{}{`1`, `2`},
+			in:         []any{`1`, `2`},
 			want:       1,
 			jsonFmtStr: `{"Proxy": {"Expose": {"Paths": [{` + strings.Join(listenerPortFields, ",") + `}]}}}`,
 			equalityFn: listenerPortEqFn,
 		},
 		{
 			desc:       "ListenerPort: first set",
-			in:         []interface{}{`1`},
+			in:         []any{`1`},
 			want:       1,
 			jsonFmtStr: `{"Proxy": {"Expose": {"Paths": [{` + listenerPortFields[0] + `}]}}}`,
 			equalityFn: listenerPortEqFn,
 		},
 		{
 			desc:       "ListenerPort: second set",
-			in:         []interface{}{`2`},
+			in:         []any{`2`},
 			want:       2,
 			jsonFmtStr: `{"Proxy": {"Expose": {"Paths": [{` + listenerPortFields[1] + `}]}}}`,
 			equalityFn: listenerPortEqFn,
 		},
 		{
 			desc:       "ListenerPort: neither set",
-			in:         []interface{}{},
+			in:         []any{},
 			want:       0, // zero value
 			jsonFmtStr: `{"Proxy": {"Expose": {"Paths": [{}]}}}`,
 			equalityFn: listenerPortEqFn,
@@ -1639,7 +1639,7 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	}
 
 	// TaggedAddresses: map[string]structs.ServiceAddress
-	taggedAddressesEqFn := func(out interface{}, want interface{}) error {
+	taggedAddressesEqFn := func(out any, want any) error {
 		tgdAddresses := out.(structs.ServiceDefinition).TaggedAddresses
 		if tgdAddresses == nil {
 			if want != "" {
@@ -1661,28 +1661,28 @@ func TestDecodeAgentRegisterService(t *testing.T) {
 	var translateTaggedAddressesTCs = []translateKeyTestCase{
 		{
 			desc:       "TaggedAddresses: both set",
-			in:         []interface{}{`{"key": {"Address": "1"}}`, `{"key": {"Address": "2"}}`},
+			in:         []any{`{"key": {"Address": "1"}}`, `{"key": {"Address": "2"}}`},
 			want:       "1",
 			jsonFmtStr: `{` + strings.Join(taggedAddressesFields, ",") + `}`,
 			equalityFn: taggedAddressesEqFn,
 		},
 		{
 			desc:       "TaggedAddresses: first set",
-			in:         []interface{}{`{"key": {"Address": "1"}}`},
+			in:         []any{`{"key": {"Address": "1"}}`},
 			want:       "1",
 			jsonFmtStr: `{` + taggedAddressesFields[0] + `}`,
 			equalityFn: taggedAddressesEqFn,
 		},
 		{
 			desc:       "TaggedAddresses: second set",
-			in:         []interface{}{`{"key": {"Address": "2"}}`},
+			in:         []any{`{"key": {"Address": "2"}}`},
 			want:       "2",
 			jsonFmtStr: `{` + taggedAddressesFields[1] + `}`,
 			equalityFn: taggedAddressesEqFn,
 		},
 		{
 			desc:       "TaggedAddresses: neither set",
-			in:         []interface{}{},
+			in:         []any{},
 			want:       "", // zero value
 			jsonFmtStr: `{}`,
 			equalityFn: taggedAddressesEqFn,
@@ -2255,7 +2255,7 @@ func TestDecodeTxnConvertOps(t *testing.T) {
 
 // checkTypeDurationTest is a helper func to test durations in CheckTYpe or CheckDefiniton
 // (to reduce repetetive typing).
-func checkTypeDurationTest(check interface{}, want time.Duration, prefix string) error {
+func checkTypeDurationTest(check any, want time.Duration, prefix string) error {
 	// check for pointers first
 	switch v := check.(type) {
 	case *structs.CheckType:
@@ -2304,7 +2304,7 @@ func checkTypeDurationTest(check interface{}, want time.Duration, prefix string)
 
 // checkTypeDurationTest is a helper func to test the Header map in a CheckType or CheckDefiniton
 // (to reduce repetetive typing).
-func checkTypeHeaderTest(check interface{}, want map[string][]string) error {
+func checkTypeHeaderTest(check any, want map[string][]string) error {
 
 	var header map[string][]string
 	switch v := check.(type) {

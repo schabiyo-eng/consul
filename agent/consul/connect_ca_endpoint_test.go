@@ -116,7 +116,7 @@ func TestConnectCAConfig_GetSet(t *testing.T) {
 	// Update a config value
 	newConfig := &structs.CAConfiguration{
 		Provider: "consul",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"PrivateKey": "",
 			"RootCert":   "",
 			// This verifies the state persistence for providers although Consul
@@ -129,7 +129,7 @@ func TestConnectCAConfig_GetSet(t *testing.T) {
 			Datacenter: "dc1",
 			Config:     newConfig,
 		}
-		var reply interface{}
+		var reply any
 		retry.Run(t, func(r *retry.R) {
 			r.Check(msgpackrpc.CallWithCodec(codec, "ConnectCA.ConfigurationSet", args, &reply))
 		})
@@ -185,7 +185,7 @@ func TestConnectCAConfig_GetSet_ACLDeny(t *testing.T) {
 	// Update a config value
 	newConfig := &structs.CAConfiguration{
 		Provider: "consul",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"PrivateKey": `
 -----BEGIN EC PRIVATE KEY-----
 MHcCAQEEIMoTkpRggp3fqZzFKh82yS4LjtJI+XY+qX/7DefHFrtdoAoGCCqGSM49
@@ -217,7 +217,7 @@ pY0heYeK9A6iOLrzqxSerkXXQyj5e9bE4VgUnxgPU6g=
 		Config:       newConfig,
 		WriteRequest: structs.WriteRequest{Token: TestDefaultInitialManagementToken},
 	}
-	var reply interface{}
+	var reply any
 	require.NoError(t, msgpackrpc.CallWithCodec(codec, "ConnectCA.ConfigurationSet", args, &reply))
 
 	t.Run("deny get with operator:read", func(t *testing.T) {
@@ -297,7 +297,7 @@ func TestConnectCAConfig_GetSetForceNoCrossSigning(t *testing.T) {
 	require.NoError(t, err)
 	newConfig := &structs.CAConfiguration{
 		Provider: "consul",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"PrivateKey": newKey,
 		},
 	}
@@ -306,7 +306,7 @@ func TestConnectCAConfig_GetSetForceNoCrossSigning(t *testing.T) {
 			Datacenter: "dc1",
 			Config:     newConfig,
 		}
-		var reply interface{}
+		var reply any
 		err := msgpackrpc.CallWithCodec(codec, "ConnectCA.ConfigurationSet", args, &reply)
 		require.EqualError(t, err, "The current CA Provider does not support cross-signing. "+
 			"You can try again with ForceWithoutCrossSigningSet but this may cause disruption"+
@@ -320,7 +320,7 @@ func TestConnectCAConfig_GetSetForceNoCrossSigning(t *testing.T) {
 			Datacenter: "dc1",
 			Config:     newConfig,
 		}
-		var reply interface{}
+		var reply any
 		err := msgpackrpc.CallWithCodec(codec, "ConnectCA.ConfigurationSet", args, &reply)
 		require.NoError(t, err)
 	}
@@ -376,7 +376,7 @@ func TestConnectCAConfig_TriggerRotation(t *testing.T) {
 
 				return &structs.CAConfiguration{
 					Provider: "consul",
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"PrivateKey": newKey,
 						"RootCert":   "",
 					},
@@ -388,7 +388,7 @@ func TestConnectCAConfig_TriggerRotation(t *testing.T) {
 			configFn: func() (*structs.CAConfiguration, error) {
 				return &structs.CAConfiguration{
 					Provider: "consul",
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"PrivateKeyType": "ec",
 						"PrivateKeyBits": 384,
 					},
@@ -400,7 +400,7 @@ func TestConnectCAConfig_TriggerRotation(t *testing.T) {
 			configFn: func() (*structs.CAConfiguration, error) {
 				return &structs.CAConfiguration{
 					Provider: "consul",
-					Config: map[string]interface{}{
+					Config: map[string]any{
 						"PrivateKeyType": "rsa",
 						"PrivateKeyBits": "2048",
 					},
@@ -436,7 +436,7 @@ func TestConnectCAConfig_TriggerRotation(t *testing.T) {
 					Datacenter: "dc1",
 					Config:     newConfig,
 				}
-				var reply interface{}
+				var reply any
 
 				require.NoError(t, msgpackrpc.CallWithCodec(codec, "ConnectCA.ConfigurationSet", args, &reply))
 			}
@@ -652,7 +652,7 @@ func TestConnectCAConfig_Vault_TriggerRotation_Fails(t *testing.T) {
 				Datacenter: "dc1",
 				Config:     tc.configFn(),
 			}
-			var reply interface{}
+			var reply any
 
 			codec := rpcClient(t, s1)
 			err := msgpackrpc.CallWithCodec(codec, "ConnectCA.ConfigurationSet", args, &reply)
@@ -718,7 +718,7 @@ func TestConnectCAConfig_UpdateSecondary(t *testing.T) {
 	assert.NoError(t, err)
 	newConfig := &structs.CAConfiguration{
 		Provider: "consul",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"PrivateKey": newKey,
 			"RootCert":   "",
 		},
@@ -728,7 +728,7 @@ func TestConnectCAConfig_UpdateSecondary(t *testing.T) {
 			Datacenter: "secondary",
 			Config:     newConfig,
 		}
-		var reply interface{}
+		var reply any
 
 		require.NoError(t, msgpackrpc.CallWithCodec(codec, "ConnectCA.ConfigurationSet", args, &reply))
 	}
@@ -803,7 +803,7 @@ func TestConnectCAConfig_UpdateSecondary(t *testing.T) {
 	{
 		newConfig := &structs.CAConfiguration{
 			Provider: "consul",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"PrivateKey": newKey,
 				"RootCert":   "",
 			},
@@ -813,7 +813,7 @@ func TestConnectCAConfig_UpdateSecondary(t *testing.T) {
 				Datacenter: "secondary",
 				Config:     newConfig,
 			}
-			var reply interface{}
+			var reply any
 
 			require.NoError(t, msgpackrpc.CallWithCodec(codec, "ConnectCA.ConfigurationSet", args, &reply))
 		}
@@ -938,7 +938,7 @@ func TestConnectCASign_rateLimit(t *testing.T) {
 		c.Datacenter = "dc1"
 		c.PrimaryDatacenter = "dc1"
 		c.Bootstrap = true
-		c.CAConfig.Config = map[string]interface{}{
+		c.CAConfig.Config = map[string]any{
 			// It actually doesn't work as expected with some higher values because
 			// the token bucket is initialized with max(10%, 1) burst which for small
 			// values is 1 and then the test completes so fast it doesn't actually
@@ -1003,7 +1003,7 @@ func TestConnectCASign_concurrencyLimit(t *testing.T) {
 		c.Datacenter = "dc1"
 		c.PrimaryDatacenter = "dc1"
 		c.Bootstrap = true
-		c.CAConfig.Config = map[string]interface{}{
+		c.CAConfig.Config = map[string]any{
 			// Must disable the rate limit since it takes precedence
 			"CSRMaxPerSecond":  0,
 			"CSRMaxConcurrent": 1,

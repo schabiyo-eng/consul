@@ -27,7 +27,7 @@ func TestJWT_NewValidator(t *testing.T) {
 			Name:        "test-" + typ,
 			Description: typ + " test",
 			Type:        typ,
-			Config:      map[string]interface{}{},
+			Config:      map[string]any{},
 		}
 		if f != nil {
 			f(method)
@@ -81,12 +81,12 @@ func TestJWT_NewValidator(t *testing.T) {
 }
 
 func TestJWT_ValidateLogin(t *testing.T) {
-	type mConfig = map[string]interface{}
+	type mConfig = map[string]any
 
 	setup := func(t *testing.T, f func(config mConfig)) *Validator {
 		t.Helper()
 
-		config := map[string]interface{}{
+		config := map[string]any{
 			"JWTSupportedAlgs": []string{"ES256"},
 			"ClaimMappings": map[string]string{
 				"first_name":   "name",
@@ -236,7 +236,7 @@ func TestNewIdentity(t *testing.T) {
 			method := &structs.ACLAuthMethod{
 				Name: "test-method",
 				Type: "jwt",
-				Config: map[string]interface{}{
+				Config: map[string]any{
 					"BoundIssuer":          "https://legit.issuer.internal/",
 					"JWTValidationPubKeys": []string{pubKey},
 					"ClaimMappings":        tc.claimMappings,

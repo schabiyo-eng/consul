@@ -182,7 +182,7 @@ func testServerConfigIPv6(t testutil.TestingTB) (string, *Config) {
 	config.CAConfig = &structs.CAConfiguration{
 		ClusterID: connect.TestClusterID,
 		Provider:  structs.ConsulCAProvider,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"PrivateKey":          "",
 			"RootCert":            "",
 			"LeafCertTTL":         "72h",
@@ -259,7 +259,7 @@ func testServerConfig(t testutil.TestingTB) (string, *Config) {
 	config.CAConfig = &structs.CAConfiguration{
 		ClusterID: connect.TestClusterID,
 		Provider:  structs.ConsulCAProvider,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"PrivateKey":          "",
 			"RootCert":            "",
 			"LeafCertTTL":         "72h",
@@ -1868,10 +1868,10 @@ func TestServer_BadExpect(t *testing.T) {
 
 type fakeGlobalResp struct{}
 
-func (r *fakeGlobalResp) Add(interface{}) {
+func (r *fakeGlobalResp) Add(any) {
 }
 
-func (r *fakeGlobalResp) New() interface{} {
+func (r *fakeGlobalResp) New() any {
 	return struct{}{}
 }
 
@@ -2039,7 +2039,7 @@ func TestServer_ReloadConfig(t *testing.T) {
 	entryInit := &structs.ProxyConfigEntry{
 		Kind: structs.ProxyDefaults,
 		Name: structs.ProxyConfigGlobal,
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			// these are made a []uint8 and a int64 to allow the Equals test to pass
 			// otherwise it will fail complaining about data types
 			"foo": "bar",

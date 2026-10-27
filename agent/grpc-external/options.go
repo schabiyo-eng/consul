@@ -49,7 +49,7 @@ func QueryOptionsFromContext(ctx context.Context) (structs.QueryOptions, error) 
 // ContextWithQueryOptions returns a context with the given query options attached.
 func ContextWithQueryOptions(ctx context.Context, options structs.QueryOptions) (context.Context, error) {
 	md := metadata.MD{}
-	m := map[string]interface{}{}
+	m := map[string]any{}
 	err := mapstructure.Decode(options, &m)
 	if err != nil {
 		return nil, err

@@ -464,7 +464,7 @@ type LockUnlock struct {
 	unlockFn  func() error
 	cleanupFn func() error
 	inUseErr  error
-	rawOpts   interface{}
+	rawOpts   any
 }
 
 const synopsis = "Execute a command holding a lock"

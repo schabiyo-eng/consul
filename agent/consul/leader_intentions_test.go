@@ -539,7 +539,7 @@ func TestLeader_LegacyIntentionMigration(t *testing.T) {
 		checkIntentions(t, s1, true, map[string]*structs.Intention{})
 	}))
 
-	mapifyConfigs := func(entries interface{}) map[configentry.KindName]*structs.ServiceIntentionsConfigEntry {
+	mapifyConfigs := func(entries any) map[configentry.KindName]*structs.ServiceIntentionsConfigEntry {
 		m := make(map[configentry.KindName]*structs.ServiceIntentionsConfigEntry)
 		switch v := entries.(type) {
 		case []*structs.ServiceIntentionsConfigEntry:

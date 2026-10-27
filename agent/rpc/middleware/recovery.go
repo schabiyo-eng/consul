@@ -12,7 +12,7 @@ import (
 // NewPanicHandler returns a RecoveryHandlerFunc type function
 // to handle panic in RPC server's handlers.
 func NewPanicHandler(logger hclog.Logger) RecoveryHandlerFunc {
-	return func(p interface{}) (err error) {
+	return func(p any) (err error) {
 		// Log the panic and the stack trace of the Goroutine that caused the panic.
 		stacktrace := hclog.Stacktrace()
 		logger.Error("panic serving rpc request",
@@ -24,4 +24,4 @@ func NewPanicHandler(logger hclog.Logger) RecoveryHandlerFunc {
 	}
 }
 
-type RecoveryHandlerFunc func(p interface{}) (err error)
+type RecoveryHandlerFunc func(p any) (err error)

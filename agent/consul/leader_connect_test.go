@@ -114,7 +114,7 @@ func TestConnectCA_ConfigurationSet_ChangeKeyConfig_Primary(t *testing.T) {
 					// Update a config value
 					newConfig := &structs.CAConfiguration{
 						Provider: "consul",
-						Config: map[string]interface{}{
+						Config: map[string]any{
 							"PrivateKey":     "",
 							"RootCert":       "",
 							"PrivateKeyType": dst.keyType,
@@ -129,7 +129,7 @@ func TestConnectCA_ConfigurationSet_ChangeKeyConfig_Primary(t *testing.T) {
 						Datacenter: "dc1",
 						Config:     newConfig,
 					}
-					var reply interface{}
+					var reply any
 					require.NoError(t, msgpackrpc.CallWithCodec(codec, "ConnectCA.ConfigurationSet", args, &reply))
 				})
 
@@ -342,7 +342,7 @@ func TestCAManager_RenewIntermediate_Vault_Primary(t *testing.T) {
 		c.PrimaryDatacenter = "dc1"
 		c.CAConfig = &structs.CAConfiguration{
 			Provider: "vault",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"Address":             testVault.Addr,
 				"Token":               vaultToken,
 				"RootPKIPath":         "pki-root/",
@@ -449,7 +449,7 @@ func TestCAManager_RenewIntermediate_Secondary(t *testing.T) {
 		c.Build = "1.6.0"
 		c.CAConfig = &structs.CAConfiguration{
 			Provider: "consul",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"PrivateKey":  "",
 				"RootCert":    "",
 				"LeafCertTTL": "5s",
@@ -599,7 +599,7 @@ func TestConnectCA_ConfigurationSet_RootRotation_Secondary(t *testing.T) {
 	require.NoError(t, err)
 	newConfig := &structs.CAConfiguration{
 		Provider: "consul",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"PrivateKey":          newKey,
 			"RootCert":            "",
 			"IntermediateCertTTL": 72 * 24 * time.Hour,
@@ -610,7 +610,7 @@ func TestConnectCA_ConfigurationSet_RootRotation_Secondary(t *testing.T) {
 			Datacenter: "dc1",
 			Config:     newConfig,
 		}
-		var reply interface{}
+		var reply any
 
 		require.NoError(t, s1.RPC(context.Background(), "ConnectCA.ConfigurationSet", args, &reply))
 	}
@@ -722,7 +722,7 @@ func TestCAManager_Initialize_Vault_KeepOldRoots_Primary(t *testing.T) {
 	// Update the CA config to use Vault - this should force the generation of a new root cert.
 	vaultCAConf := &structs.CAConfiguration{
 		Provider: "vault",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"Address":             testVault.Addr,
 			"Token":               vaultToken,
 			"RootPKIPath":         "pki-root/",
@@ -734,7 +734,7 @@ func TestCAManager_Initialize_Vault_KeepOldRoots_Primary(t *testing.T) {
 		Datacenter: "dc1",
 		Config:     vaultCAConf,
 	}
-	var reply interface{}
+	var reply any
 
 	require.NoError(t, msgpackrpc.CallWithCodec(codec, "ConnectCA.ConfigurationSet", args, &reply))
 
@@ -786,7 +786,7 @@ func TestCAManager_Initialize_Vault_FixesSigningKeyID_Primary(t *testing.T) {
 		c.PrimaryDatacenter = "dc1"
 		c.CAConfig = &structs.CAConfiguration{
 			Provider: "vault",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"Address":             testVault.Addr,
 				"Token":               vaultToken,
 				"RootPKIPath":         "pki-root/",
@@ -1233,7 +1233,7 @@ func TestLeader_CARootPruning(t *testing.T) {
 	require.NoError(t, err)
 	newConfig := &structs.CAConfiguration{
 		Provider: "consul",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"LeafCertTTL":  "500ms",
 			"PrivateKey":   newKey,
 			"RootCert":     "",
@@ -1245,7 +1245,7 @@ func TestLeader_CARootPruning(t *testing.T) {
 			Datacenter: "dc1",
 			Config:     newConfig,
 		}
-		var reply interface{}
+		var reply any
 
 		require.NoError(t, msgpackrpc.CallWithCodec(codec, "ConnectCA.ConfigurationSet", args, &reply))
 	}
@@ -1305,7 +1305,7 @@ func TestConnectCA_ConfigurationSet_PersistsRoots(t *testing.T) {
 	require.NoError(t, err)
 	newConfig := &structs.CAConfiguration{
 		Provider: "consul",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"PrivateKey": newKey,
 			"RootCert":   "",
 		},
@@ -1315,7 +1315,7 @@ func TestConnectCA_ConfigurationSet_PersistsRoots(t *testing.T) {
 			Datacenter: "dc1",
 			Config:     newConfig,
 		}
-		var reply interface{}
+		var reply any
 
 		require.NoError(t, msgpackrpc.CallWithCodec(codec, "ConnectCA.ConfigurationSet", args, &reply))
 	}
@@ -1570,7 +1570,7 @@ func TestCAManager_Initialize_Vault_BadCAConfigDoesNotPreventLeaderEstablishment
 		c.PrimaryDatacenter = "dc1"
 		c.CAConfig = &structs.CAConfiguration{
 			Provider: "vault",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"Address":             testVault.Addr,
 				"Token":               "not-the-root",
 				"RootPKIPath":         "pki-root/",
@@ -1597,7 +1597,7 @@ func TestCAManager_Initialize_Vault_BadCAConfigDoesNotPreventLeaderEstablishment
 	// verify that we can reconfigure away from the bad configuration.
 	newConfig := &structs.CAConfiguration{
 		Provider: "vault",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"Address":             testVault.Addr,
 			"Token":               goodVaultToken,
 			"RootPKIPath":         "pki-root/",
@@ -1609,7 +1609,7 @@ func TestCAManager_Initialize_Vault_BadCAConfigDoesNotPreventLeaderEstablishment
 			Datacenter: "dc1",
 			Config:     newConfig,
 		}
-		var reply interface{}
+		var reply any
 
 		retry.Run(t, func(r *retry.R) {
 			require.NoError(r, s1.RPC(context.Background(), "ConnectCA.ConfigurationSet", args, &reply))
@@ -1628,7 +1628,7 @@ func TestCAManager_Initialize_BadCAConfigDoesNotPreventLeaderEstablishment(t *te
 		c.PrimaryDatacenter = "dc1"
 		c.CAConfig = &structs.CAConfiguration{
 			Provider: "consul",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"RootCert": "garbage",
 			},
 		}
@@ -1644,14 +1644,14 @@ func TestCAManager_Initialize_BadCAConfigDoesNotPreventLeaderEstablishment(t *te
 
 	newConfig := &structs.CAConfiguration{
 		Provider: "consul",
-		Config:   map[string]interface{}{},
+		Config:   map[string]any{},
 	}
 	{
 		args := &structs.CARequest{
 			Datacenter: "dc1",
 			Config:     newConfig,
 		}
-		var reply interface{}
+		var reply any
 
 		retry.Run(t, func(r *retry.R) {
 			require.NoError(r, s1.RPC(context.Background(), "ConnectCA.ConfigurationSet", args, &reply))
@@ -1688,7 +1688,7 @@ func TestConnectCA_ConfigurationSet_ForceWithoutCrossSigning(t *testing.T) {
 	require.NoError(t, err)
 	newConfig := &structs.CAConfiguration{
 		Provider: "consul",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"LeafCertTTL":  "500ms",
 			"PrivateKey":   newKey,
 			"RootCert":     "",
@@ -1701,7 +1701,7 @@ func TestConnectCA_ConfigurationSet_ForceWithoutCrossSigning(t *testing.T) {
 			Datacenter: "dc1",
 			Config:     newConfig,
 		}
-		var reply interface{}
+		var reply any
 
 		require.NoError(t, msgpackrpc.CallWithCodec(codec, "ConnectCA.ConfigurationSet", args, &reply))
 	}
@@ -1736,7 +1736,7 @@ func TestConnectCA_ConfigurationSet_Vault_ForceWithoutCrossSigning(t *testing.T)
 		c.PrimaryDatacenter = "dc1"
 		c.CAConfig = &structs.CAConfiguration{
 			Provider: "vault",
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"Address":             testVault.Addr,
 				"Token":               vaultToken1,
 				"RootPKIPath":         "pki-root/",
@@ -1769,7 +1769,7 @@ func TestConnectCA_ConfigurationSet_Vault_ForceWithoutCrossSigning(t *testing.T)
 	// cause a rotation.
 	newConfig := &structs.CAConfiguration{
 		Provider: "vault",
-		Config: map[string]interface{}{
+		Config: map[string]any{
 			"Address":             testVault.Addr,
 			"Token":               vaultToken2,
 			"RootPKIPath":         "pki-root-2/",
@@ -1782,7 +1782,7 @@ func TestConnectCA_ConfigurationSet_Vault_ForceWithoutCrossSigning(t *testing.T)
 			Datacenter: "dc1",
 			Config:     newConfig,
 		}
-		var reply interface{}
+		var reply any
 
 		require.NoError(t, msgpackrpc.CallWithCodec(codec, "ConnectCA.ConfigurationSet", args, &reply))
 	}

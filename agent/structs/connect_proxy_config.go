@@ -310,7 +310,7 @@ type ConnectProxyConfig struct {
 
 	// Config is the arbitrary configuration data provided with the proxy
 	// registration.
-	Config map[string]interface{} `json:",omitempty" bexpr:"-"`
+	Config map[string]any `json:",omitempty" bexpr:"-"`
 
 	// Upstreams describes any upstream dependencies the proxy instance should
 	// setup.
@@ -539,7 +539,7 @@ type Upstream struct {
 	// Config is an opaque config that is specific to the proxy process being run.
 	// It can be used to pass arbitrary configuration for this specific upstream
 	// to the proxy.
-	Config map[string]interface{} `json:",omitempty" bexpr:"-"`
+	Config map[string]any `json:",omitempty" bexpr:"-"`
 
 	// MeshGateway is the configuration for mesh gateway usage of this upstream
 	MeshGateway MeshGatewayConfig `json:",omitempty" alias:"mesh_gateway"`

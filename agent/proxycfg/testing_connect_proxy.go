@@ -83,7 +83,7 @@ func TestConfigSnapshot(t testing.T, nsFn func(ns *structs.NodeService), extraUp
 			DestinationServiceName: "web",
 			LocalServiceAddress:    "127.0.0.1",
 			LocalServicePort:       8080,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": "bar",
 			},
 			Upstreams: upstreams,
@@ -160,7 +160,7 @@ func TestConfigSnapshotDiscoveryChain(
 			DestinationServiceName: "web",
 			LocalServiceAddress:    "127.0.0.1",
 			LocalServicePort:       8080,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"foo": "bar",
 			},
 			Upstreams: upstreams,
@@ -305,7 +305,7 @@ func TestConfigSnapshotGRPCExposeHTTP1(t testing.T) *ConfigSnapshot {
 			DestinationServiceName: "grpc",
 			DestinationServiceID:   "grpc",
 			LocalServicePort:       8080,
-			Config: map[string]interface{}{
+			Config: map[string]any{
 				"protocol": "grpc",
 			},
 			Expose: structs.ExposeConfig{
@@ -353,7 +353,7 @@ func TestConfigSnapshotTelemetryCollector(t testing.T) *ConfigSnapshot {
 	)
 
 	return TestConfigSnapshot(t, func(ns *structs.NodeService) {
-		ns.Proxy.Config = map[string]interface{}{
+		ns.Proxy.Config = map[string]any{
 			"envoy_telemetry_collector_bind_socket_dir": "/tmp/consul/telemetry-collector",
 		}
 	}, []UpdateEvent{

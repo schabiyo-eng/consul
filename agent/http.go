@@ -106,10 +106,10 @@ type HTTPHandlers struct {
 // endpoint is a Consul-specific HTTP handler that takes the usual arguments in
 // but returns a response object and error, both of which are handled in a
 // common manner by Consul's HTTP server.
-type endpoint func(resp http.ResponseWriter, req *http.Request) (interface{}, error)
+type endpoint func(resp http.ResponseWriter, req *http.Request) (any, error)
 
 // unboundEndpoint is an endpoint method on a server.
-type unboundEndpoint func(s *HTTPHandlers, resp http.ResponseWriter, req *http.Request) (interface{}, error)
+type unboundEndpoint func(s *HTTPHandlers, resp http.ResponseWriter, req *http.Request) (any, error)
 
 // endpoints is a map from URL pattern to unbound endpoint.
 var endpoints map[string]unboundEndpoint
@@ -259,7 +259,7 @@ func (s *HTTPHandlers) handler() http.Handler {
 	for pattern, fn := range endpoints {
 		thisFn := fn
 		methods := allowedMethods[pattern]
-		bound := func(resp http.ResponseWriter, req *http.Request) (interface{}, error) {
+		bound := func(resp http.ResponseWriter, req *http.Request) (any, error) {
 			return thisFn(s, resp, req)
 		}
 		handleFuncMetrics(pattern, s.wrap(bound, methods))
@@ -578,7 +578,7 @@ func (s *HTTPHandlers) wrap(handler endpoint, methods []string) http.HandlerFunc
 			)
 		}()
 
-		var obj interface{}
+		var obj any
 
 		// if this endpoint has declared methods, respond appropriately to OPTIONS requests. Otherwise let the endpoint handle that.
 		if req.Method == "OPTIONS" && len(methods) > 0 {
@@ -752,7 +752,7 @@ func isRequestBodyTooLarge(err error) bool {
 
 // marshalJSON marshals the object into JSON, respecting the user's pretty-ness
 // configuration.
-func (s *HTTPHandlers) marshalJSON(req *http.Request, obj interface{}) ([]byte, error) {
+func (s *HTTPHandlers) marshalJSON(req *http.Request, obj any) ([]byte, error) {
 	if _, ok := req.URL.Query()["pretty"]; ok || s.agent.config.DevMode {
 		buf, err := json.MarshalIndent(obj, "", "    ")
 		if err != nil {
@@ -812,13 +812,13 @@ func (s *HTTPHandlers) Index(resp http.ResponseWriter, req *http.Request) {
 	) // 301
 }
 
-func decodeBody(body io.Reader, out interface{}) error {
+func decodeBody(body io.Reader, out any) error {
 	return lib.DecodeJSON(body, out)
 }
 
 // decodeBodyDeprecated is deprecated, please use decodeBody above.
 // decodeBodyDeprecated is used to decode a JSON request body
-func decodeBodyDeprecated(req *http.Request, out interface{}, cb func(interface{}) error) error {
+func decodeBodyDeprecated(req *http.Request, out any, cb func(any) error) error {
 	// This generally only happens in tests since real HTTP requests set
 	// a non-nil body with no content. We guard against it anyways to prevent
 	// a panic. The EOF response is the same behavior as an empty reader.
@@ -826,7 +826,7 @@ func decodeBodyDeprecated(req *http.Request, out interface{}, cb func(interface{
 		return io.EOF
 	}
 
-	var raw interface{}
+	var raw any
 	dec := json.NewDecoder(req.Body)
 	if err := dec.Decode(&raw); err != nil {
 		return err
@@ -862,7 +862,7 @@ func stringToReadableDurationFunc() mapstructure.DecodeHookFunc {
 	return func(
 		f reflect.Type,
 		t reflect.Type,
-		data interface{}) (interface{}, error) {
+		data any) (any, error) {
 		var v api.ReadableDuration
 		if t != reflect.TypeOf(v) {
 			return data, nil

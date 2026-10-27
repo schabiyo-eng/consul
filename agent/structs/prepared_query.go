@@ -309,7 +309,7 @@ func (q *PreparedQueryExecuteRequest) CacheInfo() cache.RequestInfo {
 	// cached results, we need to be careful we maintain the same order of fields
 	// here. We could alternatively use `hash:set` struct tag on an anonymous
 	// struct to make it more robust if it becomes significant.
-	v, err := hashstructure.Hash([]interface{}{
+	v, err := hashstructure.Hash([]any{
 		q.QueryIDOrName,
 		q.Limit,
 		q.Connect,
